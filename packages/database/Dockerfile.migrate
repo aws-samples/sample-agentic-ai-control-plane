@@ -1,0 +1,22 @@
+FROM public.ecr.aws/lambda/nodejs:22
+
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+COPY package.json ./
+RUN npm install --include=dev
+
+COPY prisma/ ./prisma/
+COPY prisma.config.ts ./
+RUN npx prisma generate --schema=./prisma/schema.prisma
+
+COPY migrate.ts seed.ts client.ts ./
+RUN npx esbuild migrate.ts \
+    --bundle \
+    --platform=node \
+    --target=node22 \
+    --outfile=index.mjs \
+    --format=esm \
+    --banner:js="import { createRequire } from 'module'; const require = createRequire(import.meta.url);" \
+    --external:@aws-sdk/*
+
+CMD ["index.handler"]

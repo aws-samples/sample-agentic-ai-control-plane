@@ -1,0 +1,23 @@
+{
+  "name": "@package/auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./server": "./server.ts"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.30.3",
+  "dependencies": {
+    "@better-auth/prisma-adapter": "^1.5.4",
+    "@package/database": "workspace:*",
+    "better-auth": "^1.5.4",
+    "dotenv": "^17.3.1"
+  }
+}

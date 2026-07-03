@@ -1,0 +1,2215 @@
+{
+  "Dashboard": {
+    "title": "Dashboard",
+    "description": "Overview of your agent management platform",
+    "stats": {
+      "agents": "Total Agents",
+      "agentsDescription": "Registered in the platform",
+      "toolRequests": "Tool Requests",
+      "approved": "approved",
+      "denied": "denied",
+      "approvalRate": "Approval Rate",
+      "approvalRateDescription": "Of all tool requests",
+      "activePolicies": "Active Policies",
+      "activePoliciesDelta": "+2 this week"
+    },
+    "chart": {
+      "title": "Agent Activity",
+      "descriptionCalls": "Tool calls per day across all agents",
+      "descriptionDecisions": "Tool approvals and denials per day",
+      "selectView": "Select chart view",
+      "selectRange": "Select time range",
+      "viewCalls": "Calls per Day",
+      "viewDecisions": "Approvals vs Denials",
+      "legendCalls": "Tool Calls",
+      "legendApprovals": "Approvals",
+      "legendDenials": "Denials",
+      "last90": "Last 3 months",
+      "last30": "Last 30 days",
+      "last7": "Last 7 days"
+    },
+    "gateway": {
+      "sectionTitle": "Gateway Activity",
+      "sectionDescription": "Request throughput and errors aggregated across all AgentCore gateways",
+      "stats": {
+        "invocations": "Invocations",
+        "invocationsDescription": "Total requests across {count} gateways",
+        "systemErrors": "System Errors",
+        "systemErrorsDescription": "5xx responses",
+        "userErrors": "User Errors",
+        "userErrorsDescription": "4xx responses (excl. 429)",
+        "avgLatency": "Avg Latency",
+        "avgLatencyDescription": "Initial response time"
+      },
+      "chart": {
+        "title": "Gateway Requests",
+        "description": "Invocations and errors per day across all gateways",
+        "legendInvocations": "Invocations",
+        "legendSystemErrors": "System Errors",
+        "legendUserErrors": "User Errors"
+      }
+    }
+  },
+  "SignIn": {
+    "signIn": "Sign in"
+  },
+  "LanguageSwitcher": {
+    "en": "English",
+    "ja": "日本語"
+  },
+  "AppSidebar": {
+    "title": "Agent Management Platform",
+    "quickCreate": "Quick Create",
+    "navMain": {
+      "dashboard": "Dashboard",
+      "agents": "Agents"
+    },
+    "authorization": {
+      "label": "Authorization",
+      "policies": "Policies",
+      "policyLibrary": "Policy Library",
+      "gateway": "Gateway",
+      "tool": "Tool"
+    },
+    "toolManagement": {
+      "label": "Tool Management",
+      "registry": "Registry"
+    },
+    "test": {
+      "label": "Testing",
+      "playground": "Playground"
+    },
+    "platform": {
+      "label": "Platform",
+      "settings": "Settings"
+    }
+  },
+  "RegistryList": {
+    "title": "Tool/Agent Registry",
+    "description": "Manage your registries for organizing agents and tools",
+    "error": {
+      "loadFailed": "Failed to load registries",
+      "deleteFailed": "Failed to delete registry"
+    },
+    "toast": {
+      "deleteSuccess": "Registry deleted successfully",
+      "refreshSuccess": "Registries refreshed",
+      "creatingAccessBlocked": "Cannot access whilst registry is being created"
+    },
+    "empty": {
+      "title": "No registries found",
+      "description": "Create your first registry to get started"
+    },
+    "table": {
+      "name": "Name",
+      "description": "Description",
+      "status": "Status",
+      "created": "Created",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "na": "N/A",
+    "registry": "registry",
+    "registries": "registries",
+    "deleteDialog": {
+      "title": "Delete Registry",
+      "description": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "cancel": "Cancel",
+      "deleting": "Deleting...",
+      "delete": "Delete"
+    },
+    "actions": {
+      "edit": "Edit Registry",
+      "delete": "Delete Registry"
+    },
+    "searchPlaceholder": "Search registries...",
+    "noSearchResults": "No registries match your search"
+  },
+  "EditRegistryDialog": {
+    "title": "Edit Registry",
+    "description": "Update registry settings.",
+    "nameLabel": "Registry Name",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "e.g., Registry for production AI agents",
+    "autoApprovalLabel": "Auto-approve records",
+    "autoApprovalHint": "When enabled, submitted records are approved automatically without manual review.",
+    "toast": {
+      "success": "Registry updated successfully",
+      "error": "Failed to update registry"
+    },
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "submit": "Save Changes"
+  },
+  "CreateRegistryDialog": {
+    "trigger": "Create Registry",
+    "title": "Create New Registry",
+    "description": "Create a new registry to organize and manage your agents and tools.",
+    "nameLabel": "Registry Name",
+    "namePlaceholder": "e.g., my_agent_registry",
+    "nameHint": "Must start with a letter and contain only letters, numbers, and underscores",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "e.g., Registry for production AI agents",
+    "validation": {
+      "nameRequired": "Registry name is required",
+      "nameFormat": "Name must start with a letter and contain only letters, numbers, and underscores (max 48 characters)",
+      "nameDuplicate": "A registry with the name \"{name}\" already exists"
+    },
+    "toast": {
+      "success": "Registry created successfully",
+      "error": "Failed to create registry"
+    },
+    "cancel": "Cancel",
+    "creating": "Creating...",
+    "submit": "Create Registry",
+    "autoApprovalLabel": "Auto-approve records",
+    "autoApprovalHint": "When enabled, submitted records are approved automatically without manual review."
+  },
+  "RegistryDetail": {
+    "backToRegistries": "Back to Registries",
+    "title": "Registry Records",
+    "registryId": "Registry ID:",
+    "refreshRecords": "Refresh records",
+    "loadingRecords": "Loading records",
+    "toast": {
+      "refreshSuccess": "Records refreshed"
+    },
+    "error": {
+      "idRequired": "Registry ID is required",
+      "loadFailed": "Failed to load registry records"
+    },
+    "tabs": {
+      "allRecords": "All Records",
+      "search": "Search"
+    },
+    "search": {
+      "enterQuery": "Please enter a search query",
+      "arnUnavailable": "Registry ARN not available",
+      "searchFailed": "Search failed",
+      "placeholder": "Search records...",
+      "searching": "Searching",
+      "button": "Search",
+      "description": "Search across records in this registry using natural language or keywords.",
+      "resultsFound": "{count} results found in {time}s",
+      "noResults": "No results found for \"{query}\"",
+      "noResultsHint": "Try different keywords or a broader search term.",
+      "viewDetails": "View Details",
+      "emptyTitle": "Search Records",
+      "emptyDescription": "Use the search bar above to find records by name, description, or other attributes."
+    }
+  },
+  "RecordsList": {
+    "toast": {
+      "submitSuccess": "Record submitted for approval",
+      "submitError": "Failed to submit record for approval",
+      "statusUpdateSuccess": "Record status updated to {status}",
+      "statusUpdateError": "Failed to update record status",
+      "deleteSuccess": "Record deleted successfully",
+      "deleteError": "Failed to delete record"
+    },
+    "status": {
+      "draft": "Draft",
+      "pendingApproval": "Pending Approval",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "deprecated": "Deprecated"
+    },
+    "actions": {
+      "submitForApproval": "Submit for Approval",
+      "approve": "Approve",
+      "reject": "Reject",
+      "deprecate": "Deprecate"
+    },
+    "na": "N/A",
+    "deleteDialog": {
+      "title": "Delete Record",
+      "description": "Are you sure you want to permanently delete \"{name}\"? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "empty": {
+      "title": "No records found",
+      "description": "Create your first record to get started"
+    },
+    "table": {
+      "name": "Name",
+      "protocol": "Protocol",
+      "version": "Version",
+      "status": "Status",
+      "description": "Description",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "searchPlaceholder": "Search records...",
+    "noSearchResults": "No records match your search",
+    "noDescription": "No description",
+    "updatedAt": "Updated {date}",
+    "metrics": {
+      "totalSubmitted": "Total submitted",
+      "pendingApproval": "Pending approval",
+      "approved": "Approved",
+      "deprecated": "Deprecated",
+      "rejected": "Rejected"
+    },
+    "filter": {
+      "allStatuses": "All Statuses"
+    },
+    "noMatches": {
+      "title": "No matching records",
+      "description": "Try adjusting your search or filter"
+    },
+    "statusLabels": {
+      "DRAFT": "Draft",
+      "PENDING_APPROVAL": "Pending Approval",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "DEPRECATED": "Deprecated",
+      "CREATING": "Creating",
+      "UPDATING": "Updating",
+      "CREATE_FAILED": "Create Failed",
+      "UPDATE_FAILED": "Update Failed"
+    }
+  },
+  "CreateRecordDialog": {
+    "trigger": "Create Record",
+    "title": "Create New Record",
+    "description": "Create a new {protocol} record in this registry",
+    "protocolLabel": "Protocol",
+    "nameLabel": "Record Name",
+    "namePlaceholder": "e.g., weather_tool",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholderMcp": "e.g., Weather data retrieval tool",
+    "descriptionPlaceholderA2a": "e.g., Payment processing agent",
+    "descriptionPlaceholderCustom": "e.g., Internal data pipeline orchestrator",
+    "descriptionPlaceholderSkill": "e.g., Use this skill for PDF processing tasks",
+    "manualOnlyHint": "This descriptor type only supports manual entry",
+    "protocol": {
+      "mcp": "MCP (Model Context Protocol)",
+      "a2a": "A2A (Agent-to-Agent)",
+      "custom": "Custom",
+      "agentSkills": "Agent Skills",
+      "mcpDescription": "For registering tools and servers that agents can connect to",
+      "a2aDescription": "For registering agents that other agents can call",
+      "customDescription": "For registering custom resources like internal APIs and services",
+      "agentSkillsDescription": "For registering reusable agent skills with definitions and packages"
+    },
+    "serverSchemaLabel": "Server Schema (JSON)",
+    "serverSchemaHint": "Must include: name (reverse-domain format), description, version, and packages array with transport",
+    "toolSchemaLabel": "Tool Schema (JSON)",
+    "toolSchemaHint": "List of tools provided by this MCP server",
+    "agentCardLabel": "Agent Card (JSON)",
+    "agentCardHint": "A2A agent card with protocolVersion, name, description, and capabilities",
+    "customSchemaLabel": "Custom Descriptor (JSON)",
+    "customSchemaHint": "Free-form JSON describing your custom resource (name, description, endpoint, auth, etc.)",
+    "skillMdLabel": "Skill Markdown",
+    "skillMdHint": "Markdown content describing the skill's capabilities and usage instructions",
+    "skillDefinitionLabel": "Skill Definition (JSON)",
+    "skillDefinitionHint": "JSON with repository info and package dependencies (repository, packages array)",
+    "validation": {
+      "nameRequired": "Record name is required",
+      "nameFormat": "Name must start with a letter and contain only letters, numbers, and underscores (max 64 characters)",
+      "mcpSchemasRequired": "Server schema is required for MCP",
+      "invalidJson": "Schema must be valid JSON",
+      "serverNameRequired": "Server schema must include 'name' field",
+      "serverNameFormat": "Server name must be in reverse-domain format (e.g., 'io.example/my-server')",
+      "serverDescriptionRequired": "Server schema must include 'description' field",
+      "serverVersionRequired": "Server schema must include 'version' field",
+      "serverRemotesRequired": "Server schema must include 'remotes' array with at least one remote endpoint",
+      "serverRemoteUrlRequired": "Remote endpoint must include 'url' field",
+      "serverRemoteUrlInvalid": "Remote endpoint 'url' must be a valid URL",
+      "agentCardRequired": "Agent card is required for A2A",
+      "agentCardInvalidJson": "Agent card must be valid JSON",
+      "agentCardNameRequired": "Agent card must include 'name' field",
+      "agentCardDescriptionRequired": "Agent card must include 'description' field",
+      "agentCardUrlRequired": "Agent card must include 'url' field (needed for admin testing)",
+      "agentCardUrlInvalid": "Agent card 'url' must be a valid URL",
+      "agentCardVersionRequired": "Agent card must include 'version' field",
+      "customSchemaRequired": "Custom descriptor content is required for CUSTOM type",
+      "customSchemaInvalidJson": "Custom descriptor must be valid JSON",
+      "skillMdRequired": "Skill markdown content is required",
+      "skillDefinitionInvalidJson": "Skill definition must be valid JSON"
+    },
+    "toast": {
+      "success": "Record created successfully",
+      "error": "Failed to create record"
+    },
+    "prettify": "Format",
+    "cancel": "Cancel",
+    "creating": "Creating...",
+    "submit": "Create Record",
+    "page": {
+      "title": "Create record",
+      "registryPrefix": "Registry",
+      "backAria": "Back",
+      "sourceCard": {
+        "title": "Record source",
+        "description": "Choose how to provide the record definition.",
+        "sync": {
+          "title": "Synchronize from endpoint",
+          "description": "Provide an endpoint URL and authentication details. The Registry will automatically detect and add available details, tools, and metadata from your record."
+        },
+        "manual": {
+          "title": "Define manually",
+          "description": "Manually specify the record definition, schema, and metadata. Use this option for records without accessible endpoints."
+        }
+      },
+      "detailsCard": {
+        "title": "Record details",
+        "description": "Specify the record configuration including name, description and type. This establishes the base information for discovery and connection.",
+        "typeLabel": "Type",
+        "types": {
+          "mcp": {
+            "title": "MCP",
+            "description": "Protocol designed for AI tool and agent communications. Handles context management and structured message formats."
+          },
+          "agent": {
+            "title": "Agent",
+            "description": "Protocol designed for secure agent-to-agent interactions. Enables distributed workflows and information exchange."
+          },
+          "agentSkills": {
+            "title": "Agent skills",
+            "description": "Register agent skills with markdown documentation and an optional structured definition."
+          },
+          "custom": {
+            "title": "Custom",
+            "description": "Custom protocol implementation for specialised communication patterns. Define your own interface specification and integration requirements."
+          }
+        },
+        "nameHint": "Must start with a letter, only letters, numbers, and underscores (max 64 chars).",
+        "descriptionHint": "Short, human-readable summary shown in discovery and search results.",
+        "deriveFromUrl": "Leave empty to derive from URL",
+        "endpointLabel": "Endpoint",
+        "endpointPlaceholder": "https://example.com/mcp-server",
+        "endpointHint": "Must be a valid HTTPS URL.",
+        "credentialType": "Credential type",
+        "credentials": {
+          "iam": {
+            "title": "IAM Role",
+            "description": "Authenticate using IAM role assumption with SigV4 signing."
+          },
+          "oauth": {
+            "title": "OAuth client",
+            "description": "Authenticate using OAuth 2.0 client credentials."
+          },
+          "none": {
+            "title": "No authorization",
+            "description": "No authorization required. Use for public endpoints."
+          }
+        },
+        "roleArnLabel": "Role ARN",
+        "serviceLabel": "Service",
+        "servicePlaceholder": "e.g. execute-api",
+        "regionLabel": "Region (optional)",
+        "oauthArnLabel": "OAuth Provider ARN",
+        "oauthScopesLabel": "Scopes (optional, comma-separated)"
+      },
+      "mcpCard": {
+        "title": "MCP server definition",
+        "description": "Specify the MCP server configuration including name, description and capabilities. This establishes the base server information for discovery and connection.",
+        "serverLabel": "Your MCP server definition",
+        "addToolTitle": "Add tool definition - optional",
+        "addToolDescription": "Add specific tools available on this server with their input parameters, outputs and usage examples to enhance discoverability.",
+        "toolLabel": "Your tool definition"
+      },
+      "agentCardSection": {
+        "title": "Agent",
+        "description": "Specify the agent configuration including its capabilities, supported tasks and interaction patterns for agent-to-agent communication.",
+        "agentCardLabel": "Your agent card"
+      },
+      "customCard": {
+        "title": "Custom definition",
+        "description": "Define the custom record as free-form JSON describing the resource (name, description, endpoint, auth, etc.).",
+        "customLabel": "Your custom definition"
+      },
+      "skillsCard": {
+        "title": "Agent skills",
+        "description": "Provide skill documentation in markdown format and optionally include a structured skill definition in JSON. At least one of skill documentation or skill definition must be provided.",
+        "includeDocTitle": "Include skill documentation",
+        "includeDocDescription": "Provide skill documentation in markdown or text format.",
+        "skillMdLabel": "Skill markdown",
+        "pasteExample": "Paste example",
+        "includeDefTitle": "Include skill definition",
+        "includeDefDescription": "Define the skill's structured metadata with a schema version and JSON definition.",
+        "skillDefinitionLabel": "Your skill definition"
+      },
+      "editor": {
+        "showOfficialSchema": "Show official schema",
+        "yourDefinition": "Your definition",
+        "definition": "Definition",
+        "officialSchema": "Official schema"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "saveDraft": "Create as draft",
+        "submitForApproval": "Create and submit for approval"
+      },
+      "toast": {
+        "approvalSuccess": "Record submitted for approval",
+        "approvalFailed": "Record created but submission failed"
+      },
+      "endpointRequired": "Endpoint URL is required"
+    }
+  },
+  "AgentList": {
+    "title": "Agents",
+    "description": "Manage your AI agents and browse public ones",
+    "agent": "agent",
+    "agents": "agents",
+    "createAgent": "Create Agent",
+    "tabs": {
+      "all": "All",
+      "mine": "My Agents",
+      "public": "Public"
+    },
+    "search": {
+      "placeholder": "Search agents...",
+      "clear": "Clear",
+      "clearAll": "Clear search"
+    },
+    "visibility": {
+      "public": "Public",
+      "private": "Private"
+    },
+    "empty": {
+      "title": "No agents found",
+      "withSearch": "Try adjusting your search to find what you're looking for.",
+      "noData": "Create your first agent to get started."
+    },
+    "error": {
+      "loadFailed": "Failed to load agents"
+    },
+    "toast": {
+      "deleteSuccess": "Agent deleted successfully",
+      "deleteFailed": "Failed to delete agent"
+    },
+    "actions": {
+      "view": "View Agent",
+      "edit": "Edit Agent",
+      "delete": "Delete Agent"
+    },
+    "deleteDialog": {
+      "title": "Delete Agent",
+      "description": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "pagination": {
+      "showing": "Showing {from} - {to} of {total} agents"
+    }
+  },
+  "AgentForm": {
+    "header": {
+      "subtitle": "Configure agent settings and behavior"
+    },
+    "sidebar": {
+      "general": "General",
+      "model": "Model",
+      "prompt": "Prompt",
+      "tools": "Tools",
+      "compute": "Compute"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "general": {
+      "identity": {
+        "title": "Agent Identity",
+        "description": "Configure the basic identity of your agent.",
+        "nameLabel": "Name",
+        "nameHint": "A display name for your agent. This will be shown in conversations.",
+        "namePlaceholder": "Agent name",
+        "descriptionLabel": "Description",
+        "descriptionHint": "A brief description of what this agent does.",
+        "descriptionPlaceholder": "Describe your agent..."
+      },
+      "danger": {
+        "title": "Danger Zone",
+        "description": "Permanently delete this agent and all associated data. This action cannot be undone.",
+        "delete": "Delete Agent",
+        "deleting": "Deleting...",
+        "dialogTitle": "Delete Agent",
+        "dialogDescription": "Are you sure you want to delete \"{name}\"? This will permanently remove the agent and all associated data. This action cannot be undone.",
+        "dialogCancel": "Cancel",
+        "dialogConfirm": "Delete"
+      },
+      "toast": {
+        "updated": "Agent updated",
+        "updateFailed": "Failed to update agent",
+        "deleted": "Agent deleted",
+        "deleteFailed": "Failed to delete agent"
+      },
+      "visibility": {
+        "title": "Visibility",
+        "description": "Control who can see and use this agent.",
+        "public": "Public",
+        "private": "Private",
+        "publicHint": "Anyone in your organization can see and use this agent.",
+        "privateHint": "Only you can see and use this agent.",
+        "toast": {
+          "madePublic": "Agent is now public",
+          "madePrivate": "Agent is now private",
+          "failed": "Failed to update visibility"
+        }
+      }
+    },
+    "model": {
+      "title": "Model Configuration",
+      "description": "Choose the preferred language model for this agent. The selected model affects response quality, speed, and cost.",
+      "preferredLabel": "Preferred Model",
+      "preferredHint": "Select the default model this agent will use for all conversations.",
+      "searchPlaceholder": "Search models...",
+      "noResults": "No models found",
+      "loading": "Loading models...",
+      "noModels": "No models configured. Add models in Platform Settings.",
+      "systemDefault": "Use system default",
+      "detail": {
+        "contextWindow": "Context",
+        "input": "Input",
+        "output": "Output",
+        "cacheRead": "Cache read",
+        "cacheWrite": "Cache write"
+      },
+      "toast": {
+        "updated": "Model preference saved",
+        "updateFailed": "Failed to save model preference"
+      }
+    },
+    "prompt": {
+      "title": "System Prompt",
+      "description": "Define the core instructions and behavior for your agent. The system prompt shapes how the agent responds to users.",
+      "instructionsLabel": "Custom Instructions",
+      "instructionsHint": "Provide specific instructions, personality traits, and constraints for the agent.",
+      "placeholder": "You are a helpful assistant...",
+      "toast": {
+        "updated": "System prompt saved",
+        "updateFailed": "Failed to save system prompt"
+      }
+    },
+    "tools": {
+      "title": "Tools",
+      "description": "Manage the tools available to this agent. Tools allow the agent to perform actions beyond conversation.",
+      "searchPlaceholder": "Search tools...",
+      "allTypes": "All types",
+      "core": "Core",
+      "thirdParty": "Registry",
+      "mcp": "MCP",
+      "addTool": "Add Tool",
+      "addTools": "Add Tools",
+      "addDescription": "Browse and add tools to your agent. Tools allow the agent to perform actions beyond conversation.",
+      "addCount": "Add {count, plural, one {# tool} other {# tools}}",
+      "alreadyAdded": "Already added",
+      "back": "Back",
+      "editTools": "Edit Tools",
+      "remove": "Remove",
+      "saveChanges": "Save Changes",
+      "noResults": "No tools found matching \"{query}\"",
+      "empty": "No tools configured yet. Add tools to get started.",
+      "table": {
+        "name": "Name",
+        "category": "Category",
+        "type": "Type",
+        "lastUpdated": "Last Updated"
+      },
+      "registry": {
+        "searchPlaceholder": "Search registry tools...",
+        "noRegistries": "No registries available. Create a registry first.",
+        "loading": "Loading registries...",
+        "loadingRecords": "Loading tools...",
+        "noResults": "No approved tools found",
+        "noSearchResults": "No tools found for \"{query}\"",
+        "searchHint": "Search across all registries for approved tools",
+        "protocol": "Protocol",
+        "registryLabel": "Registry",
+        "version": "v{version}",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "errorLoadingRegistries": "Failed to load registries",
+        "errorLoadingRecords": "Failed to load records",
+        "errorSearching": "Search failed",
+        "searchButton": "Search",
+        "searching": "Searching..."
+      },
+      "detail": {
+        "title": "Tool Details",
+        "subtitle": "Registry tool details fetched from the registry API.",
+        "loading": "Loading tool details...",
+        "loadError": "Failed to load tool details",
+        "basicInfo": "Basic Information",
+        "name": "Name",
+        "protocol": "Protocol",
+        "version": "Version",
+        "status": "Status",
+        "description": "Description",
+        "endpoint": "Endpoint",
+        "descriptors": "Descriptors",
+        "metadata": "Metadata",
+        "recordArn": "Record ARN",
+        "recordId": "Record ID",
+        "created": "Created",
+        "updated": "Updated",
+        "viewInRegistry": "View in Registry"
+      },
+      "coreDetail": {
+        "category": "Category",
+        "configuration": "Configuration"
+      },
+      "target": {
+        "ready": "Ready",
+        "provisioning": "Provisioning…",
+        "failed": "Failed",
+        "retry": "Retry",
+        "unsupported": "Unsupported",
+        "unsupportedHint": "Only MCP-server records can be materialized as gateway tools"
+      }
+    },
+    "compute": {
+      "title": "Compute Runtime",
+      "description": "Choose the compute environment that will power this agent. This determines how the agent is executed and scaled.",
+      "bedrockName": "Bedrock AgentCore",
+      "bedrockDescription": "Fully managed runtime powered by Amazon Bedrock AgentCore. Handles scaling, orchestration, and tool execution automatically.",
+      "lambdaName": "AWS Lambda",
+      "lambdaDescription": "Serverless compute using AWS Lambda functions. Provides fine-grained control over the execution environment and custom runtime logic."
+    }
+  },
+  "CreateAgentDialog": {
+    "trigger": "Create Agent",
+    "title": "Create New Agent",
+    "description": "Provide a name and description for your new AI agent.",
+    "nameLabel": "Agent Name",
+    "namePlaceholder": "e.g., Customer Support Agent",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe what this agent does...",
+    "toast": {
+      "success": "Agent created successfully",
+      "error": "Failed to create agent"
+    },
+    "cancel": "Cancel",
+    "creating": "Creating...",
+    "submit": "Create Agent"
+  },
+  "NavUser": {
+    "loading": "Loading...",
+    "loadingSession": "Loading session...",
+    "account": "Account",
+    "notifications": "Notifications",
+    "apiReference": "API Reference",
+    "language": "Language",
+    "logOut": "Log out"
+  },
+  "RecordDetailPage": {
+    "title": "Record Details",
+    "description": "View detailed information about this registry record",
+    "error": {
+      "loadFailed": "Failed to load record details"
+    },
+    "basicInfo": "Basic Information",
+    "name": "Name:",
+    "protocol": "Protocol:",
+    "version": "Version:",
+    "status": "Status:",
+    "descriptionLabel": "Description:",
+    "descriptors": "Descriptors",
+    "metadata": "Metadata",
+    "recordArn": "Record ARN:",
+    "recordId": "Record ID:",
+    "created": "Created:",
+    "updated": "Updated:",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "nameLabel": "Name",
+    "descriptionEditLabel": "Description",
+    "protocolLabel": "Protocol",
+    "versionLabel": "Version",
+    "statusLabel": "Status",
+    "descriptorsLabel": "Descriptors",
+    "prettify": "Prettify",
+    "serverSchemaLabel": "Server Schema (JSON)",
+    "toolSchemaLabel": "Tool Schema (JSON)",
+    "agentCardLabel": "Agent Card (JSON)",
+    "toast": {
+      "updateSuccess": "Record updated successfully",
+      "updateError": "Failed to update record",
+      "submitSuccess": "Record submitted for approval",
+      "statusSuccess": "Record status updated successfully",
+      "statusError": "Failed to update record status",
+      "deleteSuccess": "Record deleted successfully",
+      "deleteError": "Failed to delete record"
+    },
+    "actions": {
+      "updateStatus": "Update status",
+      "submitForApproval": "Submit for Approval",
+      "approve": "Approve",
+      "reject": "Reject",
+      "deprecate": "Deprecate",
+      "delete": "Delete"
+    },
+    "deleteDialog": {
+      "title": "Delete Record",
+      "description": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
+    },
+    "test": {
+      "title": "Test Endpoint",
+      "run": "Test",
+      "testing": "Testing...",
+      "success": "Endpoint is reachable",
+      "toolsFound": "{count} tool(s) discovered:",
+      "noEndpoint": "No endpoint URL found in the server schema. Add an 'endpoint' field to enable testing.",
+      "a2aNotAvailable": "A2A agent card testing is not available yet."
+    },
+    "testTool": {
+      "trigger": "Test tool",
+      "sheetTitle": "Test tool",
+      "endpointLabel": "Endpoint",
+      "selectValuePlaceholder": "Select a value",
+      "auth": {
+        "label": "Authentication",
+        "none": "None",
+        "sigv4": "IAM (SigV4)",
+        "jwt": "OAuth bearer token",
+        "bearerLabel": "Bearer token",
+        "bearerPlaceholder": "Paste a bearer token",
+        "bearerHint": "OAuth tokens aren't persisted on the record. Paste a token from your OAuth provider to test."
+      },
+      "arguments": "Arguments",
+      "rawJson": "Raw JSON",
+      "noArguments": "This tool takes no arguments.",
+      "required": "required",
+      "run": "Run tool",
+      "running": "Running...",
+      "close": "Close",
+      "result": "Result",
+      "error": "Error",
+      "emptyResult": "(empty)"
+    },
+    "readView": {
+      "recordDetails": "Record details",
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "status": "Status",
+        "version": "Version",
+        "lastUpdated": "Last updated",
+        "recordType": "Record type",
+        "recordId": "Record ID",
+        "created": "Created"
+      },
+      "failure": {
+        "createTitle": "Record creation failed",
+        "updateTitle": "Record update failed",
+        "defaultReason": "No failure reason was provided. Try synchronizing again or review the endpoint configuration."
+      },
+      "sections": {
+        "mcpEndpoint": "MCP Endpoint",
+        "agentEndpoint": "Agent Endpoint",
+        "serverInformation": "Server Information",
+        "serverName": "Server Name",
+        "version": "Version",
+        "transport": "Transport",
+        "tools": "Tools",
+        "noToolsDefined": "No tools defined in this server",
+        "parameters": "Parameters",
+        "agentInformation": "Agent Information",
+        "agentName": "Agent Name",
+        "protocolVersion": "Protocol Version",
+        "descriptionLabel": "Description",
+        "capabilities": "Capabilities",
+        "skills": "Skills",
+        "noCapabilities": "No capabilities defined in this agent card",
+        "skillDefinition": "Skill Definition",
+        "skillMarkdown": "Skill Markdown",
+        "repository": "Repository",
+        "source": "Source",
+        "packages": "Packages",
+        "noSkillMarkdown": "No skill markdown content",
+        "customDescriptor": "Custom Descriptor",
+        "name": "Name",
+        "endpoint": "Endpoint",
+        "noCustomDescriptor": "No custom descriptor content",
+        "syncButton": "Sync",
+        "copied": "{label} copied",
+        "copyFailed": "Failed to copy"
+      }
+    },
+    "editView": {
+      "basicInfo": {
+        "description": "Update the record's name, description and version metadata.",
+        "nameHint": "Must start with a letter, only letters, numbers, and underscores (max 64 chars).",
+        "descriptionHint": "Short, human-readable summary shown in discovery and search results.",
+        "versionHint": "Semantic version string for this record (e.g. 1.0, 1.2.3). Bump when publishing a meaningful change.",
+        "typeFixedHint": "Record type is fixed after creation."
+      },
+      "mcp": {
+        "title": "MCP server definition",
+        "description": "Specify the MCP server configuration including name, description and capabilities. This establishes the base server information for discovery and connection.",
+        "serverLabel": "Your MCP server definition",
+        "addToolTitle": "Add tool definition - optional",
+        "addToolDescription": "Add specific tools available on this server with their input parameters, outputs and usage examples to enhance discoverability.",
+        "toolLabel": "Your tool definition"
+      },
+      "a2a": {
+        "title": "Agent",
+        "description": "Specify the agent configuration including its capabilities, supported tasks and interaction patterns for agent-to-agent communication.",
+        "agentCardLabel": "Your agent card"
+      },
+      "custom": {
+        "title": "Custom definition",
+        "description": "Define the custom record as free-form JSON describing the resource (name, description, endpoint, auth, etc.).",
+        "customLabel": "Your custom definition"
+      },
+      "skills": {
+        "title": "Agent skills",
+        "description": "Provide skill documentation in markdown format and optionally include a structured skill definition in JSON. At least one of skill documentation or skill definition must be provided.",
+        "includeDocTitle": "Include skill documentation",
+        "includeDocDescription": "Provide skill documentation in markdown or text format.",
+        "skillMdLabel": "Skill markdown",
+        "pasteExample": "Paste example",
+        "includeDefTitle": "Include skill definition",
+        "includeDefDescription": "Define the skill's structured metadata with a schema version and JSON definition.",
+        "skillDefinitionLabel": "Your skill definition"
+      },
+      "syncTriggered": "Synchronization triggered",
+      "syncFailed": "Sync failed"
+    }
+  },
+  "PlatformSettings": {
+    "header": {
+      "title": "Platform Settings",
+      "subtitle": "Configure platform-wide settings and available resources"
+    },
+    "sidebar": {
+      "models": "Models",
+      "personas": "Personas"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "models": {
+      "title": "Available Models",
+      "description": "Manage the AI models available to users on the platform.",
+      "searchPlaceholder": "Search models...",
+      "addModel": "Add Model",
+      "addTitle": "Add Model",
+      "addDescription": "Add a new AI model to the platform. Users will be able to select this model for their agents.",
+      "addSubmit": "Add Model",
+      "editTitle": "Edit Model",
+      "editDescription": "Update the configuration of this model.",
+      "empty": "No models configured yet. Add a model to get started.",
+      "noResults": "No models found matching \"{query}\"",
+      "table": {
+        "name": "Name",
+        "modelProvider": "Model Provider",
+        "modelId": "Model ID",
+        "inferenceProvider": "Inference Provider"
+      },
+      "form": {
+        "nameLabel": "Name",
+        "namePlaceholder": "Claude Sonnet 4.6",
+        "modelProviderLabel": "Model Provider",
+        "modelProviderPlaceholder": "Select a model provider",
+        "customProvider": "Custom",
+        "customProviderPlaceholder": "Enter provider name",
+        "modelIdLabel": "Model ID",
+        "modelIdPlaceholder": "global.anthropic.claude-sonnet-4-6",
+        "searchModels": "Search models...",
+        "noModelsFound": "No models found",
+        "customModelId": "Custom",
+        "browseModels": "Browse",
+        "inferenceProviderLabel": "Inference Provider",
+        "inferenceProviderPlaceholder": "Select an inference provider"
+      },
+      "detail": {
+        "contextWindow": "Context",
+        "input": "Input",
+        "output": "Output",
+        "cacheRead": "Cache read",
+        "cacheWrite": "Cache write"
+      },
+      "actions": {
+        "edit": "Edit Model",
+        "delete": "Delete Model"
+      },
+      "deleteDialog": {
+        "title": "Delete Model",
+        "description": "Are you sure you want to delete \"{name}\"? Agents using this model will have their preference cleared.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      },
+      "toast": {
+        "created": "Model added successfully",
+        "createFailed": "Failed to add model",
+        "updated": "Model updated",
+        "updateFailed": "Failed to update model",
+        "deleted": "Model deleted",
+        "deleteFailed": "Failed to delete model"
+      }
+    },
+    "personas": {
+      "title": "Personas",
+      "description": "Manage test personas from identity providers for agent execution testing.",
+      "searchPlaceholder": "Search personas...",
+      "addPersona": "Add Persona",
+      "addTitle": "Add Persona",
+      "addDescription": "Create a new persona profile from an identity provider. This persona can be used for testing agent execution.",
+      "addSubmit": "Add Persona",
+      "editTitle": "Edit Persona",
+      "editDescription": "Update this persona's details.",
+      "empty": "No personas configured yet. Add a persona to get started.",
+      "noResults": "No personas found matching \"{query}\"",
+      "table": {
+        "name": "Name",
+        "groups": "Groups",
+        "provider": "Provider",
+        "email": "Email"
+      },
+      "form": {
+        "providerLabel": "Identity Provider",
+        "providerPlaceholder": "Select a provider",
+        "selectUser": "Select User",
+        "selectGroups": "Assign Groups",
+        "searchUsers": "Search users by name or email...",
+        "searchGroups": "Search groups by name...",
+        "noResults": "No results found",
+        "nameLabel": "Display Name",
+        "namePlaceholder": "Enter a name for this persona",
+        "externalId": "External ID",
+        "emailLabel": "Email",
+        "emailPlaceholder": "user@example.com",
+        "selectedGroups": "{count} group(s) selected",
+        "cognitoGroupsEmpty": "No groups available. Create groups in the AWS Cognito console to assign them to personas."
+      },
+      "actions": {
+        "edit": "Edit Persona",
+        "delete": "Delete Persona"
+      },
+      "deleteDialog": {
+        "title": "Delete Persona",
+        "description": "Are you sure you want to delete \"{name}\"? This persona will be removed from all test configurations.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      },
+      "toast": {
+        "created": "Persona added successfully",
+        "createFailed": "Failed to add persona",
+        "updated": "Persona updated",
+        "updateFailed": "Failed to update persona",
+        "deleted": "Persona deleted",
+        "deleteFailed": "Failed to delete persona"
+      }
+    }
+  },
+  "PolicyLibrary": {
+    "title": "Policy Library",
+    "description": "Manage Cedar authorization policy drafts, templates, and published policies",
+    "policy": "policy",
+    "policies": "policies",
+    "loading": "Loading policies",
+    "createPolicy": "Create Policy",
+    "import": "Import .cedar file",
+    "importInfo": "Import functionality coming soon",
+    "templateBadge": "Template",
+    "instanceBadge": "Instance",
+    "tabs": {
+      "all": "All",
+      "policies": "Policies",
+      "templates": "Templates"
+    },
+    "createFromTemplate": {
+      "trigger": "From template",
+      "pickTitle": "Pick a template",
+      "pickDescription": "Choose a published template. You'll fill in its placeholders on the next step.",
+      "bindTitle": "Instantiate template",
+      "bindDescription": "Provide values for each placeholder in \"{name}\". The Cedar definition is resolved server-side — you can't edit it here.",
+      "search": "Search templates...",
+      "empty": "No published templates yet.",
+      "emptyFiltered": "No templates match your search.",
+      "loadError": "Failed to load templates.",
+      "back": "Back",
+      "success": "Policy instantiated",
+      "form": {
+        "name": "Policy name",
+        "namePlaceholder": "e.g. Production Access - Alice",
+        "description": "Description",
+        "descriptionPlaceholder": "A short summary of what this instance covers",
+        "bindingFor": "Binding for this slot",
+        "entityType": "Entity type",
+        "entityId": "Entity ID",
+        "preview": "Resolved Cedar preview",
+        "noSlots": "This template has no placeholders. A copy will be created with the exact Cedar definition.",
+        "submit": "Create policy"
+      }
+    },
+    "errors": {
+      "loadFailed": "Failed to load policies",
+      "createFailed": "Failed to create policy",
+      "updateFailed": "Failed to update policy",
+      "deleteFailed": "Failed to delete policy"
+    },
+    "search": {
+      "placeholder": "Search policies by name, description, or tag..."
+    },
+    "filters": {
+      "status": {
+        "placeholder": "Status",
+        "all": "All Status",
+        "draft": "Draft",
+        "in_review": "In Review",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "type": {
+        "placeholder": "Type",
+        "all": "All Types",
+        "permit": "Permit",
+        "forbid": "Forbid"
+      }
+    },
+    "table": {
+      "name": "Name",
+      "description": "Description",
+      "type": "Type",
+      "status": "Status",
+      "creator": "Creator",
+      "tags": "Tags",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "status": {
+      "draft": "Draft",
+      "in_review": "In Review",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "type": {
+      "permit": "Permit",
+      "forbid": "Forbid"
+    },
+    "empty": {
+      "title": "No policies found",
+      "noData": "Create your first Cedar policy to get started.",
+      "withFilters": "Try adjusting your search or filters to find what you're looking for."
+    },
+    "actions": {
+      "view": "View Policy",
+      "edit": "Edit Policy",
+      "publish": "Publish",
+      "publishSuccess": "Policy published",
+      "delete": "Delete Policy",
+      "deleteSuccess": "Policy deleted"
+    },
+    "createDialog": {
+      "trigger": "Create Policy",
+      "title": "Create a new policy",
+      "description": "Give your policy a name to get started. You can edit the Cedar definition after it's created.",
+      "name": {
+        "label": "Policy name",
+        "placeholder": "e.g. Claims Read Access"
+      },
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short summary of what this policy controls",
+      "openEditor": {
+        "label": "Open the editor after creation",
+        "helper": "Jump straight into the Cedar editor to author the policy. Uncheck to create a blank draft and edit later."
+      },
+      "saveAsTemplate": {
+        "label": "Save as a template",
+        "helper": "Templates contain ?principal and ?resource placeholders. Others can instantiate them with specific bindings."
+      },
+      "scaffoldedCedar": "permit (\n    principal == ?principal,\n    action,\n    resource == ?resource\n);",
+      "cancel": "Cancel",
+      "confirm": "Create policy",
+      "toast": {
+        "success": "Policy created"
+      }
+    },
+    "deleteDialog": {
+      "title": "Delete policy?",
+      "description": "This will permanently delete \"{name}\" along with all its versions, activity history, and linked policies. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "bulk": {
+      "selected": "{count} selected",
+      "export": "Export",
+      "delete": "Delete",
+      "deleteSuccess": "{count} policies deleted",
+      "exportSuccess": "{count} policies exported",
+      "deleteDialog": {
+        "title": "Delete {count} policies?",
+        "description": "This will permanently delete {count} selected policies along with their versions, activity history, and linked policies. This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      }
+    },
+    "na": "N/A"
+  },
+  "PolicyLibraryDetail": {
+    "backToLibrary": "Back to Policy Library",
+    "notFound": "Policy not found.",
+    "policyId": "Policy ID:",
+    "edit": "Edit Policy",
+    "na": "N/A",
+    "templateBadge": "Template",
+    "parentBanner": {
+      "title": "Instance of a template",
+      "description": "This policy was created by instantiating the template \"{name}\". It has its own lifecycle from this point on.",
+      "viewTemplate": "View template"
+    },
+    "statusValues": {
+      "draft": "Draft",
+      "in_review": "In Review",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "sidebar": {
+      "overview": "Overview",
+      "definition": "Definition",
+      "versions": "Versions",
+      "instances": "Instances",
+      "activity": "Activity",
+      "settings": "Settings"
+    },
+    "overview": {
+      "title": "Overview",
+      "name": "Name",
+      "status": "Status",
+      "type": "Type",
+      "policyId": "Policy ID",
+      "creator": "Creator",
+      "created": "Created",
+      "updated": "Last Updated",
+      "tags": "Tags",
+      "description": "Description",
+      "versionCount": "Current Version",
+      "linkedCount": "Linked Policies",
+      "promote": "Change status",
+      "promoteTo": {
+        "draft": "Move to Draft",
+        "in_review": "Submit for Review",
+        "published": "Publish",
+        "archived": "Archive"
+      },
+      "statusValues": {
+        "draft": "Draft",
+        "in_review": "In Review",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "typeValues": {
+        "permit": "Permit",
+        "forbid": "Forbid"
+      },
+      "nameUpdated": "Policy name updated",
+      "descriptionUpdated": "Description updated",
+      "statusUpdated": "Policy status updated",
+      "tagAdded": "Tag added",
+      "addTag": "Add Tag",
+      "tagPlaceholder": "Tag name",
+      "noTags": "No tags",
+      "noDescription": "No description provided.",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "definition": {
+      "title": "Policy Definition",
+      "cedar": "Cedar Policy",
+      "copy": "Copy",
+      "copied": "Copied",
+      "noDefinition": "No policy definition available.",
+      "templateSlots": "Template Slots Detected",
+      "templateSlotsDescription": "This policy contains placeholders that are filled in at instantiation. Open the Instances section to create a concrete policy from this template."
+    },
+    "versions": {
+      "title": "Version History ({count})",
+      "empty": "No version history available.",
+      "current": "Current",
+      "revert": "Revert",
+      "revertTitle": "Revert to Previous Version",
+      "revertDescription": "This will create a new version with the Cedar code from version {version}. The current version will remain in history.",
+      "revertCancel": "Cancel",
+      "revertConfirm": "Revert",
+      "revertSuccess": "Reverted to version {version}",
+      "compare": "Compare Versions",
+      "selectVersion": "Select version",
+      "comparBtn": "Compare",
+      "closeDiff": "Close"
+    },
+    "instances": {
+      "title": "Instances ({count})",
+      "create": "Create instance",
+      "loadError": "Failed to load instances.",
+      "createSuccess": "Instance created",
+      "createError": "Failed to create instance",
+      "empty": "No instances yet. Create one to fill in this template's placeholders with concrete values.",
+      "noSlots": "This template has no ?principal or ?resource slots. Add slot placeholders to the Cedar definition before instantiating.",
+      "table": {
+        "name": "Name",
+        "status": "Status",
+        "created": "Created"
+      },
+      "createTitle": "Instantiate template",
+      "createDescription": "Create a new policy by filling in this template's placeholders with concrete entities. The resolved Cedar is saved as a standalone policy linked to this template.",
+      "form": {
+        "name": "Policy name",
+        "namePlaceholder": "e.g. Production Access - Alice",
+        "description": "Description",
+        "descriptionPlaceholder": "A short summary of what this instance covers",
+        "bindingFor": "Binding for this slot",
+        "entityType": "Entity type",
+        "entityId": "Entity ID",
+        "preview": "Resolved Cedar preview",
+        "cancel": "Cancel",
+        "create": "Create instance"
+      }
+    },
+    "activity": {
+      "title": "Activity ({count})",
+      "empty": "No activity recorded for this policy yet."
+    },
+    "settings": {
+      "general": "General",
+      "metadata": "Metadata",
+      "metadataFields": {
+        "policyId": "Policy ID",
+        "copyId": "Copy policy ID",
+        "creator": "Created by",
+        "created": "Created",
+        "updated": "Last updated",
+        "archivedAt": "Archived",
+        "exports": "Exports"
+      },
+      "archivedBanner": {
+        "title": "This policy is archived",
+        "description": "It's excluded from the active library. Restore it to make changes or edit the Cedar definition."
+      },
+      "restoreBtn": "Restore",
+      "restoreTitle": "Restore policy?",
+      "restoreConfirmDescription": "\"{name}\" will be moved back to Draft and reappear in the active library.",
+      "restoreConfirm": "Restore to Draft",
+      "restoreSuccess": "Policy restored",
+      "duplicate": "Duplicate Policy",
+      "duplicateDescription": "Create a copy of this policy with all its settings.",
+      "duplicateBtn": "Duplicate",
+      "duplicateSuccess": "Policy duplicated",
+      "duplicateDialog": {
+        "title": "Duplicate policy",
+        "description": "Create a new draft policy with the Cedar definition, description, type, and tags from \"{name}\".",
+        "nameLabel": "New policy name",
+        "namePlaceholder": "e.g. Copy of Claims Read Access",
+        "cancel": "Cancel",
+        "confirm": "Create duplicate",
+        "success": "Policy duplicated"
+      },
+      "export": "Export as .cedar",
+      "exportDescription": "Download the Cedar policy definition as a file.",
+      "exportBtn": "Export",
+      "exportSuccess": "Policy exported",
+      "dangerZone": "Danger Zone",
+      "dangerZoneDescription": "Irreversible and destructive actions.",
+      "archive": "Archive Policy",
+      "archiveDescription": "Archive this policy. It will no longer appear in the library but can be restored.",
+      "archiveBtn": "Archive",
+      "archiveTitle": "Archive Policy",
+      "archiveConfirmDescription": "Are you sure you want to archive \"{name}\"? This will remove it from the active library.",
+      "archiveConfirm": "Archive",
+      "archiveSuccess": "Policy archived",
+      "delete": "Delete Policy",
+      "deleteDescription": "Permanently delete this policy and all its versions. This cannot be undone.",
+      "deleteBtn": "Delete",
+      "deleteTitle": "Delete Policy",
+      "deleteConfirmDescription": "This will permanently delete \"{name}\" and all associated versions and linked policies. This action cannot be undone.",
+      "deleteTypeToConfirm": "Type \"{name}\" to confirm:",
+      "deleteConfirm": "Delete Permanently",
+      "deleteSuccess": "Policy deleted",
+      "cancel": "Cancel"
+    }
+  },
+  "PolicyLibraryEdit": {
+    "title": "Edit: {name}",
+    "policyId": "Policy ID:",
+    "back": "Back to Policy",
+    "notFound": "Policy not found.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "cedarPolicy": "Cedar Policy",
+    "format": "Format policy",
+    "undo": "Undo",
+    "redo": "Redo",
+    "placeholder": "Describe the policy behavior in natural language...",
+    "generate": "Generate",
+    "generateEmptyError": "Please enter a policy description first",
+    "generateSuccess": "Cedar policy generated",
+    "generateError": "Failed to generate Cedar policy",
+    "templates": {
+      "trigger": "Templates",
+      "title": "Pick a template",
+      "description": "Replace the Cedar definition with a published policy's code.",
+      "search": "Search templates...",
+      "empty": "No published policies yet.",
+      "emptyFiltered": "No templates match your search.",
+      "loadError": "Failed to load templates."
+    },
+    "replaceDialog": {
+      "title": "Replace Cedar definition?",
+      "description": "The current Cedar code will be replaced with \"{name}\". Your previous code can be recovered with Undo.",
+      "cancel": "Cancel",
+      "confirm": "Use template"
+    },
+    "validation": {
+      "loading": "Loading...",
+      "loadError": "Checker unavailable",
+      "valid": "Valid",
+      "invalid": "{count, plural, one {# error} other {# errors}}"
+    },
+    "toast": {
+      "saved": "Policy saved successfully"
+    },
+    "saveDialog": {
+      "title": "Save New Version",
+      "description": "Describe what changed in this version. This note will appear in the version history.",
+      "changeNote": "Change Note",
+      "changeNotePlaceholder": "e.g., Added scope validation for claim filing",
+      "confirm": "Save Version"
+    },
+    "discardDialog": {
+      "title": "Discard Changes?",
+      "description": "You have unsaved changes to this policy. Are you sure you want to leave? Your changes will be lost.",
+      "cancel": "Keep Editing",
+      "confirm": "Discard Changes"
+    }
+  },
+  "Playground": {
+    "title": "Playground",
+    "description": "Test and interact with your agents",
+    "newChat": "New Chat",
+    "noConversations": "No conversations yet",
+    "noConversationsHint": "Start a new chat to begin",
+    "emptyState": {
+      "title": "Start a Conversation",
+      "description": "Select a runtime and send a message to get started"
+    },
+    "agentSelect": {
+      "placeholder": "Select an agent",
+      "loading": "Loading agents...",
+      "empty": "No agents available",
+      "search": "Search agents..."
+    },
+    "runtimeSelect": {
+      "placeholder": "Select a runtime",
+      "loading": "Loading runtimes...",
+      "empty": "No runtimes available",
+      "search": "Search runtimes..."
+    },
+    "personaSelect": {
+      "placeholder": "No persona",
+      "loading": "Loading personas...",
+      "empty": "No personas available",
+      "search": "Search personas...",
+      "none": "Invoke without persona"
+    },
+    "input": {
+      "placeholder": "Type a message..."
+    },
+    "streaming": {
+      "thinking": "Agent is thinking..."
+    },
+    "oauth": {
+      "title": "Authentication Required",
+      "description": "This agent needs to verify your identity with an external provider before it can proceed.",
+      "authenticate": "Authenticate",
+      "waiting": "Waiting for authentication..."
+    },
+    "error": {
+      "loadAgents": "Failed to load agents",
+      "loadRuntimes": "Failed to load runtimes",
+      "loadPersonas": "Failed to load personas",
+      "noRuntime": "Please select a runtime first",
+      "noPersona": "Please select a persona — AgentCore runtimes require a persona JWT to authenticate",
+      "invokeFailed": "Failed to invoke agent runtime",
+      "streamError": "An error occurred during streaming"
+    },
+    "defaultChatTitle": "New Chat"
+  },
+  "Mentions": {
+    "categories": {
+      "users": "Entra ID Users",
+      "groups": "Entra ID Groups",
+      "cognito-groups": "Cognito Groups",
+      "gateways": "AgentCore Gateways",
+      "gateway-targets": "AgentCore Gateway Targets",
+      "gateway-tools": "AgentCore Gateway Tools",
+      "agent-runtimes": "AgentCore Runtimes"
+    },
+    "back": "Back",
+    "loading": "Loading…",
+    "noResults": "No results",
+    "gatewayTargets": "Gateway Targets",
+    "noTargets": "No targets configured",
+    "selectGateway": "Select a Gateway",
+    "selectTarget": "Select a Target",
+    "selectRuntime": "Select a Runtime",
+    "parentGateway": "Gateway",
+    "parentTarget": "Target",
+    "parentRuntime": "Runtime",
+    "targets": "Targets",
+    "tools": "Tools",
+    "endpoints": "Endpoints",
+    "runtimeEndpoints": "Runtime Endpoints",
+    "noTools": "No tools found",
+    "noEndpoints": "No endpoints found"
+  },
+  "ToolStoreList": {
+    "title": "Tool Policy Stores",
+    "description": "Manage Amazon Verified Permissions policy stores for tool-level authorization",
+    "store": "store",
+    "stores": "stores",
+    "na": "N/A",
+    "overview": {
+      "title": "Overview",
+      "status": "Status",
+      "namespace": "Namespace",
+      "region": "Region",
+      "validationMode": "Validation",
+      "schemaStatus": "Schema",
+      "policies": "Policies",
+      "created": "Created",
+      "updated": "Updated",
+      "lastSynced": "Last Synced",
+      "createdBy": "Created by",
+      "createdByInline": "by {name}",
+      "policyStoreId": "AWS Policy Store ID",
+      "description": "Description",
+      "statusValues": {
+        "ACTIVE": "Active",
+        "CREATING": "Creating",
+        "DELETING": "Deleting",
+        "DELETED": "Deleted",
+        "FAILED": "Failed"
+      },
+      "syncValues": {
+        "in_sync": "In Sync",
+        "pending": "Pending",
+        "drifted": "Drifted",
+        "unsynced": "Unsynced",
+        "failed": "Failed"
+      }
+    },
+    "schema": {
+      "title": "Cedar Schema",
+      "subtitle": "Defines the entity types, attributes, and actions that policies in this store can reference.",
+      "saveAndSync": "Save & Sync",
+      "savedToast": "Schema saved and synced to AWS.",
+      "saveError": "Failed to save schema.",
+      "emptyError": "Schema cannot be empty.",
+      "notReadyOnAws": "Store is not yet provisioned on AWS.",
+      "placeholder": "{ ... Cedar schema JSON ... }",
+      "hint": "JSON only. The Verified Permissions API will validate the structure when saving.",
+      "syncValues": {
+        "in_sync": "In Sync",
+        "pending": "Pending",
+        "drifted": "Drifted",
+        "unsynced": "Unsynced",
+        "failed": "Failed"
+      }
+    },
+    "search": {
+      "placeholder": "Search policy stores..."
+    },
+    "filters": {
+      "status": {
+        "placeholder": "Status",
+        "all": "All statuses",
+        "ACTIVE": "Active",
+        "CREATING": "Creating",
+        "DELETING": "Deleting",
+        "DELETED": "Deleted",
+        "FAILED": "Failed"
+      }
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "CREATING": "Creating",
+      "DELETING": "Deleting",
+      "DELETED": "Deleted",
+      "FAILED": "Failed"
+    },
+    "table": {
+      "name": "Name",
+      "description": "Description",
+      "policyStoreId": "Policy Store ID",
+      "region": "Region",
+      "status": "Status",
+      "policies": "Policies",
+      "creator": "Created by",
+      "lastSynced": "Last Synced",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View Policies"
+    },
+    "empty": {
+      "title": "No policy stores found",
+      "noData": "Create a policy store to get started with tool-level authorization.",
+      "withFilters": "No policy stores match the current filters."
+    },
+    "createStore": "Create Store",
+    "createSheet": {
+      "title": "Create Policy Store",
+      "description": "Set up a new Amazon Verified Permissions policy store for tool-level authorization.",
+      "fields": {
+        "name": "Store Name",
+        "namePlaceholder": "e.g. Insurance Tool Policies",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the purpose of this policy store...",
+        "namespace": "Namespace",
+        "namespacePlaceholder": "e.g. InsuranceTool",
+        "namespaceHint": "Must start with an uppercase letter. Only letters, numbers, and underscores are allowed.",
+        "namespaceInvalid": "Namespace must start with an uppercase letter and contain only letters, numbers, or underscores.",
+        "region": "AWS Region",
+        "regionPlaceholder": "Select a region"
+      },
+      "cancel": "Cancel",
+      "create": "Create Store",
+      "toast": {
+        "created": "Policy store \"{name}\" created successfully."
+      }
+    }
+  },
+  "ToolPolicyList": {
+    "storeNotFound": "Policy store not found.",
+    "backToStores": "Back to Stores",
+    "storeId": "Store ID:",
+    "policy": "policy",
+    "policies": "policies",
+    "na": "N/A",
+    "syncAll": "Sync All",
+    "autoSync": "Auto-sync",
+    "templateLinked": "Template",
+    "tabs": {
+      "overview": "Overview",
+      "schema": "Schema",
+      "policies": "Policies",
+      "syncHistory": "Sync History"
+    },
+    "search": {
+      "placeholder": "Search policies..."
+    },
+    "filters": {
+      "status": {
+        "placeholder": "Status",
+        "all": "All statuses",
+        "draft": "Draft",
+        "in_review": "In Review",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "sync": {
+        "placeholder": "Sync Status",
+        "all": "All sync",
+        "in_sync": "In Sync",
+        "pending": "Pending",
+        "drifted": "Drifted",
+        "unsynced": "Unsynced",
+        "failed": "Failed"
+      }
+    },
+    "status": {
+      "draft": "Draft",
+      "in_review": "In Review",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "syncStatus": {
+      "in_sync": "In Sync",
+      "pending": "Pending",
+      "drifted": "Drifted",
+      "unsynced": "Unsynced",
+      "failed": "Failed"
+    },
+    "type": {
+      "permit": "Permit",
+      "forbid": "Forbid"
+    },
+    "table": {
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "syncStatus": "Sync Status",
+      "action": "Action",
+      "templateLinked": "Template",
+      "creator": "Created by",
+      "lastSynced": "Last Synced",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "sync": "Sync to AVP",
+      "delete": "Delete"
+    },
+    "toast": {
+      "syncAllStarted": "Sync started for all policies.",
+      "syncAllDone": "Synced {success} policies, {failure} failed.",
+      "syncStarted": "Sync started for this policy.",
+      "deleted": "Policy deleted."
+    },
+    "empty": {
+      "title": "No policies found",
+      "noData": "This policy store has no policies yet.",
+      "withFilters": "No policies match the current filters."
+    },
+    "createPolicy": "Create Policy",
+    "createSheet": {
+      "title": "Create Policy",
+      "description": "Select a policy template from the library or create a new policy from scratch.",
+      "tabs": {
+        "template": "From Template",
+        "new": "New Policy"
+      },
+      "templateSearch": "Search templates...",
+      "templateEmpty": "No templates match your search.",
+      "templatePreview": "Template Preview",
+      "templateLink": "Template",
+      "cedarDefinition": "Cedar Policy",
+      "useTemplate": "Use Template",
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "e.g. Read Project Access",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe what this policy controls...",
+        "type": "Type",
+        "typePermit": "Permit",
+        "typeForbid": "Forbid",
+        "action": "Action",
+        "actionPlaceholder": "e.g. ReadProject",
+        "cedarCode": "Cedar Policy",
+        "cedarPlaceholder": "permit(\n  principal,\n  action,\n  resource\n);"
+      },
+      "createPolicy": "Create Policy",
+      "toast": {
+        "created": "Policy \"{name}\" created.",
+        "templateApplied": "Template \"{name}\" applied."
+      }
+    }
+  },
+  "ToolPolicyDetail": {
+    "notFound": "Policy not found.",
+    "backToPolicies": "Back to Policies",
+    "policyId": "Policy ID:",
+    "sidebar": {
+      "overview": "Overview",
+      "definition": "Definition",
+      "syncHistory": "Sync History",
+      "sdk": "SDK Usage",
+      "settings": "Settings"
+    },
+    "overview": {
+      "title": "Overview",
+      "name": "Name",
+      "status": "Status",
+      "syncStatus": "Sync Status",
+      "type": "Type",
+      "action": "Action",
+      "principalTypes": "Principal Types",
+      "resourceTypes": "Resource Types",
+      "templateLinked": "Template-Linked",
+      "created": "Created",
+      "updated": "Updated",
+      "lastSynced": "Last Synced",
+      "description": "Description",
+      "noDescription": "No description provided.",
+      "noAction": "No action set",
+      "awsPolicyId": "AWS Policy ID",
+      "save": "Save",
+      "cancel": "Cancel",
+      "nameUpdated": "Policy name updated",
+      "descriptionUpdated": "Description updated",
+      "actionUpdated": "Action updated",
+      "createdBy": "Created by",
+      "promote": "Change status",
+      "promoteTo": {
+        "draft": "Move to Draft",
+        "in_review": "Submit for Review",
+        "published": "Publish",
+        "archived": "Archive"
+      },
+      "statusUpdated": "Policy status updated",
+      "statusValues": {
+        "draft": "Draft",
+        "in_review": "In Review",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "syncValues": {
+        "in_sync": "In Sync",
+        "pending": "Pending",
+        "drifted": "Drifted",
+        "unsynced": "Unsynced",
+        "failed": "Failed"
+      },
+      "typeValues": {
+        "permit": "Permit",
+        "forbid": "Forbid"
+      }
+    },
+    "definition": {
+      "title": "Cedar Policy Definition",
+      "cedar": "Cedar Policy",
+      "save": "Save",
+      "saveSuccess": "Cedar updated. Sync to push changes to AVP.",
+      "saveError": "Failed to save Cedar",
+      "copy": "Copy",
+      "copied": "Copied",
+      "edit": "Edit Policy",
+      "templateNote": "This policy is linked to template",
+      "templateDocs": "View AVP template docs",
+      "noDefinition": "No policy definition available."
+    },
+    "settings": {
+      "general": "General",
+      "save": "Save",
+      "saveSuccess": "Settings saved",
+      "saveError": "Failed to save",
+      "nameLabel": "Name",
+      "descriptionLabel": "Description",
+      "actionLabel": "Action",
+      "dangerZone": "Danger Zone",
+      "dangerZoneDescription": "Irreversible and destructive actions.",
+      "delete": {
+        "title": "Delete policy",
+        "description": "Permanently delete this tool policy from AVP and the platform.",
+        "button": "Delete",
+        "dialogTitle": "Delete \"{name}\"?",
+        "dialogDescription": "This removes the policy from Amazon Verified Permissions and the platform. This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      },
+      "deleteSuccess": "Policy deleted",
+      "deleteError": "Failed to delete policy"
+    },
+    "sync": {
+      "title": "Sync Status",
+      "syncNow": "Sync Now",
+      "lastSynced": "Last synced:",
+      "neverSynced": "Never synced to AVP",
+      "autoSync": "Automatic Sync",
+      "autoSyncDescription": "Automatically sync policy changes to Amazon Verified Permissions.",
+      "platformVsAvp": "Platform vs. AVP Status",
+      "platform": "Platform",
+      "avp": "Amazon Verified Permissions",
+      "avpPresent": "Present",
+      "avpStale": "Stale",
+      "avpAbsent": "Not Present",
+      "statusLabel": {
+        "in_sync": "In Sync — policy is up to date in AVP",
+        "pending": "Pending — sync in progress",
+        "drifted": "Drifted — AVP-side Cedar differs from the last sync",
+        "unsynced": "Unsynced — policy has never been synced to AVP",
+        "failed": "Failed — last sync attempt failed"
+      },
+      "toast": {
+        "started": "Sync started."
+      }
+    },
+    "syncHistory": {
+      "storeTitle": "Sync batches ({count})",
+      "policyTitle": "Sync events ({count})",
+      "orphanTitle": "Other events ({count})",
+      "empty": "No sync events yet.",
+      "emptyBatches": "No sync batches yet. Run Sync All or sync a single policy to generate history.",
+      "emptyChildren": "No events recorded for this batch.",
+      "batch": {
+        "scope": "Scope",
+        "actor": "Triggered by",
+        "started": "Started",
+        "results": "Results (ok / failed / total)",
+        "scopeValue": {
+          "store": "Store",
+          "policy": "Policy",
+          "schema": "Schema"
+        },
+        "system": "System"
+      },
+      "event": {
+        "action": "Action",
+        "target": "Target",
+        "result": "Result",
+        "actor": "Actor",
+        "when": "When",
+        "success": "Success",
+        "failure": "Failure",
+        "system": "System"
+      }
+    },
+    "sdk": {
+      "title": "SDK Usage",
+      "description": "Use @package/policy to enforce this policy at the tool level in your application code.",
+      "schema": "Schema Definition",
+      "usage": "Authorize a Request",
+      "errorHandling": "Error Handling",
+      "contextMapping": "Context Mapping",
+      "required": "Required",
+      "optional": "Optional",
+      "table": {
+        "field": "Field",
+        "type": "Type",
+        "required": "Required",
+        "mapsTo": "Maps To (AVP)"
+      }
+    }
+  },
+  "ToolPolicyEdit": {
+    "title": "Edit: {name}",
+    "notFound": "Policy not found.",
+    "back": "Back to Policy",
+    "save": "Save",
+    "cancel": "Cancel",
+    "cedarPolicy": "Cedar Policy",
+    "format": "Format policy",
+    "undo": "Undo",
+    "redo": "Redo",
+    "placeholder": "Describe the policy behavior in natural language...",
+    "generate": "Generate",
+    "generateEmptyError": "Please enter a policy description first",
+    "generateSuccess": "Cedar policy generated",
+    "generateError": "Failed to generate Cedar policy",
+    "toast": {
+      "saved": "Policy saved. Sync to push changes to AVP.",
+      "saveError": "Failed to save policy"
+    },
+    "templates": {
+      "trigger": "Templates",
+      "title": "Pick a template",
+      "description": "Replace the Cedar definition with a published template from the policy library.",
+      "search": "Search templates...",
+      "empty": "No published templates yet.",
+      "emptyFiltered": "No templates match your search.",
+      "loadError": "Failed to load templates."
+    },
+    "replaceDialog": {
+      "title": "Replace Cedar definition?",
+      "description": "The current Cedar code will be replaced with \"{name}\". Your previous code can be recovered with Undo.",
+      "cancel": "Cancel",
+      "confirm": "Use template"
+    },
+    "discardDialog": {
+      "title": "Discard Changes?",
+      "description": "You have unsaved changes to this policy. Are you sure you want to leave? Your changes will be lost.",
+      "cancel": "Keep Editing",
+      "confirm": "Discard Changes"
+    },
+    "validation": {
+      "loading": "Loading...",
+      "loadError": "Checker unavailable",
+      "valid": "Valid",
+      "invalid": "{count, plural, one {# error} other {# errors}}"
+    }
+  },
+  "PolicyEngines": {
+    "title": "Policy Engines",
+    "description": "AWS Bedrock AgentCore policy engines. Create engines, import library policies into them, and sync to AWS.",
+    "engine": "engine",
+    "engines": "engines",
+    "search": "Search engines by name or description",
+    "refresh": "Refresh",
+    "drifted": "{count, plural, one {# drifted} other {# drifted}}",
+    "errors": {
+      "loadFailed": "Failed to load policy engines",
+      "createFailed": "Failed to create policy engine"
+    },
+    "status": {
+      "CREATING": "Creating",
+      "ACTIVE": "Active",
+      "UPDATING": "Updating",
+      "DELETING": "Deleting",
+      "CREATE_FAILED": "Create Failed",
+      "UPDATE_FAILED": "Update Failed",
+      "DELETE_FAILED": "Delete Failed"
+    },
+    "table": {
+      "name": "Name",
+      "status": "Status",
+      "policies": "Policies",
+      "gateways": "Gateways",
+      "region": "Region",
+      "created": "Created"
+    },
+    "empty": {
+      "title": "No policy engines yet. Create one to start deploying Cedar policies to AWS.",
+      "withFilters": "No engines match your search."
+    },
+    "createDialog": {
+      "trigger": "Create engine",
+      "title": "Create a policy engine",
+      "description": "Creates a new policy engine in AWS Bedrock AgentCore. You can import library policies or author new ones once it's created.",
+      "name": {
+        "label": "Engine name",
+        "placeholder": "e.g. production_insurance",
+        "invalid": "Must start with a letter; only letters, numbers, and underscores (max 48 chars)."
+      },
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short summary of what this engine controls",
+      "cancel": "Cancel",
+      "confirm": "Create engine",
+      "success": "Policy engine created"
+    }
+  },
+  "PolicyEngineDetail": {
+    "back": "Back to policy engines",
+    "notFound": "Policy engine not found.",
+    "sidebar": {
+      "overview": "Overview",
+      "policies": "Policies",
+      "gateways": "Gateways",
+      "syncHistory": "Sync history",
+      "settings": "Settings"
+    },
+    "overview": {
+      "title": "Engine",
+      "description": "Description",
+      "status": "Status",
+      "region": "Region",
+      "policies": "Policies",
+      "gateways": "Gateways",
+      "created": "Created",
+      "updated": "Last updated",
+      "awsEngineId": "AWS Policy Engine ID",
+      "awsEngineArn": "AWS Policy Engine ARN",
+      "syncAll": "Sync all",
+      "driftBanner": {
+        "title": "{count, plural, one {# policy has drifted} other {# policies have drifted}} from their synced copy",
+        "description": "Drift means the AWS-side Cedar differs from what we last synced. Open each drifted policy to review and re-sync."
+      }
+    },
+    "policies": {
+      "title": "Engine policies ({count})",
+      "import": "Import from Library",
+      "create": "New policy",
+      "fromLibrary": "From library",
+      "syncNow": "Sync",
+      "syncSuccess": "Synced \"{name}\"",
+      "syncError": "Failed to sync policy",
+      "neverSynced": "Never synced",
+      "empty": "No policies yet. Import one from the library or create a new one.",
+      "syncStatus": {
+        "unsynced": "Unsynced",
+        "in_sync": "In sync",
+        "drifted": "Drifted",
+        "pending": "Pending",
+        "failed": "Failed"
+      },
+      "table": {
+        "name": "Name",
+        "type": "Type",
+        "syncStatus": "Sync",
+        "lastSynced": "Last synced",
+        "actions": "Actions"
+      },
+      "importSheet": {
+        "title": "Import from library",
+        "description": "Pick a Policy Library policy to copy into this engine. You'll sync it to AWS as a separate step.",
+        "search": "Search the library",
+        "empty": "No policies in the library yet.",
+        "emptyFiltered": "No policies match your search.",
+        "templateBadge": "Template",
+        "loadError": "Failed to load library",
+        "success": "Policy imported",
+        "error": "Failed to import policy",
+        "close": "Close",
+        "slotBinding": {
+          "title": "Fill in template slots",
+          "description": "\"{name}\" is a template. Provide the principal and resource to materialize a concrete policy in this engine.",
+          "success": "Template imported",
+          "error": "Failed to import template",
+          "form": {
+            "name": "Policy name",
+            "namePlaceholder": "e.g. allow-alice-read-reports",
+            "bindingFor": "Bind this slot to an entity.",
+            "entityType": "Entity type",
+            "entityId": "Entity ID",
+            "preview": "Resolved Cedar preview",
+            "cancel": "Cancel",
+            "import": "Import"
+          }
+        }
+      }
+    },
+    "gateways": {
+      "title": "Attached gateways ({count})",
+      "attach": "Attach gateway",
+      "detach": "Detach",
+      "empty": "No gateways attached. Attach one to enforce these policies on incoming traffic.",
+      "attachSuccess": "Gateway attached",
+      "attachError": "Failed to attach gateway",
+      "detachSuccess": "Gateway detached",
+      "detachError": "Failed to detach gateway",
+      "loadError": "Failed to load gateways",
+      "table": {
+        "gateway": "Gateway",
+        "mode": "Mode",
+        "attachedAt": "Attached",
+        "actions": "Actions"
+      },
+      "mode": {
+        "LOG_ONLY": "Log only",
+        "ENFORCE": "Enforce"
+      },
+      "attachSheet": {
+        "title": "Attach a gateway",
+        "description": "Pick one of your AWS gateways. The engine's policies will apply to its traffic.",
+        "search": "Search gateways",
+        "empty": "No gateways available in this AWS account.",
+        "alreadyAttached": "Attached",
+        "mode": "Enforcement mode",
+        "modeHelper": {
+          "LOG_ONLY": "Policies evaluate but don't block traffic. Useful for validating a new engine.",
+          "ENFORCE": "Policies block traffic that doesn't satisfy a permit. Production default."
+        },
+        "cancel": "Cancel",
+        "confirm": "Attach"
+      },
+      "detachDialog": {
+        "title": "Detach gateway?",
+        "description": "This removes the policy engine from \"{name}\". Policies stop evaluating immediately.",
+        "cancel": "Cancel",
+        "confirm": "Detach"
+      }
+    },
+    "syncHistory": {
+      "engineTitle": "Sync batches ({count})",
+      "policyTitle": "Sync events ({count})",
+      "orphanTitle": "Other events ({count})",
+      "empty": "No sync events yet.",
+      "emptyBatches": "No sync batches yet. Run Sync all or sync a single policy to generate history.",
+      "emptyChildren": "No events recorded for this batch.",
+      "batch": {
+        "scope": "Scope",
+        "actor": "Triggered by",
+        "started": "Started",
+        "results": "Results (ok / failed / total)",
+        "scopeValue": {
+          "engine": "Engine",
+          "policy": "Policy"
+        },
+        "system": "System"
+      },
+      "event": {
+        "action": "Action",
+        "target": "Target",
+        "result": "Result",
+        "actor": "Actor",
+        "when": "When",
+        "success": "Success",
+        "failure": "Failure",
+        "system": "System"
+      }
+    },
+    "syncAll": {
+      "title": "Sync {count, plural, one {# policy} other {# policies}} to AWS?",
+      "description": "This pushes the current Cedar definition of every policy under \"{name}\" to the AWS policy engine. Existing remote policies are updated; new ones are created.",
+      "cancel": "Cancel",
+      "confirm": "Sync all",
+      "result": "Synced {success, plural, one {# policy} other {# policies}}{failure, plural, =0 {} other {, # failed}}.",
+      "error": "Failed to sync engine"
+    },
+    "settings": {
+      "general": "General",
+      "save": "Save",
+      "saveSuccess": "Settings saved",
+      "saveError": "Failed to save",
+      "name": {
+        "label": "Engine name",
+        "helper": "The name is fixed after creation in AWS and cannot be renamed from here."
+      },
+      "description": {
+        "label": "Description"
+      },
+      "dangerZone": "Danger zone",
+      "dangerZoneDescription": "Irreversible and destructive actions.",
+      "delete": {
+        "title": "Delete engine",
+        "description": "Permanently deletes the policy engine both locally and in AWS.",
+        "hasPolicies": "Remove all {count} policies before deleting the engine.",
+        "button": "Delete",
+        "dialogTitle": "Delete engine?",
+        "dialogDescription": "This permanently deletes \"{name}\" from AWS Bedrock AgentCore and the platform. This action cannot be undone.",
+        "typeToConfirm": "Type \"{name}\" to confirm:",
+        "cancel": "Cancel",
+        "confirm": "Delete permanently"
+      },
+      "deleteSuccess": "Policy engine deleted",
+      "deleteError": "Failed to delete engine"
+    },
+    "newPolicy": {
+      "title": "New engine policy",
+      "back": "Back",
+      "save": "Save policy",
+      "name": "Name",
+      "namePlaceholder": "e.g. allow-read-claims",
+      "type": "Type",
+      "description": "Description",
+      "descriptionPlaceholder": "A short summary of what this policy authorizes",
+      "cedarPolicy": "Cedar policy",
+      "success": "Policy created",
+      "error": "Failed to create policy"
+    }
+  },
+  "EnginePolicyDetail": {
+    "back": "Back to engine",
+    "notFound": "Engine policy not found.",
+    "syncNow": "Sync now",
+    "syncSuccess": "Policy synced",
+    "syncError": "Failed to sync policy",
+    "openLibrarySource": "Open library source",
+    "syncStatus": {
+      "unsynced": "Unsynced",
+      "in_sync": "In sync",
+      "drifted": "Drifted",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "sidebar": {
+      "overview": "Overview",
+      "definition": "Definition",
+      "syncHistory": "Sync history",
+      "settings": "Settings"
+    },
+    "overview": {
+      "title": "Policy",
+      "type": "Type",
+      "syncStatus": "Sync",
+      "lastSynced": "Last synced",
+      "created": "Created",
+      "updated": "Last updated",
+      "awsPolicyId": "AWS Policy ID",
+      "description": "Description"
+    },
+    "definition": {
+      "title": "Cedar definition",
+      "save": "Save",
+      "saveSuccess": "Cedar updated. Sync to push changes to AWS.",
+      "saveError": "Failed to save Cedar"
+    },
+    "settings": {
+      "general": "General",
+      "save": "Save",
+      "saveSuccess": "Saved",
+      "saveError": "Failed to save",
+      "nameLabel": "Name",
+      "descriptionLabel": "Description",
+      "dangerZone": "Danger zone",
+      "dangerZoneDescription": "Deleting removes the policy from AWS and the platform.",
+      "delete": {
+        "title": "Delete policy",
+        "description": "Permanently delete this engine policy.",
+        "button": "Delete",
+        "dialogTitle": "Delete \"{name}\"?",
+        "dialogDescription": "This removes the policy from the AWS policy engine and the platform. The library source (if any) is unaffected.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      },
+      "deleteSuccess": "Policy deleted",
+      "deleteError": "Failed to delete policy"
+    }
+  }
+}

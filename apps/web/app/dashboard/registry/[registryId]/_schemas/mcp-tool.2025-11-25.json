@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MCP Tool Schema",
+  "description": "Validates MCP tool definitions for protocol version 2025-11-25.",
+  "type": "object",
+  "properties": {
+    "tools": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Tool" }
+    }
+  },
+  "required": ["tools"],
+  "$defs": {
+    "Tool": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique identifier for the tool."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable explanation of what the tool does."
+        },
+        "inputSchema": {
+          "type": "object",
+          "description": "JSON Schema describing the tool's input parameters.",
+          "properties": {
+            "type": { "type": "string", "const": "object" },
+            "properties": { "type": "object" },
+            "required": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["type"]
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Optional metadata annotations for the tool."
+        }
+      },
+      "required": ["name", "description", "inputSchema"]
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "@packages/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.30.3",
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "@vitest/coverage-v8": "^4.1.5",
+    "aws-sdk-client-mock": "^4.1.0",
+    "aws-sdk-client-mock-vitest": "^7.0.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "@ai-sdk/amazon-bedrock": "^4.0.83",
+    "@ai-sdk/mcp": "^1.0.30",
+    "@aws-crypto/sha256-js": "^5.2.0",
+    "@aws-sdk/client-bedrock-agent-runtime": "^3.1027.0",
+    "@aws-sdk/client-bedrock-agentcore": "^3.1029.0",
+    "@aws-sdk/client-bedrock-agentcore-control": "^3.1029.0",
+    "@aws-sdk/client-cloudwatch": "^3.1035.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.1029.0",
+    "@aws-sdk/client-secrets-manager": "^3.1007.0",
+    "@aws-sdk/client-verifiedpermissions": "^3.1037.0",
+    "@aws-sdk/credential-provider-node": "^3.972.18",
+    "@aws-sdk/credential-providers": "^3.1004.0",
+    "@aws-sdk/signature-v4": "^3.374.0",
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@orpc/client": "^1.13.6",
+    "@orpc/contract": "^1.13.6",
+    "@orpc/server": "^1.13.6",
+    "@orpc/zod": "^1.13.6",
+    "@package/auth": "workspace:*",
+    "@package/database": "workspace:*",
+    "@smithy/protocol-http": "^5.3.11",
+    "@smithy/signature-v4": "^5.3.11",
+    "@voltagent/core": "^2.6.13",
+    "ai": "^6.0.138",
+    "dotenv": "^17.3.1",
+    "nanoid": "^5.1.6",
+    "zod": "^4.3.6"
+  }
+}

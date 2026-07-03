@@ -1,0 +1,11 @@
+node_modules
+.cdk.staging
+cdk.out
+**/cdk.out
+.git
+*.md
+.gitignore
+.env*
+apps/web/.next
+apps/web/node_modules
+apps/infra/cdk.out

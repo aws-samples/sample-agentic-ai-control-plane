@@ -1,0 +1,30 @@
+services:
+  agentic-ai-postgres:
+    image: postgres:15
+    container_name: agentic-ai-postgres
+    environment:
+      POSTGRES_DB: agentic_ai_platform
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - agentic_ai_postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d agentic_ai_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agentic-ai-network
+
+volumes:
+  agentic_ai_postgres_data:
+    name: agentic_ai_postgres_data
+
+networks:
+  agentic-ai-network:
+    name: agentic-ai-network
+    driver: bridge
