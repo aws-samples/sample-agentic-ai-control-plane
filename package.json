@@ -1,0 +1,15 @@
+{
+  "name": "agentic-ai-platform",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.30.3",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "init": "npx tsx scripts/project-init.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "turbo": "^2.8.16"
+  }
+}

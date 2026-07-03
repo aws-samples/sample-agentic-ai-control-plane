@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/AgentCard",
+  "definitions": {
+    "AgentCard": {
+      "description": "A2A Agent Card describing an agent's identity, capabilities, and communication settings.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The agent's identifier."
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of what this agent does."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "A2A endpoint URL."
+        },
+        "version": {
+          "type": "string",
+          "description": "Agent version."
+        },
+        "protocolVersion": {
+          "type": "string",
+          "description": "A2A protocol version.",
+          "example": "0.3"
+        },
+        "capabilities": {
+          "type": "object",
+          "description": "Capabilities supported by this agent."
+        },
+        "defaultInputModes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Default accepted input modes (e.g. text/plain)."
+        },
+        "defaultOutputModes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Default produced output modes."
+        },
+        "skills": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Skill" }
+        }
+      },
+      "required": ["name", "description", "url", "version", "protocolVersion"]
+    },
+    "Skill": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["id", "name"]
+    }
+  }
+}

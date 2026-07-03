@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Secrets / local env — NEVER commit
+.env
+.env.local
+.env.*.local
+*.pem
+*credentials*
+
+# Build output
+dist/
+.next/
+out/
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# CDK
+cdk.out/
+.cdk.staging/
+# Cached context lookups are account/region-specific — regenerated per user
+cdk.context.json
+
+# Turbo
+.turbo/
+
+# Prisma generated client
+packages/database/generated/
+
+# Python / virtualenvs
+.venv/
+venv/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*

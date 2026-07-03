@@ -1,0 +1,505 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Agent {
+  id           String  @id
+  name         String
+  description  String
+  systemPrompt String? @map("system_prompt")
+  isPublic     Boolean @default(false)
+
+  preferredModelId String?
+  preferredModel   Model?  @relation(fields: [preferredModelId], references: [id], onDelete: SetNull)
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  tools AgentTool[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([preferredModelId])
+}
+
+model AgentTool {
+  id        String   @id @default(cuid())
+  agentId   String
+  agent     Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  name      String
+  type      String   @default("registry")
+  metadata  Json
+  isEnabled Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([agentId])
+}
+
+model Model {
+  id       String @id @default(cuid())
+  server   String
+  provider String
+  name     String
+  profile  String
+  modelId  String @unique
+
+  agents Agent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id                   String                @id
+  name                 String
+  email                String
+  emailVerified        Boolean               @default(false)
+  image                String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  sessions             Session[]
+  accounts             Account[]
+  agents               Agent[]
+  policies             Policy[]
+  policyVersions       PolicyVersion[]
+  policyActivityEvents PolicyActivityEvent[]
+  policyEngines        PolicyEngine[]        @relation("PolicyEngineAuthor")
+  enginePolicies       EnginePolicy[]        @relation("EnginePolicyAuthor")
+  syncBatches          SyncBatch[]           @relation("SyncBatchTriggeredBy")
+  syncEvents           SyncEvent[]           @relation("SyncEventActor")
+  toolPolicyStores     ToolPolicyStore[]     @relation("ToolPolicyStoreAuthor")
+  toolPolicies         ToolPolicy[]          @relation("ToolPolicyAuthor")
+  toolSyncBatches      ToolSyncBatch[]       @relation("ToolSyncBatchTriggeredBy")
+  toolSyncEvents       ToolSyncEvent[]       @relation("ToolSyncEventActor")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Persona {
+  id          String   @id @default(cuid())
+  name        String
+  provider    String
+  externalId  String
+  displayName String
+  email       String?
+  groups      Json     @default("[]")
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([provider, externalId])
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Policy {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  cedarCode   String   @map("cedar_code")
+  type        String
+  status      String   @default("draft")
+  tags        String[] @default([])
+  exportCount Int      @default(0) @map("export_count")
+
+  isTemplate       Boolean @default(false) @map("is_template")
+  parentTemplateId String? @map("parent_template_id")
+  parentTemplate   Policy? @relation("TemplateInstances", fields: [parentTemplateId], references: [id], onDelete: SetNull)
+  instances        Policy[] @relation("TemplateInstances")
+
+  createdById String? @map("created_by_id")
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  versions       PolicyVersion[]
+  activityEvents PolicyActivityEvent[]
+  linkedPolicies LinkedPolicy[]
+  engineInstances EnginePolicy[] @relation("LibraryToEngine")
+  toolInstances  ToolPolicy[]   @relation("LibraryToToolPolicy")
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  archivedAt DateTime? @map("archived_at")
+
+  @@index([createdById])
+  @@index([status])
+  @@index([isTemplate])
+  @@index([parentTemplateId])
+}
+
+model PolicyVersion {
+  id          String   @id @default(cuid())
+  policyId    String   @map("policy_id")
+  policy      Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  version     Int
+  cedarCode   String   @map("cedar_code")
+  changeNote  String   @default("") @map("change_note")
+  createdById String?  @map("created_by_id")
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([policyId, version])
+  @@index([policyId])
+}
+
+model PolicyActivityEvent {
+  id          String   @id @default(cuid())
+  policyId    String   @map("policy_id")
+  policy      Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  type        String
+  description String
+  actorId     String?  @map("actor_id")
+  actor       User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([policyId, createdAt])
+}
+
+model LinkedPolicy {
+  id                  String   @id @default(cuid())
+  policyId            String   @map("policy_id")
+  policy              Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  name                String
+  policyEngineId      String   @map("policy_engine_id")
+  policyEngineArn     String   @map("policy_engine_arn")
+  principalEntityType String   @map("principal_entity_type")
+  principalEntityId   String   @map("principal_entity_id")
+  resourceEntityType  String   @map("resource_entity_type")
+  resourceEntityId    String   @map("resource_entity_id")
+  status              String   @default("CREATING")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@index([policyId])
+}
+
+model PolicyEngine {
+  id                 String   @id @default(cuid())
+  name               String
+  description        String   @default("")
+  awsPolicyEngineId  String?  @unique @map("aws_policy_engine_id")
+  awsPolicyEngineArn String?  @map("aws_policy_engine_arn")
+  region             String
+  status             String   @default("CREATING")
+  statusReasons      String[] @default([]) @map("status_reasons")
+
+  createdById String? @map("created_by_id")
+  createdBy   User?   @relation("PolicyEngineAuthor", fields: [createdById], references: [id], onDelete: SetNull)
+
+  policies           EnginePolicy[]
+  gatewayAttachments GatewayAttachment[]
+  syncBatches        SyncBatch[]
+  syncEvents         SyncEvent[]
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  archivedAt DateTime? @map("archived_at")
+
+  @@index([createdById])
+  @@index([status])
+}
+
+model EnginePolicy {
+  id                  String       @id @default(cuid())
+  engineId            String       @map("engine_id")
+  engine              PolicyEngine @relation(fields: [engineId], references: [id], onDelete: Cascade)
+  name                String
+  description         String       @default("")
+  cedarCode           String       @map("cedar_code")
+  type                String
+  libraryPolicyId     String?      @map("library_policy_id")
+  libraryPolicy       Policy?      @relation("LibraryToEngine", fields: [libraryPolicyId], references: [id], onDelete: SetNull)
+  awsPolicyId         String?      @map("aws_policy_id")
+  awsPolicyArn        String?      @map("aws_policy_arn")
+  awsStatus           String?      @map("aws_status")
+  lastSyncedAt        DateTime?    @map("last_synced_at")
+  lastSyncedCedarHash String?      @map("last_synced_cedar_hash")
+  syncStatus          String       @default("unsynced") @map("sync_status")
+
+  createdById String? @map("created_by_id")
+  createdBy   User?   @relation("EnginePolicyAuthor", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([engineId, name])
+  @@index([engineId])
+  @@index([libraryPolicyId])
+  @@index([awsPolicyId])
+}
+
+model GatewayAttachment {
+  id            String       @id @default(cuid())
+  engineId      String       @map("engine_id")
+  engine        PolicyEngine @relation(fields: [engineId], references: [id], onDelete: Cascade)
+  awsGatewayId  String       @map("aws_gateway_id")
+  awsGatewayArn String       @map("aws_gateway_arn")
+  gatewayName   String       @map("gateway_name")
+  mode          String
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  @@unique([engineId, awsGatewayId])
+  @@index([engineId])
+}
+
+model GatewayTarget {
+  id               String   @id @default(cuid())
+  registryRecordId String   @unique @map("registry_record_id")
+  registryArn      String   @map("registry_arn")
+  awsGatewayId     String   @map("aws_gateway_id")
+  awsTargetId      String?  @map("aws_target_id")
+  awsTargetArn     String?  @map("aws_target_arn")
+  targetName       String   @map("target_name")
+  status           String   @default("CREATING")
+  statusReasons    String[] @default([]) @map("status_reasons")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@index([awsGatewayId])
+  @@index([status])
+  @@map("gateway_target")
+}
+
+model SyncBatch {
+  id            String       @id @default(cuid())
+  engineId      String       @map("engine_id")
+  engine        PolicyEngine @relation(fields: [engineId], references: [id], onDelete: Cascade)
+  scope         String
+  totalCount    Int          @default(0) @map("total_count")
+  successCount Int           @default(0) @map("success_count")
+  failureCount Int           @default(0) @map("failure_count")
+  startedAt    DateTime      @default(now()) @map("started_at")
+  completedAt  DateTime?     @map("completed_at")
+  triggeredById String?      @map("triggered_by_id")
+  triggeredBy   User?        @relation("SyncBatchTriggeredBy", fields: [triggeredById], references: [id], onDelete: SetNull)
+
+  events SyncEvent[]
+
+  @@index([engineId, startedAt])
+}
+
+model SyncEvent {
+  id             String       @id @default(cuid())
+  engineId       String       @map("engine_id")
+  engine         PolicyEngine @relation(fields: [engineId], references: [id], onDelete: Cascade)
+  batchId        String?      @map("batch_id")
+  batch          SyncBatch?   @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  enginePolicyId String?      @map("engine_policy_id")
+
+  action       String
+  success      Boolean
+  errorMessage String? @map("error_message")
+  awsRequestId String? @map("aws_request_id")
+
+  actorId String? @map("actor_id")
+  actor   User?   @relation("SyncEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([engineId, createdAt])
+  @@index([batchId])
+}
+
+model ToolPolicyStore {
+  id                  String   @id @default(cuid())
+  name                String
+  description         String   @default("")
+  namespace           String
+  region              String
+  awsPolicyStoreId    String?  @unique @map("aws_policy_store_id")
+  awsPolicyStoreArn   String?  @map("aws_policy_store_arn")
+  status              String   @default("CREATING")
+  validationMode      String   @default("OFF") @map("validation_mode")
+  schemaJson          Json?    @map("schema_json")
+  schemaSyncStatus    String   @default("unsynced") @map("schema_sync_status")
+  lastSchemaSyncedAt  DateTime? @map("last_schema_synced_at")
+
+  createdById String? @map("created_by_id")
+  createdBy   User?   @relation("ToolPolicyStoreAuthor", fields: [createdById], references: [id], onDelete: SetNull)
+
+  policies  ToolPolicy[]
+  templates ToolPolicyTemplate[]
+  syncBatches ToolSyncBatch[]
+  syncEvents  ToolSyncEvent[]
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  archivedAt DateTime? @map("archived_at")
+
+  @@index([createdById])
+  @@index([status])
+}
+
+model ToolPolicy {
+  id                  String          @id @default(cuid())
+  storeId             String          @map("store_id")
+  store               ToolPolicyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name                String
+  description         String          @default("")
+  cedarCode           String          @map("cedar_code")
+  type                String
+  status              String          @default("draft")
+  action              String          @default("")
+  principalTypes      String[]        @default([]) @map("principal_types")
+  resourceTypes       String[]        @default([]) @map("resource_types")
+  contextFields       Json            @default("[]") @map("context_fields")
+
+  libraryPolicyId String? @map("library_policy_id")
+  libraryPolicy   Policy? @relation("LibraryToToolPolicy", fields: [libraryPolicyId], references: [id], onDelete: SetNull)
+
+  templateLinkId String?              @map("template_link_id")
+  templateLink   ToolPolicyTemplate?  @relation(fields: [templateLinkId], references: [id], onDelete: SetNull)
+
+  awsPolicyId         String?   @map("aws_policy_id")
+  awsPolicyArn        String?   @map("aws_policy_arn")
+  awsStatus           String?   @map("aws_status")
+  lastSyncedAt        DateTime? @map("last_synced_at")
+  lastSyncedCedarHash String?   @map("last_synced_cedar_hash")
+  syncStatus          String    @default("unsynced") @map("sync_status")
+
+  createdById String? @map("created_by_id")
+  createdBy   User?   @relation("ToolPolicyAuthor", fields: [createdById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([storeId, name])
+  @@index([storeId])
+  @@index([libraryPolicyId])
+  @@index([templateLinkId])
+  @@index([awsPolicyId])
+}
+
+model ToolPolicyTemplate {
+  id              String          @id @default(cuid())
+  storeId         String          @map("store_id")
+  store           ToolPolicyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name            String
+  description     String          @default("")
+  cedarStatement  String          @map("cedar_statement")
+  awsTemplateId   String?         @map("aws_template_id")
+  lastSyncedAt    DateTime?       @map("last_synced_at")
+  lastSyncedHash  String?         @map("last_synced_hash")
+  syncStatus      String          @default("unsynced") @map("sync_status")
+
+  instances ToolPolicy[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([storeId, name])
+  @@index([storeId])
+  @@index([awsTemplateId])
+}
+
+model ToolSyncBatch {
+  id           String          @id @default(cuid())
+  storeId      String          @map("store_id")
+  store        ToolPolicyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  scope        String
+  totalCount   Int             @default(0) @map("total_count")
+  successCount Int             @default(0) @map("success_count")
+  failureCount Int             @default(0) @map("failure_count")
+  startedAt    DateTime        @default(now()) @map("started_at")
+  completedAt  DateTime?       @map("completed_at")
+  triggeredById String?        @map("triggered_by_id")
+  triggeredBy   User?          @relation("ToolSyncBatchTriggeredBy", fields: [triggeredById], references: [id], onDelete: SetNull)
+
+  events ToolSyncEvent[]
+
+  @@index([storeId, startedAt])
+}
+
+model ToolSyncEvent {
+  id          String          @id @default(cuid())
+  storeId     String          @map("store_id")
+  store       ToolPolicyStore @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  batchId     String?         @map("batch_id")
+  batch       ToolSyncBatch?  @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  toolPolicyId String?        @map("tool_policy_id")
+
+  action       String
+  success      Boolean
+  errorMessage String? @map("error_message")
+  awsRequestId String? @map("aws_request_id")
+
+  actorId String? @map("actor_id")
+  actor   User?   @relation("ToolSyncEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([storeId, createdAt])
+  @@index([batchId])
+}
+
+model Expense {
+  id                   String   @id @default(cuid())
+  submitterEmail       String   @map("submitter_email")
+  submitterName        String   @map("submitter_name")
+  submitterDepartment  String   @map("submitter_department")
+  amount               Int
+  category             String
+  description          String
+  status               String   @default("pending")
+  submittedAt          DateTime @default(now()) @map("submitted_at")
+
+  @@index([submitterEmail])
+  @@index([submitterDepartment])
+  @@index([status])
+  @@map("expense")
+}

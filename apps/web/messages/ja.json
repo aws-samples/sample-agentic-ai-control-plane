@@ -1,0 +1,2215 @@
+{
+  "Dashboard": {
+    "title": "ダッシュボード",
+    "description": "エージェント管理プラットフォームの概要",
+    "stats": {
+      "agents": "エージェント数",
+      "agentsDescription": "プラットフォームに登録済み",
+      "toolRequests": "ツールリクエスト",
+      "approved": "承認",
+      "denied": "拒否",
+      "approvalRate": "承認率",
+      "approvalRateDescription": "全ツールリクエストのうち",
+      "activePolicies": "有効なポリシー",
+      "activePoliciesDelta": "今週 +2"
+    },
+    "chart": {
+      "title": "エージェントアクティビティ",
+      "descriptionCalls": "全エージェントの1日あたりのツール呼び出し",
+      "descriptionDecisions": "1日あたりのツール承認と拒否",
+      "selectView": "チャート表示を選択",
+      "selectRange": "期間を選択",
+      "viewCalls": "1日あたりの呼び出し",
+      "viewDecisions": "承認 vs 拒否",
+      "legendCalls": "ツール呼び出し",
+      "legendApprovals": "承認",
+      "legendDenials": "拒否",
+      "last90": "過去3ヶ月",
+      "last30": "過去30日",
+      "last7": "過去7日"
+    },
+    "gateway": {
+      "sectionTitle": "ゲートウェイアクティビティ",
+      "sectionDescription": "全 AgentCore ゲートウェイのリクエスト数とエラーの集計",
+      "stats": {
+        "invocations": "呼び出し数",
+        "invocationsDescription": "{count} 個のゲートウェイの合計リクエスト",
+        "systemErrors": "システムエラー",
+        "systemErrorsDescription": "5xx 応答",
+        "userErrors": "ユーザーエラー",
+        "userErrorsDescription": "4xx 応答 (429 を除く)",
+        "avgLatency": "平均レイテンシ",
+        "avgLatencyDescription": "初回応答時間"
+      },
+      "chart": {
+        "title": "ゲートウェイリクエスト",
+        "description": "全ゲートウェイの1日あたりの呼び出し数とエラー",
+        "legendInvocations": "呼び出し",
+        "legendSystemErrors": "システムエラー",
+        "legendUserErrors": "ユーザーエラー"
+      }
+    }
+  },
+  "SignIn": {
+    "signIn": "サインイン"
+  },
+  "LanguageSwitcher": {
+    "en": "English",
+    "ja": "日本語"
+  },
+  "AppSidebar": {
+    "title": "エージェント管理プラットフォーム",
+    "quickCreate": "新規作成",
+    "navMain": {
+      "dashboard": "ダッシュボード",
+      "agents": "エージェント"
+    },
+    "authorization": {
+      "label": "認可",
+      "policies": "ポリシー",
+      "policyLibrary": "ポリシーライブラリ",
+      "gateway": "ゲートウェイ",
+      "tool": "ツール"
+    },
+    "toolManagement": {
+      "label": "ツール管理",
+      "registry": "レジストリ"
+    },
+    "test": {
+      "label": "テスティング",
+      "playground": "プレイグラウンド"
+    },
+    "platform": {
+      "label": "プラットフォーム",
+      "settings": "設定"
+    }
+  },
+  "RegistryList": {
+    "title": "ツール/エージェントレジストリ",
+    "description": "エージェントとツールを管理するレジストリを管理",
+    "error": {
+      "loadFailed": "レジストリの読み込みに失敗しました",
+      "deleteFailed": "レジストリの削除に失敗しました"
+    },
+    "toast": {
+      "deleteSuccess": "レジストリが正常に削除されました",
+      "refreshSuccess": "レジストリを更新しました",
+      "creatingAccessBlocked": "レジストリ作成中はアクセスできません"
+    },
+    "empty": {
+      "title": "レジストリが見つかりません",
+      "description": "最初のレジストリを作成して始めましょう"
+    },
+    "table": {
+      "name": "名前",
+      "description": "説明",
+      "status": "ステータス",
+      "created": "作成日",
+      "updated": "更新日",
+      "actions": "アクション"
+    },
+    "na": "N/A",
+    "registry": "レジストリ",
+    "registries": "レジストリ",
+    "deleteDialog": {
+      "title": "レジストリの削除",
+      "description": "{name} を削除してもよろしいですか？この操作は取り消せません。",
+      "cancel": "キャンセル",
+      "deleting": "削除中...",
+      "delete": "削除"
+    },
+    "actions": {
+      "edit": "レジストリを編集",
+      "delete": "レジストリを削除"
+    },
+    "searchPlaceholder": "レジストリを検索...",
+    "noSearchResults": "検索に一致するレジストリがありません"
+  },
+  "EditRegistryDialog": {
+    "title": "レジストリの編集",
+    "description": "レジストリの設定を更新します。",
+    "nameLabel": "レジストリ名",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "例: 本番AIエージェント用レジストリ",
+    "autoApprovalLabel": "レコードの自動承認",
+    "autoApprovalHint": "有効にすると、送信されたレコードは手動レビューなしで自動的に承認されます。",
+    "toast": {
+      "success": "レジストリが正常に更新されました",
+      "error": "レジストリの更新に失敗しました"
+    },
+    "cancel": "キャンセル",
+    "saving": "保存中...",
+    "submit": "変更を保存"
+  },
+  "CreateRegistryDialog": {
+    "trigger": "レジストリを作成",
+    "title": "新規レジストリの作成",
+    "description": "エージェントとツールを整理・管理するための新しいレジストリを作成します。",
+    "nameLabel": "レジストリ名",
+    "namePlaceholder": "例: my_agent_registry",
+    "nameHint": "先頭は英字で、英字・数字・アンダースコアのみ使用可能",
+    "descriptionLabel": "説明（任意）",
+    "descriptionPlaceholder": "例: 本番AIエージェント用レジストリ",
+    "validation": {
+      "nameRequired": "レジストリ名は必須です",
+      "nameFormat": "名前は英字で始まり、英字・数字・アンダースコアのみ使用可能です（最大48文字）",
+      "nameDuplicate": "名前「{name}」のレジストリは既に存在します"
+    },
+    "toast": {
+      "success": "レジストリが正常に作成されました",
+      "error": "レジストリの作成に失敗しました"
+    },
+    "cancel": "キャンセル",
+    "creating": "作成中...",
+    "submit": "レジストリを作成",
+    "autoApprovalLabel": "レコードの自動承認",
+    "autoApprovalHint": "有効にすると、送信されたレコードは手動レビューなしで自動的に承認されます。"
+  },
+  "RegistryDetail": {
+    "backToRegistries": "レジストリ一覧に戻る",
+    "title": "レジストリレコード",
+    "registryId": "レジストリID:",
+    "refreshRecords": "レコードを更新",
+    "loadingRecords": "レコードを読み込み中",
+    "toast": {
+      "refreshSuccess": "レコードを更新しました"
+    },
+    "error": {
+      "idRequired": "レジストリIDが必要です",
+      "loadFailed": "レジストリレコードの読み込みに失敗しました"
+    },
+    "tabs": {
+      "allRecords": "全レコード",
+      "search": "検索"
+    },
+    "search": {
+      "enterQuery": "検索クエリを入力してください",
+      "arnUnavailable": "レジストリARNが利用できません",
+      "searchFailed": "検索に失敗しました",
+      "placeholder": "レコードを検索...",
+      "searching": "検索中",
+      "button": "検索",
+      "description": "自然言語やキーワードを使用して、このレジストリ内のレコードを検索します。",
+      "resultsFound": "{count}件の結果が{time}秒で見つかりました",
+      "noResults": "「{query}」の検索結果はありません",
+      "noResultsHint": "別のキーワードやより広い検索語をお試しください。",
+      "viewDetails": "詳細を表示",
+      "emptyTitle": "レコードを検索",
+      "emptyDescription": "上の検索バーを使用して、名前、説明、その他の属性でレコードを検索できます。"
+    }
+  },
+  "RecordsList": {
+    "toast": {
+      "submitSuccess": "レコードが承認申請されました",
+      "submitError": "レコードの承認申請に失敗しました",
+      "statusUpdateSuccess": "レコードのステータスが{status}に更新されました",
+      "statusUpdateError": "レコードのステータス更新に失敗しました",
+      "deleteSuccess": "レコードが正常に削除されました",
+      "deleteError": "レコードの削除に失敗しました"
+    },
+    "status": {
+      "draft": "下書き",
+      "pendingApproval": "承認待ち",
+      "approved": "承認済み",
+      "rejected": "却下",
+      "deprecated": "非推奨"
+    },
+    "actions": {
+      "submitForApproval": "承認申請",
+      "approve": "承認",
+      "reject": "却下",
+      "deprecate": "非推奨にする"
+    },
+    "na": "N/A",
+    "deleteDialog": {
+      "title": "レコードの削除",
+      "description": "「{name}」を完全に削除してもよろしいですか？この操作は取り消せません。",
+      "cancel": "キャンセル",
+      "delete": "削除"
+    },
+    "empty": {
+      "title": "レコードが見つかりません",
+      "description": "最初のレコードを作成して始めましょう"
+    },
+    "table": {
+      "name": "名前",
+      "protocol": "プロトコル",
+      "version": "バージョン",
+      "status": "ステータス",
+      "description": "説明",
+      "updated": "更新日",
+      "actions": "アクション"
+    },
+    "searchPlaceholder": "レコードを検索...",
+    "noSearchResults": "検索に一致するレコードがありません",
+    "noDescription": "説明なし",
+    "updatedAt": "{date}に更新",
+    "metrics": {
+      "totalSubmitted": "総提出数",
+      "pendingApproval": "承認待ち",
+      "approved": "承認済み",
+      "deprecated": "非推奨",
+      "rejected": "却下済み"
+    },
+    "filter": {
+      "allStatuses": "すべてのステータス"
+    },
+    "noMatches": {
+      "title": "一致するレコードがありません",
+      "description": "検索またはフィルターを調整してみてください"
+    },
+    "statusLabels": {
+      "DRAFT": "下書き",
+      "PENDING_APPROVAL": "承認待ち",
+      "APPROVED": "承認済み",
+      "REJECTED": "却下",
+      "DEPRECATED": "非推奨",
+      "CREATING": "作成中",
+      "UPDATING": "更新中",
+      "CREATE_FAILED": "作成失敗",
+      "UPDATE_FAILED": "更新失敗"
+    }
+  },
+  "CreateRecordDialog": {
+    "trigger": "レコードを作成",
+    "title": "新規レコードの作成",
+    "description": "このレジストリに新しい{protocol}レコードを作成",
+    "protocolLabel": "プロトコル",
+    "nameLabel": "レコード名",
+    "namePlaceholder": "例: weather_tool",
+    "descriptionLabel": "説明（任意）",
+    "descriptionPlaceholderMcp": "例: 天気データ取得ツール",
+    "descriptionPlaceholderA2a": "例: 決済処理エージェント",
+    "descriptionPlaceholderCustom": "例: 内部データパイプラインオーケストレーター",
+    "descriptionPlaceholderSkill": "例: PDF処理タスクにこのスキルを使用",
+    "manualOnlyHint": "この記述子タイプは手動入力のみサポートしています",
+    "protocol": {
+      "mcp": "MCP（Model Context Protocol）",
+      "a2a": "A2A（Agent-to-Agent）",
+      "custom": "カスタム",
+      "agentSkills": "エージェントスキル",
+      "mcpDescription": "エージェントが接続できるツールやサーバーを登録するため",
+      "a2aDescription": "他のエージェントが呼び出せるエージェントを登録するため",
+      "customDescription": "内部APIやサービスなどのカスタムリソースを登録するため",
+      "agentSkillsDescription": "定義とパッケージを含む再利用可能なエージェントスキルを登録するため"
+    },
+    "serverSchemaLabel": "サーバースキーマ（JSON）",
+    "serverSchemaHint": "name（逆ドメイン形式）、description、version、transportを含むpackages配列が必要です",
+    "toolSchemaLabel": "ツールスキーマ（JSON）",
+    "toolSchemaHint": "このMCPサーバーが提供するツールの一覧",
+    "agentCardLabel": "エージェントカード（JSON）",
+    "agentCardHint": "protocolVersion、name、description、capabilitiesを含むA2Aエージェントカード",
+    "customSchemaLabel": "カスタム記述子（JSON）",
+    "customSchemaHint": "カスタムリソースを記述する自由形式のJSON（name、description、endpoint、authなど）",
+    "skillMdLabel": "スキルMarkdown",
+    "skillMdHint": "スキルの機能と使用方法を説明するMarkdownコンテンツ",
+    "skillDefinitionLabel": "スキル定義（JSON）",
+    "skillDefinitionHint": "リポジトリ情報とパッケージ依存関係を含むJSON（repository、packages配列）",
+    "validation": {
+      "nameRequired": "レコード名は必須です",
+      "nameFormat": "名前は英字で始まり、英字・数字・アンダースコアのみ使用可能です（最大64文字）",
+      "mcpSchemasRequired": "MCPにはサーバースキーマが必要です",
+      "invalidJson": "スキーマは有効なJSONである必要があります",
+      "serverNameRequired": "サーバースキーマに'name'フィールドが必要です",
+      "serverNameFormat": "サーバー名は逆ドメイン形式である必要があります（例: 'io.example/my-server'）",
+      "serverDescriptionRequired": "サーバースキーマに'description'フィールドが必要です",
+      "serverVersionRequired": "サーバースキーマに'version'フィールドが必要です",
+      "serverRemotesRequired": "サーバースキーマに少なくとも1つのリモートエンドポイントを含む'remotes'配列が必要です",
+      "serverRemoteUrlRequired": "リモートエンドポイントに'url'フィールドが必要です",
+      "serverRemoteUrlInvalid": "リモートエンドポイントの'url'は有効なURLである必要があります",
+      "agentCardRequired": "A2Aにはエージェントカードが必要です",
+      "agentCardInvalidJson": "エージェントカードは有効なJSONである必要があります",
+      "agentCardNameRequired": "エージェントカードに'name'フィールドが必要です",
+      "agentCardDescriptionRequired": "エージェントカードに'description'フィールドが必要です",
+      "agentCardUrlRequired": "エージェントカードに'url'フィールドが必要です（管理者テスト用）",
+      "agentCardUrlInvalid": "エージェントカードの'url'は有効なURLである必要があります",
+      "agentCardVersionRequired": "エージェントカードに'version'フィールドが必要です",
+      "customSchemaRequired": "CUSTOMタイプにはカスタム記述子の内容が必要です",
+      "customSchemaInvalidJson": "カスタム記述子は有効なJSONである必要があります",
+      "skillMdRequired": "スキルMarkdownの内容が必要です",
+      "skillDefinitionInvalidJson": "スキル定義は有効なJSONである必要があります"
+    },
+    "toast": {
+      "success": "レコードが正常に作成されました",
+      "error": "レコードの作成に失敗しました"
+    },
+    "prettify": "整形",
+    "cancel": "キャンセル",
+    "creating": "作成中...",
+    "submit": "レコードを作成",
+    "page": {
+      "title": "レコードを作成",
+      "registryPrefix": "レジストリ",
+      "backAria": "戻る",
+      "sourceCard": {
+        "title": "レコードソース",
+        "description": "レコード定義の提供方法を選択してください。",
+        "sync": {
+          "title": "エンドポイントから同期",
+          "description": "エンドポイントURLと認証情報を指定します。レジストリがレコードから利用可能な詳細、ツール、メタデータを自動的に検出して追加します。"
+        },
+        "manual": {
+          "title": "手動で定義",
+          "description": "レコード定義、スキーマ、メタデータを手動で指定します。アクセス可能なエンドポイントがないレコードにはこのオプションを使用してください。"
+        }
+      },
+      "detailsCard": {
+        "title": "レコード詳細",
+        "description": "名前、説明、タイプを含むレコード構成を指定します。これにより検出と接続のための基本情報が確立されます。",
+        "typeLabel": "タイプ",
+        "types": {
+          "mcp": {
+            "title": "MCP",
+            "description": "AIツールとエージェントの通信向けに設計されたプロトコル。コンテキスト管理と構造化されたメッセージ形式を扱います。"
+          },
+          "agent": {
+            "title": "エージェント",
+            "description": "安全なエージェント間通信向けに設計されたプロトコル。分散ワークフローと情報交換を可能にします。"
+          },
+          "agentSkills": {
+            "title": "エージェントスキル",
+            "description": "マークダウンドキュメントと任意の構造化された定義を持つエージェントスキルを登録します。"
+          },
+          "custom": {
+            "title": "カスタム",
+            "description": "特殊な通信パターンのためのカスタムプロトコル実装。独自のインターフェース仕様と統合要件を定義します。"
+          }
+        },
+        "nameHint": "英字で始まり、英字・数字・アンダースコアのみ使用可能（最大64文字）。",
+        "descriptionHint": "検出および検索結果に表示される、人間が読める短い概要。",
+        "deriveFromUrl": "空欄の場合はURLから取得",
+        "endpointLabel": "エンドポイント",
+        "endpointPlaceholder": "https://example.com/mcp-server",
+        "endpointHint": "有効なHTTPS URLである必要があります。",
+        "credentialType": "認証タイプ",
+        "credentials": {
+          "iam": {
+            "title": "IAMロール",
+            "description": "SigV4署名によるIAMロール引き受けで認証します。"
+          },
+          "oauth": {
+            "title": "OAuthクライアント",
+            "description": "OAuth 2.0クライアントクレデンシャルで認証します。"
+          },
+          "none": {
+            "title": "認証なし",
+            "description": "認証は不要です。公開エンドポイント向け。"
+          }
+        },
+        "roleArnLabel": "ロールARN",
+        "serviceLabel": "サービス",
+        "servicePlaceholder": "例: execute-api",
+        "regionLabel": "リージョン（任意）",
+        "oauthArnLabel": "OAuthプロバイダARN",
+        "oauthScopesLabel": "スコープ（任意、カンマ区切り）"
+      },
+      "mcpCard": {
+        "title": "MCPサーバー定義",
+        "description": "名前、説明、機能を含むMCPサーバー構成を指定します。これにより検出と接続のための基本サーバー情報が確立されます。",
+        "serverLabel": "MCPサーバー定義",
+        "addToolTitle": "ツール定義を追加（任意）",
+        "addToolDescription": "このサーバーで利用可能な特定のツールを入力パラメータ、出力、使用例とともに追加して、検出性を高めます。",
+        "toolLabel": "ツール定義"
+      },
+      "agentCardSection": {
+        "title": "エージェント",
+        "description": "エージェント間通信のための機能、サポートされるタスク、対話パターンを含むエージェント構成を指定します。",
+        "agentCardLabel": "エージェントカード"
+      },
+      "customCard": {
+        "title": "カスタム定義",
+        "description": "リソース（名前、説明、エンドポイント、認証など）を記述する自由形式のJSONとしてカスタムレコードを定義します。",
+        "customLabel": "カスタム定義"
+      },
+      "skillsCard": {
+        "title": "エージェントスキル",
+        "description": "マークダウン形式でスキルドキュメントを提供し、必要に応じてJSON形式の構造化されたスキル定義を含めます。スキルドキュメントまたはスキル定義のいずれかを提供する必要があります。",
+        "includeDocTitle": "スキルドキュメントを含める",
+        "includeDocDescription": "マークダウンまたはテキスト形式でスキルドキュメントを提供します。",
+        "skillMdLabel": "スキルMarkdown",
+        "pasteExample": "例を貼り付け",
+        "includeDefTitle": "スキル定義を含める",
+        "includeDefDescription": "スキーマバージョンとJSON定義でスキルの構造化されたメタデータを定義します。",
+        "skillDefinitionLabel": "スキル定義"
+      },
+      "editor": {
+        "showOfficialSchema": "公式スキーマを表示",
+        "yourDefinition": "あなたの定義",
+        "definition": "定義",
+        "officialSchema": "公式スキーマ"
+      },
+      "actions": {
+        "cancel": "キャンセル",
+        "saveDraft": "下書きとして作成",
+        "submitForApproval": "作成して承認申請"
+      },
+      "toast": {
+        "approvalSuccess": "レコードが承認のため提出されました",
+        "approvalFailed": "レコードは作成されましたが提出に失敗しました"
+      },
+      "endpointRequired": "エンドポイントURLは必須です"
+    }
+  },
+  "AgentList": {
+    "title": "エージェント",
+    "description": "AIエージェントの管理と公開エージェントの閲覧",
+    "agent": "エージェント",
+    "agents": "エージェント",
+    "createAgent": "エージェントを作成",
+    "tabs": {
+      "all": "すべて",
+      "mine": "自分のエージェント",
+      "public": "公開"
+    },
+    "search": {
+      "placeholder": "エージェントを検索...",
+      "clear": "クリア",
+      "clearAll": "検索をクリア"
+    },
+    "visibility": {
+      "public": "公開",
+      "private": "非公開"
+    },
+    "empty": {
+      "title": "エージェントが見つかりません",
+      "withSearch": "検索条件を変更して、お探しのものを見つけてください。",
+      "noData": "最初のエージェントを作成して始めましょう。"
+    },
+    "error": {
+      "loadFailed": "エージェントの読み込みに失敗しました"
+    },
+    "toast": {
+      "deleteSuccess": "エージェントが正常に削除されました",
+      "deleteFailed": "エージェントの削除に失敗しました"
+    },
+    "actions": {
+      "view": "エージェントを表示",
+      "edit": "エージェントを編集",
+      "delete": "エージェントを削除"
+    },
+    "deleteDialog": {
+      "title": "エージェントを削除",
+      "description": "「{name}」を削除してもよろしいですか？この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除"
+    },
+    "pagination": {
+      "showing": "{from} - {to} / {total} エージェントを表示中"
+    }
+  },
+  "AgentForm": {
+    "header": {
+      "subtitle": "エージェントの設定と動作を構成する"
+    },
+    "sidebar": {
+      "general": "一般",
+      "model": "モデル",
+      "prompt": "プロンプト",
+      "tools": "ツール",
+      "compute": "コンピュート"
+    },
+    "save": "保存",
+    "cancel": "キャンセル",
+    "general": {
+      "identity": {
+        "title": "エージェントID",
+        "description": "エージェントの基本情報を設定します。",
+        "nameLabel": "名前",
+        "nameHint": "エージェントの表示名です。会話中に表示されます。",
+        "namePlaceholder": "エージェント名",
+        "descriptionLabel": "説明",
+        "descriptionHint": "このエージェントの役割の簡単な説明です。",
+        "descriptionPlaceholder": "エージェントの説明..."
+      },
+      "danger": {
+        "title": "危険ゾーン",
+        "description": "このエージェントと関連するすべてのデータを完全に削除します。この操作は取り消せません。",
+        "delete": "エージェントを削除",
+        "deleting": "削除中...",
+        "dialogTitle": "エージェントを削除",
+        "dialogDescription": "「{name}」を削除してもよろしいですか？エージェントと関連するすべてのデータが完全に削除されます。この操作は元に戻せません。",
+        "dialogCancel": "キャンセル",
+        "dialogConfirm": "削除"
+      },
+      "toast": {
+        "updated": "エージェントが更新されました",
+        "updateFailed": "エージェントの更新に失敗しました",
+        "deleted": "エージェントが削除されました",
+        "deleteFailed": "エージェントの削除に失敗しました"
+      },
+      "visibility": {
+        "title": "公開設定",
+        "description": "このエージェントの公開範囲を設定します。",
+        "public": "公開",
+        "private": "非公開",
+        "publicHint": "組織内の全員がこのエージェントを閲覧・利用できます。",
+        "privateHint": "このエージェントを閲覧・利用できるのはあなただけです。",
+        "toast": {
+          "madePublic": "エージェントが公開されました",
+          "madePrivate": "エージェントが非公開になりました",
+          "failed": "公開設定の更新に失敗しました"
+        }
+      }
+    },
+    "model": {
+      "title": "モデル設定",
+      "description": "このエージェントに使用する言語モデルを選択します。選択したモデルは応答の品質、速度、コストに影響します。",
+      "preferredLabel": "優先モデル",
+      "preferredHint": "このエージェントがすべての会話でデフォルトで使用するモデルを選択します。",
+      "searchPlaceholder": "モデルを検索...",
+      "noResults": "モデルが見つかりません",
+      "loading": "モデルを読み込み中...",
+      "noModels": "モデルが設定されていません。プラットフォーム設定でモデルを追加してください。",
+      "systemDefault": "システムデフォルトを使用",
+      "detail": {
+        "contextWindow": "コンテキスト",
+        "input": "入力",
+        "output": "出力",
+        "cacheRead": "キャッシュ読み取り",
+        "cacheWrite": "キャッシュ書き込み"
+      },
+      "toast": {
+        "updated": "モデル設定が保存されました",
+        "updateFailed": "モデル設定の保存に失敗しました"
+      }
+    },
+    "prompt": {
+      "title": "システムプロンプト",
+      "description": "エージェントの基本的な指示と動作を定義します。システムプロンプトはエージェントのユーザーへの応答方法を決定します。",
+      "instructionsLabel": "カスタム指示",
+      "instructionsHint": "エージェントの具体的な指示、性格特性、制約を提供します。",
+      "placeholder": "あなたは親切なアシスタントです...",
+      "toast": {
+        "updated": "システムプロンプトが保存されました",
+        "updateFailed": "システムプロンプトの保存に失敗しました"
+      }
+    },
+    "tools": {
+      "title": "ツール",
+      "description": "このエージェントで利用可能なツールを管理します。ツールにより、エージェントは会話以外のアクションを実行できます。",
+      "searchPlaceholder": "ツールを検索...",
+      "allTypes": "すべてのタイプ",
+      "core": "コア",
+      "thirdParty": "レジストリ",
+      "mcp": "MCP",
+      "addTool": "ツールを追加",
+      "addTools": "ツールを追加",
+      "addDescription": "エージェントにツールを追加します。ツールにより、エージェントは会話以外のアクションを実行できます。",
+      "addCount": "{count}個のツールを追加",
+      "alreadyAdded": "追加済み",
+      "back": "戻る",
+      "editTools": "ツールを編集",
+      "remove": "削除",
+      "saveChanges": "変更を保存",
+      "noResults": "「{query}」に一致するツールが見つかりません",
+      "empty": "ツールがまだ設定されていません。ツールを追加して始めましょう。",
+      "table": {
+        "name": "名前",
+        "category": "カテゴリ",
+        "type": "タイプ",
+        "lastUpdated": "最終更新"
+      },
+      "registry": {
+        "searchPlaceholder": "レジストリツールを検索...",
+        "noRegistries": "利用可能なレジストリがありません。まずレジストリを作成してください。",
+        "loading": "レジストリを読み込み中...",
+        "loadingRecords": "ツールを読み込み中...",
+        "noResults": "承認済みのツールが見つかりません",
+        "noSearchResults": "「{query}」に一致するツールが見つかりません",
+        "searchHint": "すべてのレジストリから承認済みツールを検索",
+        "protocol": "プロトコル",
+        "registryLabel": "レジストリ",
+        "version": "v{version}",
+        "selectAll": "すべて選択",
+        "deselectAll": "すべて解除",
+        "errorLoadingRegistries": "レジストリの読み込みに失敗しました",
+        "errorLoadingRecords": "レコードの読み込みに失敗しました",
+        "errorSearching": "検索に失敗しました",
+        "searchButton": "検索",
+        "searching": "検索中..."
+      },
+      "detail": {
+        "title": "ツール詳細",
+        "subtitle": "レジストリAPIから取得したレジストリツールの詳細。",
+        "loading": "ツール詳細を読み込み中...",
+        "loadError": "ツール詳細の読み込みに失敗しました",
+        "basicInfo": "基本情報",
+        "name": "名前",
+        "protocol": "プロトコル",
+        "version": "バージョン",
+        "status": "ステータス",
+        "description": "説明",
+        "endpoint": "エンドポイント",
+        "descriptors": "ディスクリプタ",
+        "metadata": "メタデータ",
+        "recordArn": "レコードARN",
+        "recordId": "レコードID",
+        "created": "作成日時",
+        "updated": "更新日時",
+        "viewInRegistry": "レジストリで表示"
+      },
+      "coreDetail": {
+        "category": "カテゴリ",
+        "configuration": "設定"
+      },
+      "target": {
+        "ready": "使用可能",
+        "provisioning": "プロビジョニング中…",
+        "failed": "失敗",
+        "retry": "再試行",
+        "unsupported": "未対応",
+        "unsupportedHint": "MCPサーバーレコードのみゲートウェイツールとして利用できます"
+      }
+    },
+    "compute": {
+      "title": "コンピュートランタイム",
+      "description": "このエージェントを動かすコンピュート環境を選択します。エージェントの実行とスケーリング方法が決まります。",
+      "bedrockName": "Bedrock AgentCore",
+      "bedrockDescription": "Amazon Bedrock AgentCoreによるフルマネージドランタイム。スケーリング、オーケストレーション、ツール実行を自動的に処理します。",
+      "lambdaName": "AWS Lambda",
+      "lambdaDescription": "AWS Lambda関数を使用したサーバーレスコンピュート。実行環境とカスタムランタイムロジックをきめ細かく制御できます。"
+    }
+  },
+  "CreateAgentDialog": {
+    "trigger": "エージェントを作成",
+    "title": "新規エージェントの作成",
+    "description": "新しいAIエージェントの名前と説明を入力してください。",
+    "nameLabel": "エージェント名",
+    "namePlaceholder": "例: カスタマーサポートエージェント",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "このエージェントの役割を説明してください...",
+    "toast": {
+      "success": "エージェントが正常に作成されました",
+      "error": "エージェントの作成に失敗しました"
+    },
+    "cancel": "キャンセル",
+    "creating": "作成中...",
+    "submit": "エージェントを作成"
+  },
+  "NavUser": {
+    "loading": "読み込み中...",
+    "loadingSession": "セッションを読み込み中...",
+    "account": "アカウント",
+    "notifications": "通知",
+    "apiReference": "APIリファレンス",
+    "language": "言語",
+    "logOut": "ログアウト"
+  },
+  "RecordDetailPage": {
+    "title": "レコード詳細",
+    "description": "このレジストリレコードの詳細情報を表示",
+    "error": {
+      "loadFailed": "レコード詳細の読み込みに失敗しました"
+    },
+    "basicInfo": "基本情報",
+    "name": "名前:",
+    "protocol": "プロトコル:",
+    "version": "バージョン:",
+    "status": "ステータス:",
+    "descriptionLabel": "説明:",
+    "descriptors": "ディスクリプタ",
+    "metadata": "メタデータ",
+    "recordArn": "レコードARN:",
+    "recordId": "レコードID:",
+    "created": "作成日:",
+    "updated": "更新日:",
+    "edit": "編集",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "saving": "保存中...",
+    "nameLabel": "名前",
+    "descriptionEditLabel": "説明",
+    "protocolLabel": "プロトコル",
+    "versionLabel": "バージョン",
+    "statusLabel": "ステータス",
+    "descriptorsLabel": "ディスクリプタ",
+    "prettify": "整形",
+    "serverSchemaLabel": "サーバースキーマ (JSON)",
+    "toolSchemaLabel": "ツールスキーマ (JSON)",
+    "agentCardLabel": "エージェントカード (JSON)",
+    "toast": {
+      "updateSuccess": "レコードが正常に更新されました",
+      "updateError": "レコードの更新に失敗しました",
+      "submitSuccess": "レコードを承認申請しました",
+      "statusSuccess": "レコードのステータスが更新されました",
+      "statusError": "ステータスの更新に失敗しました",
+      "deleteSuccess": "レコードが正常に削除されました",
+      "deleteError": "レコードの削除に失敗しました"
+    },
+    "actions": {
+      "updateStatus": "ステータスを更新",
+      "submitForApproval": "承認申請",
+      "approve": "承認",
+      "reject": "却下",
+      "deprecate": "非推奨にする",
+      "delete": "削除"
+    },
+    "deleteDialog": {
+      "title": "レコードの削除",
+      "description": "「{name}」を削除してもよろしいですか？この操作は取り消せません。",
+      "confirm": "削除",
+      "deleting": "削除中..."
+    },
+    "test": {
+      "title": "エンドポイントテスト",
+      "run": "テスト",
+      "testing": "テスト中...",
+      "success": "エンドポイントに接続できました",
+      "toolsFound": "{count}個のツールが見つかりました:",
+      "noEndpoint": "サーバースキーマにエンドポイントURLが見つかりません。テストを有効にするには'endpoint'フィールドを追加してください。",
+      "a2aNotAvailable": "A2Aエージェントカードのテストはまだ利用できません。"
+    },
+    "testTool": {
+      "trigger": "ツールをテスト",
+      "sheetTitle": "ツールをテスト",
+      "endpointLabel": "エンドポイント",
+      "selectValuePlaceholder": "値を選択",
+      "auth": {
+        "label": "認証",
+        "none": "なし",
+        "sigv4": "IAM (SigV4)",
+        "jwt": "OAuthベアラートークン",
+        "bearerLabel": "ベアラートークン",
+        "bearerPlaceholder": "ベアラートークンを貼り付け",
+        "bearerHint": "OAuthトークンはレコードに保存されません。テストするにはOAuthプロバイダからのトークンを貼り付けてください。"
+      },
+      "arguments": "引数",
+      "rawJson": "生のJSON",
+      "noArguments": "このツールは引数を受け取りません。",
+      "required": "必須",
+      "run": "ツールを実行",
+      "running": "実行中...",
+      "close": "閉じる",
+      "result": "結果",
+      "error": "エラー",
+      "emptyResult": "(空)"
+    },
+    "readView": {
+      "recordDetails": "レコード詳細",
+      "fields": {
+        "name": "名前",
+        "description": "説明",
+        "status": "ステータス",
+        "version": "バージョン",
+        "lastUpdated": "最終更新",
+        "recordType": "レコードタイプ",
+        "recordId": "レコードID",
+        "created": "作成日時"
+      },
+      "failure": {
+        "createTitle": "レコードの作成に失敗しました",
+        "updateTitle": "レコードの更新に失敗しました",
+        "defaultReason": "失敗理由が提供されていません。再同期を試すか、エンドポイント設定を確認してください。"
+      },
+      "sections": {
+        "mcpEndpoint": "MCPエンドポイント",
+        "agentEndpoint": "エージェントエンドポイント",
+        "serverInformation": "サーバー情報",
+        "serverName": "サーバー名",
+        "version": "バージョン",
+        "transport": "トランスポート",
+        "tools": "ツール",
+        "noToolsDefined": "このサーバーにツールが定義されていません",
+        "parameters": "パラメータ",
+        "agentInformation": "エージェント情報",
+        "agentName": "エージェント名",
+        "protocolVersion": "プロトコルバージョン",
+        "descriptionLabel": "説明",
+        "capabilities": "機能",
+        "skills": "スキル",
+        "noCapabilities": "このエージェントカードに機能が定義されていません",
+        "skillDefinition": "スキル定義",
+        "skillMarkdown": "スキルMarkdown",
+        "repository": "リポジトリ",
+        "source": "ソース",
+        "packages": "パッケージ",
+        "noSkillMarkdown": "スキルMarkdownの内容がありません",
+        "customDescriptor": "カスタム記述子",
+        "name": "名前",
+        "endpoint": "エンドポイント",
+        "noCustomDescriptor": "カスタム記述子の内容がありません",
+        "syncButton": "同期",
+        "copied": "{label}をコピーしました",
+        "copyFailed": "コピーに失敗しました"
+      }
+    },
+    "editView": {
+      "basicInfo": {
+        "description": "レコードの名前、説明、バージョンのメタデータを更新します。",
+        "nameHint": "英字で始まり、英字・数字・アンダースコアのみ使用可能（最大64文字）。",
+        "descriptionHint": "検出および検索結果に表示される、人間が読める短い概要。",
+        "versionHint": "このレコードのセマンティックバージョン文字列（例: 1.0, 1.2.3）。意味のある変更を公開する際にバージョンを上げてください。",
+        "typeFixedHint": "レコードタイプは作成後に固定されます。"
+      },
+      "mcp": {
+        "title": "MCPサーバー定義",
+        "description": "名前、説明、機能を含むMCPサーバー構成を指定します。これにより検出と接続のための基本サーバー情報が確立されます。",
+        "serverLabel": "MCPサーバー定義",
+        "addToolTitle": "ツール定義を追加（任意）",
+        "addToolDescription": "このサーバーで利用可能な特定のツールを入力パラメータ、出力、使用例とともに追加して、検出性を高めます。",
+        "toolLabel": "ツール定義"
+      },
+      "a2a": {
+        "title": "エージェント",
+        "description": "エージェント間通信のための機能、サポートされるタスク、対話パターンを含むエージェント構成を指定します。",
+        "agentCardLabel": "エージェントカード"
+      },
+      "custom": {
+        "title": "カスタム定義",
+        "description": "リソース（名前、説明、エンドポイント、認証など）を記述する自由形式のJSONとしてカスタムレコードを定義します。",
+        "customLabel": "カスタム定義"
+      },
+      "skills": {
+        "title": "エージェントスキル",
+        "description": "マークダウン形式でスキルドキュメントを提供し、必要に応じてJSON形式の構造化されたスキル定義を含めます。スキルドキュメントまたはスキル定義のいずれかを提供する必要があります。",
+        "includeDocTitle": "スキルドキュメントを含める",
+        "includeDocDescription": "マークダウンまたはテキスト形式でスキルドキュメントを提供します。",
+        "skillMdLabel": "スキルMarkdown",
+        "pasteExample": "例を貼り付け",
+        "includeDefTitle": "スキル定義を含める",
+        "includeDefDescription": "スキーマバージョンとJSON定義でスキルの構造化されたメタデータを定義します。",
+        "skillDefinitionLabel": "スキル定義"
+      },
+      "syncTriggered": "同期を開始しました",
+      "syncFailed": "同期に失敗しました"
+    }
+  },
+  "PlatformSettings": {
+    "header": {
+      "title": "プラットフォーム設定",
+      "subtitle": "プラットフォーム全体の設定と利用可能なリソースを構成"
+    },
+    "sidebar": {
+      "models": "モデル",
+      "personas": "ペルソナ"
+    },
+    "save": "保存",
+    "cancel": "キャンセル",
+    "models": {
+      "title": "利用可能なモデル",
+      "description": "プラットフォーム上でユーザーが利用できるAIモデルを管理します。",
+      "searchPlaceholder": "モデルを検索...",
+      "addModel": "モデルを追加",
+      "addTitle": "モデルを追加",
+      "addDescription": "プラットフォームに新しいAIモデルを追加します。ユーザーはエージェントにこのモデルを選択できるようになります。",
+      "addSubmit": "モデルを追加",
+      "editTitle": "モデルを編集",
+      "editDescription": "このモデルの設定を更新します。",
+      "empty": "モデルがまだ設定されていません。モデルを追加して始めましょう。",
+      "noResults": "「{query}」に一致するモデルが見つかりません",
+      "table": {
+        "name": "名前",
+        "modelProvider": "モデルプロバイダー",
+        "modelId": "モデルID",
+        "inferenceProvider": "推論プロバイダー"
+      },
+      "form": {
+        "nameLabel": "名前",
+        "namePlaceholder": "Claude Sonnet 4.6",
+        "modelProviderLabel": "モデルプロバイダー",
+        "modelProviderPlaceholder": "モデルプロバイダーを選択",
+        "customProvider": "カスタム",
+        "customProviderPlaceholder": "プロバイダー名を入力",
+        "modelIdLabel": "モデルID",
+        "modelIdPlaceholder": "global.anthropic.claude-sonnet-4-6",
+        "searchModels": "モデルを検索...",
+        "noModelsFound": "モデルが見つかりません",
+        "customModelId": "カスタム",
+        "browseModels": "参照",
+        "inferenceProviderLabel": "推論プロバイダー",
+        "inferenceProviderPlaceholder": "推論プロバイダーを選択"
+      },
+      "detail": {
+        "contextWindow": "コンテキスト",
+        "input": "入力",
+        "output": "出力",
+        "cacheRead": "キャッシュ読み取り",
+        "cacheWrite": "キャッシュ書き込み"
+      },
+      "actions": {
+        "edit": "モデルを編集",
+        "delete": "モデルを削除"
+      },
+      "deleteDialog": {
+        "title": "モデルの削除",
+        "description": "「{name}」を削除してもよろしいですか？このモデルを使用しているエージェントの設定はクリアされます。",
+        "cancel": "キャンセル",
+        "confirm": "削除"
+      },
+      "toast": {
+        "created": "モデルが正常に追加されました",
+        "createFailed": "モデルの追加に失敗しました",
+        "updated": "モデルが更新されました",
+        "updateFailed": "モデルの更新に失敗しました",
+        "deleted": "モデルが削除されました",
+        "deleteFailed": "モデルの削除に失敗しました"
+      }
+    },
+    "personas": {
+      "title": "ペルソナ",
+      "description": "エージェント実行テスト用のIDプロバイダーからテストペルソナを管理します。",
+      "searchPlaceholder": "ペルソナを検索...",
+      "addPersona": "ペルソナを追加",
+      "addTitle": "ペルソナを追加",
+      "addDescription": "IDプロバイダーから新しいペルソナプロファイルを作成します。このペルソナはエージェント実行のテストに使用できます。",
+      "addSubmit": "ペルソナを追加",
+      "editTitle": "ペルソナを編集",
+      "editDescription": "このペルソナの詳細を更新します。",
+      "empty": "ペルソナがまだ設定されていません。ペルソナを追加して始めましょう。",
+      "noResults": "「{query}」に一致するペルソナが見つかりません",
+      "table": {
+        "name": "名前",
+        "groups": "グループ",
+        "provider": "プロバイダー",
+        "email": "メール"
+      },
+      "form": {
+        "providerLabel": "IDプロバイダー",
+        "providerPlaceholder": "プロバイダーを選択",
+        "selectUser": "ユーザーを選択",
+        "selectGroups": "グループを割り当て",
+        "searchUsers": "名前またはメールでユーザーを検索...",
+        "searchGroups": "名前でグループを検索...",
+        "noResults": "結果が見つかりません",
+        "nameLabel": "表示名",
+        "namePlaceholder": "このペルソナの名前を入力",
+        "externalId": "外部ID",
+        "emailLabel": "メール",
+        "emailPlaceholder": "user@example.com",
+        "selectedGroups": "{count}件のグループを選択",
+        "cognitoGroupsEmpty": "グループがありません。AWS Cognito コンソールでグループを作成してください。"
+      },
+      "actions": {
+        "edit": "ペルソナを編集",
+        "delete": "ペルソナを削除"
+      },
+      "deleteDialog": {
+        "title": "ペルソナの削除",
+        "description": "「{name}」を削除してもよろしいですか？このペルソナはすべてのテスト設定から削除されます。",
+        "cancel": "キャンセル",
+        "confirm": "削除"
+      },
+      "toast": {
+        "created": "ペルソナが正常に追加されました",
+        "createFailed": "ペルソナの追加に失敗しました",
+        "updated": "ペルソナが更新されました",
+        "updateFailed": "ペルソナの更新に失敗しました",
+        "deleted": "ペルソナが削除されました",
+        "deleteFailed": "ペルソナの削除に失敗しました"
+      }
+    }
+  },
+  "PolicyLibrary": {
+    "title": "ポリシーライブラリ",
+    "description": "Cedar認可ポリシーの下書き、テンプレート、公開済みポリシーを管理する",
+    "policy": "ポリシー",
+    "policies": "ポリシー",
+    "loading": "ポリシーを読み込み中",
+    "createPolicy": "ポリシーを作成",
+    "import": ".cedarファイルをインポート",
+    "importInfo": "インポート機能は近日公開予定です",
+    "templateBadge": "テンプレート",
+    "instanceBadge": "インスタンス",
+    "tabs": {
+      "all": "すべて",
+      "policies": "ポリシー",
+      "templates": "テンプレート"
+    },
+    "createFromTemplate": {
+      "trigger": "テンプレートから",
+      "pickTitle": "テンプレートを選択",
+      "pickDescription": "公開済みのテンプレートを選択してください。次のステップでプレースホルダの値を入力します。",
+      "bindTitle": "テンプレートをインスタンス化",
+      "bindDescription": "「{name}」の各プレースホルダに値を入力してください。Cedar定義はサーバー側で解決され、ここでは編集できません。",
+      "search": "テンプレートを検索...",
+      "empty": "公開済みのテンプレートはまだありません。",
+      "emptyFiltered": "検索条件に一致するテンプレートがありません。",
+      "loadError": "テンプレートの読み込みに失敗しました。",
+      "back": "戻る",
+      "success": "ポリシーをインスタンス化しました",
+      "form": {
+        "name": "ポリシー名",
+        "namePlaceholder": "例：本番アクセス - Alice",
+        "description": "説明",
+        "descriptionPlaceholder": "このインスタンスがカバーする範囲の簡単な説明",
+        "bindingFor": "このスロットのバインディング",
+        "entityType": "エンティティタイプ",
+        "entityId": "エンティティID",
+        "preview": "解決済みCedarプレビュー",
+        "noSlots": "このテンプレートにはプレースホルダがありません。Cedar定義をそのままコピーしたポリシーを作成します。",
+        "submit": "ポリシーを作成"
+      }
+    },
+    "errors": {
+      "loadFailed": "ポリシーの読み込みに失敗しました",
+      "createFailed": "ポリシーの作成に失敗しました",
+      "updateFailed": "ポリシーの更新に失敗しました",
+      "deleteFailed": "ポリシーの削除に失敗しました"
+    },
+    "search": {
+      "placeholder": "名前、説明、タグでポリシーを検索..."
+    },
+    "filters": {
+      "status": {
+        "placeholder": "ステータス",
+        "all": "すべてのステータス",
+        "draft": "下書き",
+        "in_review": "レビュー中",
+        "published": "公開済み",
+        "archived": "アーカイブ済み"
+      },
+      "type": {
+        "placeholder": "タイプ",
+        "all": "すべてのタイプ",
+        "permit": "許可",
+        "forbid": "禁止"
+      }
+    },
+    "table": {
+      "name": "名前",
+      "description": "説明",
+      "type": "タイプ",
+      "status": "ステータス",
+      "creator": "作成者",
+      "tags": "タグ",
+      "created": "作成日",
+      "actions": "操作"
+    },
+    "status": {
+      "draft": "下書き",
+      "in_review": "レビュー中",
+      "published": "公開済み",
+      "archived": "アーカイブ済み"
+    },
+    "type": {
+      "permit": "許可",
+      "forbid": "禁止"
+    },
+    "empty": {
+      "title": "ポリシーが見つかりません",
+      "noData": "最初のCedarポリシーを作成して始めましょう。",
+      "withFilters": "検索またはフィルターを調整して、お探しのものを見つけてください。"
+    },
+    "actions": {
+      "view": "ポリシーを表示",
+      "edit": "ポリシーを編集",
+      "publish": "公開",
+      "publishSuccess": "ポリシーを公開しました",
+      "delete": "ポリシーを削除",
+      "deleteSuccess": "ポリシーを削除しました"
+    },
+    "createDialog": {
+      "trigger": "ポリシーを作成",
+      "title": "新しいポリシーを作成",
+      "description": "まずはポリシー名を入力してください。Cedar定義は作成後に編集できます。",
+      "name": {
+        "label": "ポリシー名",
+        "placeholder": "例：クレーム読み取りアクセス"
+      },
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "このポリシーが制御する内容の簡単な要約",
+      "openEditor": {
+        "label": "作成後にエディタを開く",
+        "helper": "Cedarエディタに直接移動してポリシーを記述します。チェックを外すと空の下書きが作成され、後で編集できます。"
+      },
+      "saveAsTemplate": {
+        "label": "テンプレートとして保存",
+        "helper": "テンプレートには ?principal と ?resource のプレースホルダが含まれます。他の利用者は具体的なバインディングでインスタンス化できます。"
+      },
+      "scaffoldedCedar": "permit (\n    principal == ?principal,\n    action,\n    resource == ?resource\n);",
+      "cancel": "キャンセル",
+      "confirm": "ポリシーを作成",
+      "toast": {
+        "success": "ポリシーを作成しました"
+      }
+    },
+    "deleteDialog": {
+      "title": "ポリシーを削除しますか？",
+      "description": "「{name}」とそのすべてのバージョン、アクティビティ履歴、リンクポリシーが完全に削除されます。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除"
+    },
+    "bulk": {
+      "selected": "{count}件選択中",
+      "export": "エクスポート",
+      "delete": "削除",
+      "deleteSuccess": "{count}件のポリシーを削除しました",
+      "exportSuccess": "{count}件のポリシーをエクスポートしました",
+      "deleteDialog": {
+        "title": "{count}件のポリシーを削除しますか？",
+        "description": "選択した{count}件のポリシーとそのバージョン、アクティビティ履歴、リンクポリシーが完全に削除されます。この操作は元に戻せません。",
+        "cancel": "キャンセル",
+        "confirm": "削除"
+      }
+    },
+    "na": "N/A"
+  },
+  "PolicyLibraryDetail": {
+    "backToLibrary": "ポリシーライブラリに戻る",
+    "notFound": "ポリシーが見つかりません。",
+    "policyId": "ポリシーID:",
+    "edit": "ポリシーを編集",
+    "na": "N/A",
+    "templateBadge": "テンプレート",
+    "parentBanner": {
+      "title": "テンプレートのインスタンス",
+      "description": "このポリシーはテンプレート「{name}」をインスタンス化して作成されました。以降は独自のライフサイクルを持ちます。",
+      "viewTemplate": "テンプレートを表示"
+    },
+    "statusValues": {
+      "draft": "下書き",
+      "in_review": "レビュー中",
+      "published": "公開済み",
+      "archived": "アーカイブ済み"
+    },
+    "sidebar": {
+      "overview": "概要",
+      "definition": "定義",
+      "versions": "バージョン",
+      "instances": "インスタンス",
+      "activity": "アクティビティ",
+      "settings": "設定"
+    },
+    "overview": {
+      "title": "概要",
+      "name": "名前",
+      "status": "ステータス",
+      "type": "タイプ",
+      "policyId": "ポリシーID",
+      "creator": "作成者",
+      "created": "作成日",
+      "updated": "最終更新日",
+      "tags": "タグ",
+      "description": "説明",
+      "versionCount": "現在のバージョン",
+      "linkedCount": "リンクポリシー",
+      "promote": "ステータスを変更",
+      "promoteTo": {
+        "draft": "下書きに戻す",
+        "in_review": "レビューに提出",
+        "published": "公開",
+        "archived": "アーカイブ"
+      },
+      "statusValues": {
+        "draft": "下書き",
+        "in_review": "レビュー中",
+        "published": "公開済み",
+        "archived": "アーカイブ済み"
+      },
+      "typeValues": {
+        "permit": "許可",
+        "forbid": "禁止"
+      },
+      "nameUpdated": "ポリシー名を更新しました",
+      "descriptionUpdated": "説明を更新しました",
+      "statusUpdated": "ポリシーステータスを更新しました",
+      "tagAdded": "タグを追加しました",
+      "addTag": "タグを追加",
+      "tagPlaceholder": "タグ名",
+      "noTags": "タグなし",
+      "noDescription": "説明がありません。",
+      "cancel": "キャンセル",
+      "save": "保存"
+    },
+    "definition": {
+      "title": "ポリシー定義",
+      "cedar": "Cedarポリシー",
+      "copy": "コピー",
+      "copied": "コピー済み",
+      "noDefinition": "ポリシー定義がありません。",
+      "templateSlots": "テンプレートスロットを検出",
+      "templateSlotsDescription": "このポリシーにはインスタンス化時に値が設定されるプレースホルダが含まれています。「インスタンス」セクションからこのテンプレートから具体的なポリシーを作成してください。"
+    },
+    "versions": {
+      "title": "バージョン履歴 ({count})",
+      "empty": "バージョン履歴がありません。",
+      "current": "現在",
+      "revert": "戻す",
+      "revertTitle": "以前のバージョンに戻す",
+      "revertDescription": "バージョン{version}のCedarコードで新しいバージョンを作成します。現在のバージョンは履歴に残ります。",
+      "revertCancel": "キャンセル",
+      "revertConfirm": "戻す",
+      "revertSuccess": "バージョン{version}に戻しました",
+      "compare": "バージョンを比較",
+      "selectVersion": "バージョンを選択",
+      "comparBtn": "比較",
+      "closeDiff": "閉じる"
+    },
+    "instances": {
+      "title": "インスタンス ({count})",
+      "create": "インスタンスを作成",
+      "loadError": "インスタンスの読み込みに失敗しました。",
+      "createSuccess": "インスタンスを作成しました",
+      "createError": "インスタンスの作成に失敗しました",
+      "empty": "まだインスタンスはありません。テンプレートのプレースホルダに具体的な値を入力してインスタンスを作成してください。",
+      "noSlots": "このテンプレートには ?principal / ?resource のスロットがありません。インスタンス化する前にCedar定義にスロットを追加してください。",
+      "table": {
+        "name": "名前",
+        "status": "ステータス",
+        "created": "作成日"
+      },
+      "createTitle": "テンプレートをインスタンス化",
+      "createDescription": "テンプレートのプレースホルダを具体的なエンティティで置き換えて、新しいポリシーを作成します。解決済みのCedarはこのテンプレートにリンクされた独立ポリシーとして保存されます。",
+      "form": {
+        "name": "ポリシー名",
+        "namePlaceholder": "例：本番アクセス - Alice",
+        "description": "説明",
+        "descriptionPlaceholder": "このインスタンスがカバーする範囲の簡単な説明",
+        "bindingFor": "このスロットのバインディング",
+        "entityType": "エンティティタイプ",
+        "entityId": "エンティティID",
+        "preview": "解決済みCedarプレビュー",
+        "cancel": "キャンセル",
+        "create": "インスタンスを作成"
+      }
+    },
+    "activity": {
+      "title": "アクティビティ ({count})",
+      "empty": "このポリシーのアクティビティはまだ記録されていません。"
+    },
+    "settings": {
+      "general": "一般",
+      "metadata": "メタデータ",
+      "metadataFields": {
+        "policyId": "ポリシーID",
+        "copyId": "ポリシーIDをコピー",
+        "creator": "作成者",
+        "created": "作成日",
+        "updated": "最終更新日",
+        "archivedAt": "アーカイブ日時",
+        "exports": "エクスポート回数"
+      },
+      "archivedBanner": {
+        "title": "このポリシーはアーカイブ済みです",
+        "description": "アクティブなライブラリから除外されています。変更したりCedar定義を編集したりするには復元してください。"
+      },
+      "restoreBtn": "復元",
+      "restoreTitle": "ポリシーを復元しますか？",
+      "restoreConfirmDescription": "「{name}」が下書きに戻され、アクティブなライブラリに再表示されます。",
+      "restoreConfirm": "下書きに復元",
+      "restoreSuccess": "ポリシーを復元しました",
+      "duplicate": "ポリシーを複製",
+      "duplicateDescription": "すべての設定を含むポリシーのコピーを作成します。",
+      "duplicateBtn": "複製",
+      "duplicateSuccess": "ポリシーを複製しました",
+      "duplicateDialog": {
+        "title": "ポリシーを複製",
+        "description": "「{name}」のCedar定義、説明、タイプ、タグを引き継いだ新しい下書きポリシーを作成します。",
+        "nameLabel": "新しいポリシー名",
+        "namePlaceholder": "例：Copy of Claims Read Access",
+        "cancel": "キャンセル",
+        "confirm": "複製を作成",
+        "success": "ポリシーを複製しました"
+      },
+      "export": ".cedarとしてエクスポート",
+      "exportDescription": "Cedarポリシー定義をファイルとしてダウンロードします。",
+      "exportBtn": "エクスポート",
+      "exportSuccess": "ポリシーをエクスポートしました",
+      "dangerZone": "危険ゾーン",
+      "dangerZoneDescription": "元に戻せない破壊的な操作。",
+      "archive": "ポリシーをアーカイブ",
+      "archiveDescription": "このポリシーをアーカイブします。ライブラリには表示されなくなりますが、復元できます。",
+      "archiveBtn": "アーカイブ",
+      "archiveTitle": "ポリシーをアーカイブ",
+      "archiveConfirmDescription": "「{name}」をアーカイブしてもよろしいですか？アクティブなライブラリから削除されます。",
+      "archiveConfirm": "アーカイブ",
+      "archiveSuccess": "ポリシーをアーカイブしました",
+      "delete": "ポリシーを削除",
+      "deleteDescription": "このポリシーとすべてのバージョンを完全に削除します。この操作は元に戻せません。",
+      "deleteBtn": "削除",
+      "deleteTitle": "ポリシーを削除",
+      "deleteConfirmDescription": "「{name}」と関連するすべてのバージョンおよびリンクポリシーを完全に削除します。この操作は元に戻せません。",
+      "deleteTypeToConfirm": "確認するために「{name}」と入力してください：",
+      "deleteConfirm": "完全に削除",
+      "deleteSuccess": "ポリシーを削除しました",
+      "cancel": "キャンセル"
+    }
+  },
+  "PolicyLibraryEdit": {
+    "title": "編集: {name}",
+    "policyId": "ポリシーID:",
+    "back": "ポリシーに戻る",
+    "notFound": "ポリシーが見つかりません。",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "cedarPolicy": "Cedarポリシー",
+    "format": "ポリシーをフォーマット",
+    "undo": "元に戻す",
+    "redo": "やり直し",
+    "placeholder": "ポリシーの動作を自然言語で記述してください...",
+    "generate": "生成",
+    "generateEmptyError": "ポリシーの説明を入力してください",
+    "generateSuccess": "Cedarポリシーが生成されました",
+    "generateError": "Cedarポリシーの生成に失敗しました",
+    "templates": {
+      "trigger": "テンプレート",
+      "title": "テンプレートを選択",
+      "description": "Cedar定義を公開済みポリシーのコードに置き換えます。",
+      "search": "テンプレートを検索...",
+      "empty": "公開済みのポリシーはまだありません。",
+      "emptyFiltered": "検索条件に一致するテンプレートがありません。",
+      "loadError": "テンプレートの読み込みに失敗しました。"
+    },
+    "replaceDialog": {
+      "title": "Cedar定義を置き換えますか？",
+      "description": "現在のCedarコードは「{name}」に置き換えられます。元に戻す操作で以前のコードを復元できます。",
+      "cancel": "キャンセル",
+      "confirm": "テンプレートを使用"
+    },
+    "validation": {
+      "loading": "読み込み中…",
+      "loadError": "チェッカー利用不可",
+      "valid": "有効",
+      "invalid": "{count}件のエラー"
+    },
+    "toast": {
+      "saved": "ポリシーが保存されました"
+    },
+    "saveDialog": {
+      "title": "新しいバージョンを保存",
+      "description": "このバージョンの変更内容を記述してください。このメモはバージョン履歴に表示されます。",
+      "changeNote": "変更メモ",
+      "changeNotePlaceholder": "例：クレーム申請のスコープ検証を追加",
+      "confirm": "バージョンを保存"
+    },
+    "discardDialog": {
+      "title": "変更を破棄しますか？",
+      "description": "このポリシーに未保存の変更があります。本当に離れますか？変更内容は失われます。",
+      "cancel": "編集を続ける",
+      "confirm": "変更を破棄"
+    }
+  },
+  "Playground": {
+    "title": "プレイグラウンド",
+    "description": "エージェントをテスト・操作する",
+    "newChat": "新しいチャット",
+    "noConversations": "会話がありません",
+    "noConversationsHint": "新しいチャットを開始してください",
+    "emptyState": {
+      "title": "会話を始める",
+      "description": "ランタイムを選択してメッセージを送信してください"
+    },
+    "agentSelect": {
+      "placeholder": "エージェントを選択",
+      "loading": "エージェントを読み込み中...",
+      "empty": "利用可能なエージェントがありません",
+      "search": "エージェントを検索..."
+    },
+    "runtimeSelect": {
+      "placeholder": "ランタイムを選択",
+      "loading": "ランタイムを読み込み中...",
+      "empty": "利用可能なランタイムがありません",
+      "search": "ランタイムを検索..."
+    },
+    "personaSelect": {
+      "placeholder": "ペルソナなし",
+      "loading": "ペルソナを読み込み中...",
+      "empty": "利用可能なペルソナがありません",
+      "search": "ペルソナを検索...",
+      "none": "ペルソナなしで呼び出す"
+    },
+    "input": {
+      "placeholder": "メッセージを入力..."
+    },
+    "streaming": {
+      "thinking": "エージェントが考え中..."
+    },
+    "oauth": {
+      "title": "認証が必要です",
+      "description": "このエージェントは処理を続行する前に、外部プロバイダーでの本人確認が必要です。",
+      "authenticate": "認証する",
+      "waiting": "認証を待っています..."
+    },
+    "error": {
+      "loadAgents": "エージェントの読み込みに失敗しました",
+      "loadRuntimes": "ランタイムの読み込みに失敗しました",
+      "loadPersonas": "ペルソナの読み込みに失敗しました",
+      "noRuntime": "ランタイムを先に選択してください",
+      "noPersona": "ペルソナを選択してください — AgentCoreランタイムは認証にペルソナJWTが必要です",
+      "invokeFailed": "エージェントランタイムの呼び出しに失敗しました",
+      "streamError": "ストリーミング中にエラーが発生しました"
+    },
+    "defaultChatTitle": "新しいチャット"
+  },
+  "Mentions": {
+    "categories": {
+      "users": "Entra ID ユーザー",
+      "groups": "Entra ID グループ",
+      "cognito-groups": "Cognito グループ",
+      "gateways": "AgentCore ゲートウェイ",
+      "gateway-targets": "AgentCore ゲートウェイターゲット",
+      "gateway-tools": "AgentCore ゲートウェイツール",
+      "agent-runtimes": "AgentCore ランタイム"
+    },
+    "back": "戻る",
+    "loading": "読み込み中…",
+    "noResults": "結果なし",
+    "gatewayTargets": "ゲートウェイターゲット",
+    "noTargets": "ターゲットが設定されていません",
+    "selectGateway": "ゲートウェイを選択",
+    "selectTarget": "ターゲットを選択",
+    "selectRuntime": "ランタイムを選択",
+    "parentGateway": "ゲートウェイ",
+    "parentTarget": "ターゲット",
+    "parentRuntime": "ランタイム",
+    "targets": "ターゲット",
+    "tools": "ツール",
+    "endpoints": "エンドポイント",
+    "runtimeEndpoints": "ランタイムエンドポイント",
+    "noTools": "ツールが見つかりません",
+    "noEndpoints": "エンドポイントが見つかりません"
+  },
+  "ToolStoreList": {
+    "title": "ツールポリシーストア",
+    "description": "ツールレベル認可のためのAmazon Verified Permissionsポリシーストアを管理",
+    "store": "ストア",
+    "stores": "ストア",
+    "na": "N/A",
+    "overview": {
+      "title": "概要",
+      "status": "ステータス",
+      "namespace": "名前空間",
+      "region": "リージョン",
+      "validationMode": "検証モード",
+      "schemaStatus": "スキーマ",
+      "policies": "ポリシー",
+      "created": "作成日",
+      "updated": "更新日",
+      "lastSynced": "最終同期",
+      "createdBy": "作成者",
+      "createdByInline": "作成者: {name}",
+      "policyStoreId": "AWSポリシーストアID",
+      "description": "説明",
+      "statusValues": {
+        "ACTIVE": "アクティブ",
+        "CREATING": "作成中",
+        "DELETING": "削除中",
+        "DELETED": "削除済み",
+        "FAILED": "失敗"
+      },
+      "syncValues": {
+        "in_sync": "同期済み",
+        "pending": "保留中",
+        "drifted": "ドリフト",
+        "unsynced": "未同期",
+        "failed": "失敗"
+      }
+    },
+    "schema": {
+      "title": "Cedar スキーマ",
+      "subtitle": "このストアのポリシーが参照するエンティティ型・属性・アクションを定義します。",
+      "saveAndSync": "保存して同期",
+      "savedToast": "スキーマを AWS に同期しました。",
+      "saveError": "スキーマの保存に失敗しました。",
+      "emptyError": "スキーマは空にできません。",
+      "notReadyOnAws": "ストアはまだ AWS にプロビジョニングされていません。",
+      "placeholder": "{ ... Cedar スキーマ JSON ... }",
+      "hint": "JSON のみ。Verified Permissions API が保存時に検証します。",
+      "syncValues": {
+        "in_sync": "同期済み",
+        "pending": "保留中",
+        "drifted": "ドリフト",
+        "unsynced": "未同期",
+        "failed": "失敗"
+      }
+    },
+    "search": {
+      "placeholder": "ポリシーストアを検索..."
+    },
+    "filters": {
+      "status": {
+        "placeholder": "ステータス",
+        "all": "すべてのステータス",
+        "ACTIVE": "アクティブ",
+        "CREATING": "作成中",
+        "DELETING": "削除中",
+        "DELETED": "削除済み",
+        "FAILED": "失敗"
+      }
+    },
+    "status": {
+      "ACTIVE": "アクティブ",
+      "CREATING": "作成中",
+      "DELETING": "削除中",
+      "DELETED": "削除済み",
+      "FAILED": "失敗"
+    },
+    "table": {
+      "name": "名前",
+      "description": "説明",
+      "policyStoreId": "ポリシーストアID",
+      "region": "リージョン",
+      "status": "ステータス",
+      "policies": "ポリシー",
+      "creator": "作成者",
+      "lastSynced": "最終同期",
+      "actions": "アクション"
+    },
+    "actions": {
+      "view": "ポリシーを表示"
+    },
+    "empty": {
+      "title": "ポリシーストアが見つかりません",
+      "noData": "ツールレベル認可を開始するにはポリシーストアを作成してください。",
+      "withFilters": "現在のフィルターに一致するポリシーストアはありません。"
+    },
+    "createStore": "ストアを作成",
+    "createSheet": {
+      "title": "ポリシーストアを作成",
+      "description": "ツールレベル認可のための新しいAmazon Verified Permissionsポリシーストアを設定します。",
+      "fields": {
+        "name": "ストア名",
+        "namePlaceholder": "例: 保険ツールポリシー",
+        "description": "説明",
+        "descriptionPlaceholder": "このポリシーストアの目的を記述してください...",
+        "namespace": "名前空間",
+        "namespacePlaceholder": "例: InsuranceTool",
+        "namespaceHint": "先頭は英大文字で、英数字とアンダースコアのみ使用できます。",
+        "namespaceInvalid": "名前空間は英大文字で始まり、英数字とアンダースコアのみ使用できます。",
+        "region": "AWSリージョン",
+        "regionPlaceholder": "リージョンを選択"
+      },
+      "cancel": "キャンセル",
+      "create": "ストアを作成",
+      "toast": {
+        "created": "ポリシーストア「{name}」が正常に作成されました。"
+      }
+    }
+  },
+  "ToolPolicyList": {
+    "storeNotFound": "ポリシーストアが見つかりません。",
+    "backToStores": "ストアに戻る",
+    "storeId": "ストアID:",
+    "policy": "ポリシー",
+    "policies": "ポリシー",
+    "na": "N/A",
+    "syncAll": "すべて同期",
+    "autoSync": "自動同期",
+    "templateLinked": "テンプレート",
+    "tabs": {
+      "overview": "概要",
+      "schema": "スキーマ",
+      "policies": "ポリシー",
+      "syncHistory": "同期履歴"
+    },
+    "search": {
+      "placeholder": "ポリシーを検索..."
+    },
+    "filters": {
+      "status": {
+        "placeholder": "ステータス",
+        "all": "すべてのステータス",
+        "draft": "ドラフト",
+        "in_review": "レビュー中",
+        "published": "公開済み",
+        "archived": "アーカイブ済み"
+      },
+      "sync": {
+        "placeholder": "同期ステータス",
+        "all": "すべての同期",
+        "in_sync": "同期済み",
+        "pending": "保留中",
+        "drifted": "ドリフト",
+        "unsynced": "未同期",
+        "failed": "失敗"
+      }
+    },
+    "status": {
+      "draft": "ドラフト",
+      "in_review": "レビュー中",
+      "published": "公開済み",
+      "archived": "アーカイブ済み"
+    },
+    "syncStatus": {
+      "in_sync": "同期済み",
+      "pending": "保留中",
+      "drifted": "ドリフト",
+      "unsynced": "未同期",
+      "failed": "失敗"
+    },
+    "type": {
+      "permit": "許可",
+      "forbid": "禁止"
+    },
+    "table": {
+      "name": "名前",
+      "type": "タイプ",
+      "status": "ステータス",
+      "syncStatus": "同期ステータス",
+      "action": "アクション",
+      "templateLinked": "テンプレート",
+      "creator": "作成者",
+      "lastSynced": "最終同期",
+      "actions": "アクション"
+    },
+    "actions": {
+      "view": "表示",
+      "sync": "AVPに同期",
+      "delete": "削除"
+    },
+    "toast": {
+      "syncAllStarted": "すべてのポリシーの同期を開始しました。",
+      "syncAllDone": "{success}件のポリシーを同期しました（{failure}件失敗）。",
+      "syncStarted": "このポリシーの同期を開始しました。",
+      "deleted": "ポリシーを削除しました。"
+    },
+    "empty": {
+      "title": "ポリシーが見つかりません",
+      "noData": "このポリシーストアにはまだポリシーがありません。",
+      "withFilters": "現在のフィルターに一致するポリシーはありません。"
+    },
+    "createPolicy": "ポリシーを作成",
+    "createSheet": {
+      "title": "ポリシーを作成",
+      "description": "ライブラリからポリシーテンプレートを選択するか、新しいポリシーをゼロから作成します。",
+      "tabs": {
+        "template": "テンプレートから",
+        "new": "新規ポリシー"
+      },
+      "templateSearch": "テンプレートを検索...",
+      "templateEmpty": "検索に一致するテンプレートがありません。",
+      "templatePreview": "テンプレートプレビュー",
+      "templateLink": "テンプレート",
+      "cedarDefinition": "Cedarポリシー",
+      "useTemplate": "テンプレートを使用",
+      "form": {
+        "name": "名前",
+        "namePlaceholder": "例: プロジェクト読み取りアクセス",
+        "description": "説明",
+        "descriptionPlaceholder": "このポリシーが制御する内容を記述...",
+        "type": "タイプ",
+        "typePermit": "許可",
+        "typeForbid": "禁止",
+        "action": "アクション",
+        "actionPlaceholder": "例: ReadProject",
+        "cedarCode": "Cedarポリシー",
+        "cedarPlaceholder": "permit(\n  principal,\n  action,\n  resource\n);"
+      },
+      "createPolicy": "ポリシーを作成",
+      "toast": {
+        "created": "ポリシー「{name}」が作成されました。",
+        "templateApplied": "テンプレート「{name}」が適用されました。"
+      }
+    }
+  },
+  "ToolPolicyDetail": {
+    "notFound": "ポリシーが見つかりません。",
+    "backToPolicies": "ポリシーに戻る",
+    "policyId": "ポリシーID:",
+    "sidebar": {
+      "overview": "概要",
+      "definition": "定義",
+      "syncHistory": "同期履歴",
+      "sdk": "SDK 使用方法",
+      "settings": "設定"
+    },
+    "overview": {
+      "title": "概要",
+      "name": "名前",
+      "status": "ステータス",
+      "syncStatus": "同期ステータス",
+      "type": "タイプ",
+      "action": "アクション",
+      "principalTypes": "プリンシパルタイプ",
+      "resourceTypes": "リソースタイプ",
+      "templateLinked": "テンプレートリンク",
+      "created": "作成日",
+      "updated": "更新日",
+      "lastSynced": "最終同期",
+      "description": "説明",
+      "noDescription": "説明はありません。",
+      "noAction": "アクション未設定",
+      "awsPolicyId": "AWSポリシーID",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "nameUpdated": "ポリシー名を更新しました",
+      "descriptionUpdated": "説明を更新しました",
+      "actionUpdated": "アクションを更新しました",
+      "createdBy": "作成者",
+      "promote": "ステータス変更",
+      "promoteTo": {
+        "draft": "ドラフトに戻す",
+        "in_review": "レビュー依頼",
+        "published": "公開",
+        "archived": "アーカイブ"
+      },
+      "statusUpdated": "ポリシーのステータスを更新しました",
+      "statusValues": {
+        "draft": "ドラフト",
+        "in_review": "レビュー中",
+        "published": "公開済み",
+        "archived": "アーカイブ済み"
+      },
+      "syncValues": {
+        "in_sync": "同期済み",
+        "pending": "保留中",
+        "drifted": "ドリフト",
+        "unsynced": "未同期",
+        "failed": "失敗"
+      },
+      "typeValues": {
+        "permit": "許可",
+        "forbid": "禁止"
+      }
+    },
+    "definition": {
+      "title": "Cedarポリシー定義",
+      "cedar": "Cedarポリシー",
+      "save": "保存",
+      "saveSuccess": "Cedarを更新しました。同期してAVPに反映してください。",
+      "saveError": "Cedarの保存に失敗しました",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "edit": "ポリシーを編集",
+      "templateNote": "このポリシーはテンプレートにリンクされています",
+      "templateDocs": "AVPテンプレートドキュメントを表示",
+      "noDefinition": "ポリシー定義がありません。"
+    },
+    "settings": {
+      "general": "一般",
+      "save": "保存",
+      "saveSuccess": "設定を保存しました",
+      "saveError": "保存に失敗しました",
+      "nameLabel": "名前",
+      "descriptionLabel": "説明",
+      "actionLabel": "アクション",
+      "dangerZone": "危険ゾーン",
+      "dangerZoneDescription": "元に戻せない破壊的な操作です。",
+      "delete": {
+        "title": "ポリシーを削除",
+        "description": "このツールポリシーをAVPとプラットフォームから完全に削除します。",
+        "button": "削除",
+        "dialogTitle": "「{name}」を削除しますか？",
+        "dialogDescription": "Amazon Verified Permissionsとプラットフォームの両方からこのポリシーを削除します。この操作は元に戻せません。",
+        "cancel": "キャンセル",
+        "confirm": "削除"
+      },
+      "deleteSuccess": "ポリシーを削除しました",
+      "deleteError": "ポリシーの削除に失敗しました"
+    },
+    "sync": {
+      "title": "同期ステータス",
+      "syncNow": "今すぐ同期",
+      "lastSynced": "最終同期:",
+      "neverSynced": "AVPに同期されたことがありません",
+      "autoSync": "自動同期",
+      "autoSyncDescription": "ポリシーの変更をAmazon Verified Permissionsに自動的に同期します。",
+      "platformVsAvp": "プラットフォーム vs. AVPステータス",
+      "platform": "プラットフォーム",
+      "avp": "Amazon Verified Permissions",
+      "avpPresent": "存在",
+      "avpStale": "古い",
+      "avpAbsent": "未登録",
+      "statusLabel": {
+        "in_sync": "同期済み — ポリシーはAVPで最新です",
+        "pending": "保留中 — 同期を実行中です",
+        "drifted": "ドリフト — AVP側のCedarが最後の同期と異なります",
+        "unsynced": "未同期 — ポリシーはAVPに同期されたことがありません",
+        "failed": "失敗 — 直近の同期が失敗しました"
+      },
+      "toast": {
+        "started": "同期を開始しました。"
+      }
+    },
+    "syncHistory": {
+      "storeTitle": "同期バッチ ({count})",
+      "policyTitle": "同期イベント ({count})",
+      "orphanTitle": "その他のイベント ({count})",
+      "empty": "まだ同期イベントはありません。",
+      "emptyBatches": "まだ同期バッチはありません。「すべて同期」を実行するか単一のポリシーを同期すると履歴が残ります。",
+      "emptyChildren": "このバッチには記録されたイベントがありません。",
+      "batch": {
+        "scope": "スコープ",
+        "actor": "実行者",
+        "started": "開始日時",
+        "results": "結果 (成功 / 失敗 / 全体)",
+        "scopeValue": {
+          "store": "ストア",
+          "policy": "ポリシー",
+          "schema": "スキーマ"
+        },
+        "system": "システム"
+      },
+      "event": {
+        "action": "アクション",
+        "target": "対象",
+        "result": "結果",
+        "actor": "実行者",
+        "when": "日時",
+        "success": "成功",
+        "failure": "失敗",
+        "system": "システム"
+      }
+    },
+    "sdk": {
+      "title": "SDK使用方法",
+      "description": "@package/policyを使用して、アプリケーションコードのツールレベルでこのポリシーを適用します。",
+      "schema": "スキーマ定義",
+      "usage": "リクエストの認可",
+      "errorHandling": "エラーハンドリング",
+      "contextMapping": "コンテキストマッピング",
+      "required": "必須",
+      "optional": "任意",
+      "table": {
+        "field": "フィールド",
+        "type": "タイプ",
+        "required": "必須",
+        "mapsTo": "マッピング先 (AVP)"
+      }
+    }
+  },
+  "ToolPolicyEdit": {
+    "title": "編集: {name}",
+    "notFound": "ポリシーが見つかりません。",
+    "back": "ポリシーに戻る",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "cedarPolicy": "Cedarポリシー",
+    "format": "ポリシーをフォーマット",
+    "undo": "元に戻す",
+    "redo": "やり直し",
+    "placeholder": "自然言語でポリシーの動作を記述...",
+    "generate": "生成",
+    "generateEmptyError": "まずポリシーの説明を入力してください",
+    "generateSuccess": "Cedarポリシーを生成しました",
+    "generateError": "Cedarポリシーの生成に失敗しました",
+    "toast": {
+      "saved": "ポリシーを保存しました。同期してAVPに反映してください。",
+      "saveError": "ポリシーの保存に失敗しました"
+    },
+    "templates": {
+      "trigger": "テンプレート",
+      "title": "テンプレートを選択",
+      "description": "Cedar定義をポリシーライブラリの公開テンプレートで置き換えます。",
+      "search": "テンプレートを検索...",
+      "empty": "公開済みのテンプレートはまだありません。",
+      "emptyFiltered": "検索に一致するテンプレートがありません。",
+      "loadError": "テンプレートの読み込みに失敗しました。"
+    },
+    "replaceDialog": {
+      "title": "Cedar定義を置き換えますか？",
+      "description": "現在のCedarコードを「{name}」で置き換えます。元に戻す機能で以前のコードを復元できます。",
+      "cancel": "キャンセル",
+      "confirm": "テンプレートを使用"
+    },
+    "discardDialog": {
+      "title": "変更を破棄しますか？",
+      "description": "このポリシーに未保存の変更があります。本当に離れますか？変更は失われます。",
+      "cancel": "編集を続ける",
+      "confirm": "変更を破棄"
+    },
+    "validation": {
+      "loading": "読み込み中...",
+      "loadError": "チェッカーが利用できません",
+      "valid": "有効",
+      "invalid": "{count, plural, other {# 件のエラー}}"
+    }
+  },
+  "PolicyEngines": {
+    "title": "ポリシーエンジン",
+    "description": "AWS Bedrock AgentCore のポリシーエンジンを管理します。エンジンを作成し、ライブラリのポリシーをインポートして AWS と同期します。",
+    "engine": "エンジン",
+    "engines": "エンジン",
+    "search": "名前や説明で検索",
+    "refresh": "更新",
+    "drifted": "{count}件のドリフト",
+    "errors": {
+      "loadFailed": "ポリシーエンジンの読み込みに失敗しました",
+      "createFailed": "ポリシーエンジンの作成に失敗しました"
+    },
+    "status": {
+      "CREATING": "作成中",
+      "ACTIVE": "有効",
+      "UPDATING": "更新中",
+      "DELETING": "削除中",
+      "CREATE_FAILED": "作成失敗",
+      "UPDATE_FAILED": "更新失敗",
+      "DELETE_FAILED": "削除失敗"
+    },
+    "table": {
+      "name": "名前",
+      "status": "ステータス",
+      "policies": "ポリシー数",
+      "gateways": "ゲートウェイ数",
+      "region": "リージョン",
+      "created": "作成日"
+    },
+    "empty": {
+      "title": "まだポリシーエンジンがありません。最初のエンジンを作成して Cedar ポリシーを AWS にデプロイしましょう。",
+      "withFilters": "検索条件に一致するエンジンがありません。"
+    },
+    "createDialog": {
+      "trigger": "エンジンを作成",
+      "title": "ポリシーエンジンを作成",
+      "description": "AWS Bedrock AgentCore に新しいポリシーエンジンを作成します。作成後にライブラリのポリシーをインポートしたり、新しいポリシーを作成できます。",
+      "name": {
+        "label": "エンジン名",
+        "placeholder": "例：production_insurance",
+        "invalid": "先頭は英字で、英数字とアンダースコアのみ使用できます（最大48文字）。"
+      },
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "このエンジンが制御する内容の簡単な説明",
+      "cancel": "キャンセル",
+      "confirm": "エンジンを作成",
+      "success": "ポリシーエンジンを作成しました"
+    }
+  },
+  "PolicyEngineDetail": {
+    "back": "ポリシーエンジンに戻る",
+    "notFound": "ポリシーエンジンが見つかりません。",
+    "sidebar": {
+      "overview": "概要",
+      "policies": "ポリシー",
+      "gateways": "ゲートウェイ",
+      "syncHistory": "同期履歴",
+      "settings": "設定"
+    },
+    "overview": {
+      "title": "エンジン",
+      "description": "説明",
+      "status": "ステータス",
+      "region": "リージョン",
+      "policies": "ポリシー数",
+      "gateways": "ゲートウェイ数",
+      "created": "作成日",
+      "updated": "最終更新日",
+      "awsEngineId": "AWSポリシーエンジンID",
+      "awsEngineArn": "AWSポリシーエンジンARN",
+      "syncAll": "すべて同期",
+      "driftBanner": {
+        "title": "{count}件のポリシーが同期済みバージョンからドリフトしています",
+        "description": "ドリフトとは AWS 側の Cedar が最後に同期した内容と異なる状態です。各ポリシーを開いて再同期してください。"
+      }
+    },
+    "policies": {
+      "title": "エンジンのポリシー ({count})",
+      "import": "ライブラリから取り込み",
+      "create": "新しいポリシー",
+      "fromLibrary": "ライブラリ由来",
+      "syncNow": "同期",
+      "syncSuccess": "「{name}」を同期しました",
+      "syncError": "ポリシーの同期に失敗しました",
+      "neverSynced": "未同期",
+      "empty": "まだポリシーがありません。ライブラリからインポートするか新しく作成してください。",
+      "syncStatus": {
+        "unsynced": "未同期",
+        "in_sync": "同期済み",
+        "drifted": "ドリフト",
+        "pending": "処理中",
+        "failed": "失敗"
+      },
+      "table": {
+        "name": "名前",
+        "type": "タイプ",
+        "syncStatus": "同期",
+        "lastSynced": "最終同期日時",
+        "actions": "操作"
+      },
+      "importSheet": {
+        "title": "ライブラリからインポート",
+        "description": "ポリシーライブラリからポリシーを選んでこのエンジンにコピーします。AWS との同期は別の操作で行います。",
+        "search": "ライブラリを検索",
+        "empty": "ライブラリにポリシーがまだありません。",
+        "emptyFiltered": "検索条件に一致するポリシーがありません。",
+        "templateBadge": "テンプレート",
+        "loadError": "ライブラリの読み込みに失敗しました",
+        "success": "ポリシーをインポートしました",
+        "error": "ポリシーのインポートに失敗しました",
+        "close": "閉じる",
+        "slotBinding": {
+          "title": "テンプレートのスロットを入力",
+          "description": "「{name}」はテンプレートです。principal と resource を指定してこのエンジンの具体的なポリシーとして展開します。",
+          "success": "テンプレートをインポートしました",
+          "error": "テンプレートのインポートに失敗しました",
+          "form": {
+            "name": "ポリシー名",
+            "namePlaceholder": "例: allow-alice-read-reports",
+            "bindingFor": "このスロットにバインドするエンティティを指定します。",
+            "entityType": "エンティティタイプ",
+            "entityId": "エンティティ ID",
+            "preview": "展開後の Cedar プレビュー",
+            "cancel": "キャンセル",
+            "import": "インポート"
+          }
+        }
+      }
+    },
+    "gateways": {
+      "title": "接続ゲートウェイ ({count})",
+      "attach": "ゲートウェイを接続",
+      "detach": "切断",
+      "empty": "ゲートウェイが接続されていません。接続するとこのエンジンのポリシーがトラフィックに適用されます。",
+      "attachSuccess": "ゲートウェイを接続しました",
+      "attachError": "ゲートウェイの接続に失敗しました",
+      "detachSuccess": "ゲートウェイを切断しました",
+      "detachError": "ゲートウェイの切断に失敗しました",
+      "loadError": "ゲートウェイの読み込みに失敗しました",
+      "table": {
+        "gateway": "ゲートウェイ",
+        "mode": "モード",
+        "attachedAt": "接続日",
+        "actions": "操作"
+      },
+      "mode": {
+        "LOG_ONLY": "ログのみ",
+        "ENFORCE": "適用"
+      },
+      "attachSheet": {
+        "title": "ゲートウェイを接続",
+        "description": "AWS 上のゲートウェイを選択してください。エンジンのポリシーがそのトラフィックに適用されます。",
+        "search": "ゲートウェイを検索",
+        "empty": "このAWSアカウントに利用可能なゲートウェイがありません。",
+        "alreadyAttached": "接続済み",
+        "mode": "適用モード",
+        "modeHelper": {
+          "LOG_ONLY": "ポリシーは評価されますがトラフィックはブロックされません。新しいエンジンの検証に便利です。",
+          "ENFORCE": "permit を満たさないトラフィックをブロックします。本番環境のデフォルトです。"
+        },
+        "cancel": "キャンセル",
+        "confirm": "接続"
+      },
+      "detachDialog": {
+        "title": "ゲートウェイを切断しますか？",
+        "description": "「{name}」からポリシーエンジンを取り外します。ポリシーの評価はすぐに停止します。",
+        "cancel": "キャンセル",
+        "confirm": "切断"
+      }
+    },
+    "syncHistory": {
+      "engineTitle": "同期バッチ ({count})",
+      "policyTitle": "同期イベント ({count})",
+      "orphanTitle": "その他のイベント ({count})",
+      "empty": "まだ同期イベントはありません。",
+      "emptyBatches": "まだ同期バッチはありません。「すべて同期」を実行するか単一のポリシーを同期すると履歴が残ります。",
+      "emptyChildren": "このバッチには記録されたイベントがありません。",
+      "batch": {
+        "scope": "スコープ",
+        "actor": "実行者",
+        "started": "開始日時",
+        "results": "結果 (成功 / 失敗 / 全体)",
+        "scopeValue": {
+          "engine": "エンジン",
+          "policy": "ポリシー"
+        },
+        "system": "システム"
+      },
+      "event": {
+        "action": "アクション",
+        "target": "対象",
+        "result": "結果",
+        "actor": "実行者",
+        "when": "日時",
+        "success": "成功",
+        "failure": "失敗",
+        "system": "システム"
+      }
+    },
+    "syncAll": {
+      "title": "{count}件のポリシーを AWS に同期しますか？",
+      "description": "「{name}」配下のすべてのポリシーの現在の Cedar 定義を AWS ポリシーエンジンに送信します。既存のリモートポリシーは更新され、新規ポリシーは作成されます。",
+      "cancel": "キャンセル",
+      "confirm": "すべて同期",
+      "result": "{success}件を同期しました{failure, plural, =0 {} other {（{failure}件失敗）}}。",
+      "error": "エンジンの同期に失敗しました"
+    },
+    "settings": {
+      "general": "一般",
+      "save": "保存",
+      "saveSuccess": "設定を保存しました",
+      "saveError": "保存に失敗しました",
+      "name": {
+        "label": "エンジン名",
+        "helper": "AWS での作成後に名前は固定され、ここから変更できません。"
+      },
+      "description": {
+        "label": "説明"
+      },
+      "dangerZone": "危険ゾーン",
+      "dangerZoneDescription": "元に戻せない破壊的な操作です。",
+      "delete": {
+        "title": "エンジンを削除",
+        "description": "ローカルと AWS の両方からポリシーエンジンを完全に削除します。",
+        "hasPolicies": "エンジンを削除する前にすべてのポリシー（{count}件）を削除してください。",
+        "button": "削除",
+        "dialogTitle": "エンジンを削除しますか？",
+        "dialogDescription": "「{name}」を AWS Bedrock AgentCore とプラットフォームから完全に削除します。この操作は元に戻せません。",
+        "typeToConfirm": "確認のため「{name}」と入力してください：",
+        "cancel": "キャンセル",
+        "confirm": "完全に削除"
+      },
+      "deleteSuccess": "ポリシーエンジンを削除しました",
+      "deleteError": "エンジンの削除に失敗しました"
+    },
+    "newPolicy": {
+      "title": "新しいエンジンポリシー",
+      "back": "戻る",
+      "save": "ポリシーを保存",
+      "name": "名前",
+      "namePlaceholder": "例：allow-read-claims",
+      "type": "タイプ",
+      "description": "説明",
+      "descriptionPlaceholder": "このポリシーが許可する内容の簡単な説明",
+      "cedarPolicy": "Cedar ポリシー",
+      "success": "ポリシーを作成しました",
+      "error": "ポリシーの作成に失敗しました"
+    }
+  },
+  "EnginePolicyDetail": {
+    "back": "エンジンに戻る",
+    "notFound": "エンジンポリシーが見つかりません。",
+    "syncNow": "いま同期",
+    "syncSuccess": "ポリシーを同期しました",
+    "syncError": "ポリシーの同期に失敗しました",
+    "openLibrarySource": "ライブラリのソースを開く",
+    "syncStatus": {
+      "unsynced": "未同期",
+      "in_sync": "同期済み",
+      "drifted": "ドリフト",
+      "pending": "処理中",
+      "failed": "失敗"
+    },
+    "sidebar": {
+      "overview": "概要",
+      "definition": "定義",
+      "syncHistory": "同期履歴",
+      "settings": "設定"
+    },
+    "overview": {
+      "title": "ポリシー",
+      "type": "タイプ",
+      "syncStatus": "同期",
+      "lastSynced": "最終同期日時",
+      "created": "作成日",
+      "updated": "最終更新日",
+      "awsPolicyId": "AWSポリシーID",
+      "description": "説明"
+    },
+    "definition": {
+      "title": "Cedar 定義",
+      "save": "保存",
+      "saveSuccess": "Cedar を更新しました。同期して AWS に反映してください。",
+      "saveError": "Cedar の保存に失敗しました"
+    },
+    "settings": {
+      "general": "一般",
+      "save": "保存",
+      "saveSuccess": "保存しました",
+      "saveError": "保存に失敗しました",
+      "nameLabel": "名前",
+      "descriptionLabel": "説明",
+      "dangerZone": "危険ゾーン",
+      "dangerZoneDescription": "削除すると AWS とプラットフォームからポリシーを削除します。",
+      "delete": {
+        "title": "ポリシーを削除",
+        "description": "このエンジンポリシーを完全に削除します。",
+        "button": "削除",
+        "dialogTitle": "「{name}」を削除しますか？",
+        "dialogDescription": "AWS ポリシーエンジンとプラットフォームからポリシーを削除します。ライブラリのソース（ある場合）は影響を受けません。",
+        "cancel": "キャンセル",
+        "confirm": "削除"
+      },
+      "deleteSuccess": "ポリシーを削除しました",
+      "deleteError": "ポリシーの削除に失敗しました"
+    }
+  }
+}

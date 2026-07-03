@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent skills skill definition schema",
+  "description": "Schema for skill definition metadata. All top-level fields are optional.",
+  "type": "object",
+  "properties": {
+    "_meta": {
+      "description": "Extension metadata using reverse DNS namespacing for vendor-specific data.",
+      "type": "object"
+    },
+    "repository": { "$ref": "#/definitions/Repository" },
+    "websiteUrl": {
+      "description": "URL to the skill's homepage, documentation, or project website.",
+      "type": "string",
+      "format": "uri"
+    },
+    "packages": {
+      "description": "Package distribution configurations for the skill.",
+      "type": "array",
+      "items": { "$ref": "#/definitions/Package" }
+    }
+  },
+  "definitions": {
+    "Repository": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "source": { "type": "string" },
+        "id": { "type": "string" },
+        "subfolder": { "type": "string" }
+      },
+      "required": ["url", "source"]
+    },
+    "Package": {
+      "type": "object",
+      "properties": {
+        "registryType": { "type": "string" },
+        "identifier": { "type": "string" },
+        "version": { "type": "string" }
+      },
+      "required": ["registryType", "identifier"]
+    }
+  }
+}
