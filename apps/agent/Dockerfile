@@ -36,7 +36,8 @@ RUN pnpm exec esbuild index.ts \
     --external:@prisma/client \
     --external:@prisma/adapter-pg \
     --external:.prisma/* \
-    --external:pg-native
+    --external:pg-native \
+    --external:@aws-sdk/*
 
 FROM --platform=linux/arm64 public.ecr.aws/docker/library/node:22-alpine AS runner
 WORKDIR /app
