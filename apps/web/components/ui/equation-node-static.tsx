@@ -39,7 +39,10 @@ export function EquationElementStatic(
       >
         {element.texExpression.length > 0 ? (
           <span
+            // Safe: `html` is KaTeX renderToString output (getEquationHtml) with
+            // trust:false, not raw user input. TeX source is escaped by KaTeX.
             dangerouslySetInnerHTML={{
+              // nosemgrep: typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml
               __html: html,
             }}
           />
@@ -91,6 +94,9 @@ export function InlineEquationElementStatic(
             props.element.texExpression.length === 0 && 'hidden',
             'font-mono leading-none'
           )}
+          // Safe: `html` is KaTeX renderToString output (getEquationHtml) with
+          // trust:false, not raw user input. TeX source is escaped by KaTeX.
+          // nosemgrep: typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangerouslysetinnerhtml
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </div>

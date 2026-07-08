@@ -139,7 +139,7 @@ async function tryAdminDeleteCognitoUser(username: string): Promise<void> {
     );
   } catch (err) {
     if (err instanceof UserNotFoundException) return;
-    console.warn(`Cleanup: adminDeleteUser(${username}) failed:`, err);
+    console.warn("Cleanup: adminDeleteUser failed for username:", username, err);
   }
 }
 

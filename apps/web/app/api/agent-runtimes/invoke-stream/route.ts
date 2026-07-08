@@ -76,7 +76,7 @@ export async function POST(request: Request) {
       personaBearer = result.accessToken;
       console.log(`[invoke-stream:${reqId}] persona token minted`);
     } catch (err) {
-      console.error(`[invoke-stream:${reqId}] mintPersonaToken failed`, err);
+      console.error("[invoke-stream] mintPersonaToken failed", reqId, err);
       return new Response(
         JSON.stringify({
           error:

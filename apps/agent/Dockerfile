@@ -53,6 +53,16 @@ COPY --from=builder /app/packages/database/generated ./packages/database/generat
 
 WORKDIR /app/apps/agent
 
+# Run as a non-root user (the base node image ships an unprivileged `node`
+# user). Avoids running the container process as root — a container-hardening
+# best practice.
+USER node
+
 EXPOSE 8080
+
+# Liveness probe: the agent serves GET /ping (see index.ts). Uses Node's
+# built-in http client so no extra tooling is needed in the runtime image.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:8080/ping',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
 CMD ["node", "dist/index.mjs"]
