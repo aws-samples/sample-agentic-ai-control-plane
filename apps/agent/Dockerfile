@@ -23,8 +23,11 @@ RUN pnpm --filter @package/database exec prisma generate
 # Bundle the agent with esbuild so the resulting file is plain ESM with all
 # extensionless workspace imports resolved. Plain `tsc` would emit raw ESM
 # that Node refuses (extensionless imports are invalid in Node ESM mode).
-# Externalize the AWS SDK (huge, comes from node_modules) and Prisma's
-# generated engine binaries (binary, must remain on disk).
+# Only externalize things that must stay on disk: Prisma's generated engine
+# binaries and pg-native. The AWS SDK is pure JS and is a *transitive* dep of
+# @strands-agents/sdk, so under pnpm's strict layout it is NOT hoisted to a
+# top-level node_modules the standalone bundle can resolve. Bundling it inline
+# keeps index.mjs self-contained and avoids ERR_MODULE_NOT_FOUND at runtime.
 WORKDIR /app/apps/agent
 RUN pnpm exec esbuild index.ts \
     --bundle \
@@ -36,8 +39,7 @@ RUN pnpm exec esbuild index.ts \
     --external:@prisma/client \
     --external:@prisma/adapter-pg \
     --external:.prisma/* \
-    --external:pg-native \
-    --external:@aws-sdk/*
+    --external:pg-native
 
 FROM --platform=linux/arm64 public.ecr.aws/docker/library/node:22-alpine AS runner
 WORKDIR /app
