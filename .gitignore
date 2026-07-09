@@ -41,3 +41,10 @@ venv/
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# Security 
+security-evidence 
+.secrets.baseline
+THREAT_MODEL.md
+ASH
+.ash

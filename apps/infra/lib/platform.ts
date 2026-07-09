@@ -107,4 +107,5 @@ export function createPlatformStacks(
     personaUserPoolClient: cognito.personaUserPoolClient,
   });
   dashboard.addDependency(agentCoreGateway);
+  dashboard.addDependency(database);
 }
