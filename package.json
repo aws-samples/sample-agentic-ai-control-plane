@@ -9,7 +9,7 @@
     "init": "npx tsx scripts/project-init.ts"
   },
   "devDependencies": {
-    "@types/node": "^25.3.5",
-    "turbo": "^2.8.16"
+    "@types/node": "^26.1.0",
+    "turbo": "^2.10.3"
   }
 }

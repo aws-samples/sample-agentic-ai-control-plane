@@ -62,4 +62,9 @@ EXPOSE 3000
 
 ENV PORT=3000
 
+# Liveness probe: the app serves GET /api/status (see app/api/status/route.ts).
+# Uses Node's built-in http client so no extra tooling is needed in the image.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:3000/api/status',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+
 CMD ["node", "apps/web/server.js"]

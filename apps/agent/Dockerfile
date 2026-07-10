@@ -23,8 +23,19 @@ RUN pnpm --filter @package/database exec prisma generate
 # Bundle the agent with esbuild so the resulting file is plain ESM with all
 # extensionless workspace imports resolved. Plain `tsc` would emit raw ESM
 # that Node refuses (extensionless imports are invalid in Node ESM mode).
-# Externalize the AWS SDK (huge, comes from node_modules) and Prisma's
-# generated engine binaries (binary, must remain on disk).
+# Bundle the AWS SDK inline: it's pure JS and a *transitive* dep of
+# @strands-agents/sdk, so under pnpm's strict layout it is NOT hoisted to a
+# top-level node_modules the standalone bundle could resolve at runtime.
+# Inlining it (esp. @aws-sdk/client-bedrock-runtime, used by BedrockModel)
+# keeps index.mjs self-contained and avoids ERR_MODULE_NOT_FOUND.
+#
+# EXCEPT @aws-sdk/client-s3: strands references it via a lazy `await import()`
+# in its (unused) context-offloader, and the package isn't installed. Keep it
+# external so esbuild doesn't fail to resolve it at build time; the code path
+# is never hit at runtime.
+#
+# Prisma's generated engine binaries and pg-native must also stay external
+# (native/on-disk artifacts, not bundleable).
 WORKDIR /app/apps/agent
 RUN pnpm exec esbuild index.ts \
     --bundle \
@@ -36,7 +47,8 @@ RUN pnpm exec esbuild index.ts \
     --external:@prisma/client \
     --external:@prisma/adapter-pg \
     --external:.prisma/* \
-    --external:pg-native
+    --external:pg-native \
+    --external:@aws-sdk/client-s3
 
 FROM --platform=linux/arm64 public.ecr.aws/docker/library/node:22-alpine AS runner
 WORKDIR /app
@@ -53,6 +65,16 @@ COPY --from=builder /app/packages/database/generated ./packages/database/generat
 
 WORKDIR /app/apps/agent
 
+# Run as a non-root user (the base node image ships an unprivileged `node`
+# user). Avoids running the container process as root — a container-hardening
+# best practice.
+USER node
+
 EXPOSE 8080
+
+# Liveness probe: the agent serves GET /ping (see index.ts). Uses Node's
+# built-in http client so no extra tooling is needed in the runtime image.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:8080/ping',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
 CMD ["node", "dist/index.mjs"]

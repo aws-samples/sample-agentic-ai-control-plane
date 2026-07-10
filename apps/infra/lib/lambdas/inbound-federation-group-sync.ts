@@ -54,7 +54,8 @@ async function resolvePersonaClientId(userPoolId: string): Promise<string> {
     } while (nextToken);
   } catch (err) {
     console.warn(
-      `Failed to list user pool clients to resolve persona client "${PERSONA_CLIENT_NAME}":`,
+      "Failed to list user pool clients to resolve persona client:",
+      PERSONA_CLIENT_NAME,
       err,
     );
   }
@@ -251,7 +252,7 @@ async function syncCognitoGroups(
           console.log(`Removed user ${username} from stale group: ${existingGroup}`);
         }
       } catch (err) {
-        console.warn(`Failed to check/remove group ${existingGroup}:`, err);
+        console.warn("Failed to check/remove group:", existingGroup, err);
       }
     }
   }
@@ -443,7 +444,7 @@ export const preTokenHandler = async (event: any) => {
       );
     } catch (err: unknown) {
       if ((err as { name?: string }).name !== "ResourceConflictException") {
-        console.warn(`Failed to add user to group ${cognitoGroupName}:`, err);
+        console.warn("Failed to add user to group:", cognitoGroupName, err);
       }
     }
   }

@@ -1,8 +1,7 @@
 import * as cdk from "aws-cdk-lib";
-import * as cr from "aws-cdk-lib/custom-resources";
+import * as triggers from "aws-cdk-lib/triggers";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
-import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as rds from "aws-cdk-lib/aws-rds";
 
@@ -117,38 +116,11 @@ export class DatabaseStack extends cdk.Stack {
     database.secret!.grantRead(migrationFunction);
 
     // Auto-invoke the database migration Lambda on every stack create/update.
-    const runMigrations = new cr.AwsCustomResource(this, "RunMigrations", {
-      onCreate: {
-        service: "Lambda",
-        action: "invoke",
-        parameters: {
-          FunctionName: migrationFunction.functionName,
-          Payload: JSON.stringify({ ts: Date.now() }),
-        },
-        physicalResourceId: cr.PhysicalResourceId.of(
-          `${migrationFunction.functionName}-migrations`,
-        ),
-      },
-      onUpdate: {
-        service: "Lambda",
-        action: "invoke",
-        parameters: {
-          FunctionName: migrationFunction.functionName,
-          Payload: JSON.stringify({ ts: Date.now() }),
-        },
-        physicalResourceId: cr.PhysicalResourceId.of(
-          `${migrationFunction.functionName}-migrations`,
-        ),
-      },
-      policy: cr.AwsCustomResourcePolicy.fromStatements([
-        new iam.PolicyStatement({
-          actions: ["lambda:InvokeFunction"],
-          resources: [migrationFunction.functionArn],
-        }),
-      ]),
+    const runMigrations = new triggers.Trigger(this, "RunMigrations", {
+      handler: migrationFunction,
       timeout: cdk.Duration.minutes(6),
+      executeAfter: [database],
     });
-    runMigrations.node.addDependency(database);
     runMigrations.node.addDependency(migrationFunction);
   }
 }

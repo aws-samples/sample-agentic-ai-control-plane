@@ -1,3 +1,7 @@
+# checkov:skip=CKV_DOCKER_2:Lambda base image; HEALTHCHECK is ignored by the
+#   Lambda runtime and this is a one-shot migration job, not a long-running service.
+# checkov:skip=CKV_DOCKER_3:Lambda manages its own unprivileged execution user;
+#   setting USER here can break the Lambda runtime's bootstrap.
 FROM public.ecr.aws/lambda/nodejs:22
 
 WORKDIR ${LAMBDA_TASK_ROOT}

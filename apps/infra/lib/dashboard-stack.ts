@@ -215,6 +215,8 @@ export class DashboardStack extends cdk.Stack {
       desiredCount: 1,
       securityGroups: [ec2SecurityGroupEcsServiceDash],
       taskDefinition: ecsFargateTaskDefinitionDash,
+      
+      circuitBreaker: { rollback: true },
     });
 
     ecsServiceDash.attachToApplicationTargetGroup(props.dashTargetGroup);
