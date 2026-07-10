@@ -78,7 +78,7 @@ Set your AWS profile and region **once per terminal session**. Every `cdk` and
 
 ```bash
 export AWS_PROFILE= # your profile name
-export AWS_REGION= # choose us-east-1, us-west-2,ap-southeast-2, ap-northeast-2
+export AWS_REGION= # e.g. us-east-1, us-west-2, ap-southeast-2, ap-northeast-2
 export CDK_DEFAULT_REGION=$AWS_REGION
 ```
 
@@ -149,10 +149,10 @@ starts empty (self-sign-up is disabled), so create your first user with the AWS
 CLI. Set `POOL` to the `CognitoStack` user-pool ID from the deploy outputs.
 
 ```bash
-export AWS_PROFILE=agentic-ai-platform AWS_REGION=us-west-2
-POOL=us-west-2_xxxxxxxxx           # CognitoStack output
+# Assumes AWS_PROFILE and AWS_REGION are set (see Step 0)
+POOL=<region>_xxxxxxxxx            # CognitoStack output
 EMAIL="you@example.com"
-PASSWORD="ChangeMe123!"            # must meet the pool's password policy
+PASSWORD="<choose-a-strong-password>"   # min 8 chars, upper + lower + digit + symbol
 
 aws cognito-idp admin-create-user --user-pool-id "$POOL" \
   --username "$EMAIL" \
@@ -214,7 +214,7 @@ values (use a profile that can write SSM + Secrets Manager). The values are read
 at *deploy* time, so they must be set before step 4:
 
 ```bash
-export AWS_PROFILE=agentic-ai-platform AWS_REGION=us-west-2
+# Assumes AWS_PROFILE and AWS_REGION are set (see Step 0)
 
 aws ssm put-parameter --name "/agentic-ai-platform/entra/client-id" \
   --value "YOUR_ENTRA_CLIENT_ID" --type String --overwrite
@@ -280,6 +280,75 @@ aws cognito-idp describe-identity-provider --user-pool-id "$POOL" \
   --query "IdentityProvider.ProviderDetails.{client_id:client_id,oidc_issuer:oidc_issuer}"
 ```
 
+**7. Inject the Entra credentials into the dashboard service and redeploy it.**
+Steps 1–6 wire up **Cognito login** federation. The dashboard's Entra **group
+picker** (the `/rpc/listMicrosoftGroups` API used by the settings UI) is
+separate: it calls Microsoft Graph directly using `MICROSOFT_TENANT_ID`,
+`MICROSOFT_CLIENT_ID`, and `MICROSOFT_CLIENT_SECRET` read from the container's
+environment. The dashboard's ECS task definition does **not** carry these yet,
+so until it does the API returns **HTTP 500** (`Failed to acquire Microsoft
+access token`). Register a task-definition revision that adds them, then roll
+the service onto it (run from CloudShell in the deploy region):
+
+```bash
+# Your Entra app-registration values (same ones from step 2)
+export TENANT_ID="YOUR_ENTRA_TENANT_ID"
+export CLIENT_ID="YOUR_ENTRA_CLIENT_ID"
+export CLIENT_SECRET="YOUR_ENTRA_CLIENT_SECRET"
+
+# Locate the dashboard cluster + service (names are CDK-generated)
+export CLUSTER=$(aws ecs list-clusters \
+  --query "clusterArns[?contains(@,'Platform-EcsClusterStack')]|[0]" --output text)
+export SERVICE=$(aws ecs list-services --cluster "$CLUSTER" \
+  --query 'serviceArns[0]' --output text)
+CURRENT_TD=$(aws ecs describe-services --cluster "$CLUSTER" --services "$SERVICE" \
+  --query 'services[0].taskDefinition' --output text)
+
+# Add/replace the three MICROSOFT_* vars on the "dashboard" container
+aws ecs describe-task-definition --task-definition "$CURRENT_TD" \
+  --query 'taskDefinition' --output json > taskdef.json
+jq --arg t "$TENANT_ID" --arg c "$CLIENT_ID" --arg s "$CLIENT_SECRET" '
+  .containerDefinitions |= map(
+    if .name == "dashboard" then
+      .environment = ((.environment // [])
+        | map(select(.name != null
+            and (.name | test("^MICROSOFT_(TENANT_ID|CLIENT_ID|CLIENT_SECRET)$") | not))))
+        + [ {name:"MICROSOFT_TENANT_ID", value:$t},
+            {name:"MICROSOFT_CLIENT_ID", value:$c},
+            {name:"MICROSOFT_CLIENT_SECRET", value:$s} ]
+    else . end)
+  | del(.taskDefinitionArn, .revision, .status, .requiresAttributes,
+        .compatibilities, .registeredAt, .registeredBy)
+' taskdef.json > taskdef-new.json
+
+# Confirm the three vars are present with real values before continuing
+jq '.containerDefinitions[] | select(.name=="dashboard")
+      | .environment[] | select(.name|startswith("MICROSOFT"))' taskdef-new.json
+
+# Register the new revision and roll the service onto it
+NEW_TD=$(aws ecs register-task-definition --cli-input-json file://taskdef-new.json \
+  --query 'taskDefinition.taskDefinitionArn' --output text)
+aws ecs update-service --cluster "$CLUSTER" --service "$SERVICE" \
+  --task-definition "$NEW_TD" --force-new-deployment
+```
+
+Wait ~1–2 minutes for the new task to reach `RUNNING`, then reload the settings
+page — the group picker should populate instead of returning 500. Confirm the
+service moved to the new revision (`taskDefinition` should be the `$NEW_TD` value,
+not the old one):
+
+```bash
+aws ecs describe-services --cluster "$CLUSTER" --services "$SERVICE" \
+  --query 'services[0].taskDefinition' --output text
+```
+
+> **Note:** this is a manual stopgap. Because it edits the task definition
+> outside CDK, the next pipeline deploy reverts it and you must re-run this step.
+> The durable fix is to add these three variables to the dashboard container in
+> `apps/infra/lib/dashboard-stack.ts` (the tenant/client IDs from the existing
+> Entra SSM parameters, the secret via `ecs.Secret.fromSecretsManager` against
+> `agentic-ai-platform/entra/client-secret`) so every deploy carries them.
+
 ## Local development (for contributors)
 
 > **Deploying to AWS is the supported way to run this project.** Local mode is a
@@ -328,7 +397,7 @@ When that happens, refresh the credentials into the env files and restart:
 
 ```bash
 # Re-export fresh credentials from your AWS profile into the env files
-eval "$(aws configure export-credentials --profile <your-profile> --format env)"
+eval "$(aws configure export-credentials --profile "$AWS_PROFILE" --format env)"
 npx tsx scripts/sync-aws-creds.ts        # writes AWS_* into web/.env.local + agent/.env
 
 # Restart the dev server so it picks up the new credentials
@@ -362,7 +431,7 @@ The platform is a set of CloudFormation stacks, deployed by the pipeline under a
 Stage named `Platform`, so they're named `Platform-*`.
 
 ```bash
-export AWS_PROFILE=agentic-ai-platform AWS_REGION=us-west-2
+# Assumes AWS_PROFILE and AWS_REGION are set (see Step 0)
 
 # See what's actually deployed:
 aws cloudformation list-stacks --region "$AWS_REGION" \
@@ -392,7 +461,7 @@ delete the engines) — the app calls the same AWS APIs and keeps its database i
 sync. To do it from the CLI instead:
 
 ```bash
-export AWS_PROFILE=agentic-ai-platform AWS_REGION=us-west-2
+# Assumes AWS_PROFILE and AWS_REGION are set (see Step 0)
 
 # 1a. Detach every target from the gateway (find the gateway ID — it's the
 #     `Platform-AgentCoreGatewayStack` GatewayId output, e.g. agent-platform-gateway-xxxx):
