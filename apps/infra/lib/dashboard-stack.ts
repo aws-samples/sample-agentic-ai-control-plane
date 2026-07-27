@@ -122,9 +122,40 @@ export class DashboardStack extends cdk.Stack {
     props.database.secret!.grantRead(ecsFargateTaskDefinitionDash.taskRole);
 
     // Grant Amazon Verified Permissions access for the tools/AVP sync flow.
+    //
+    // Enumerated to the specific operations the dashboard's API routes invoke
+    // (see packages/api/routes/tool-policy-stores/* and packages/policy/src/
+    // mapper.ts) instead of the wildcard "verifiedpermissions:*", which granted
+    // admin-equivalent control over every policy store in the account.
+    //
+    // Resources remain "*" because policy stores are created at runtime by this
+    // task (CreatePolicyStore), so their ARNs are not known at deploy time and
+    // cannot be enumerated here. Scope to owned policy stores via a resource tag
+    // condition once the sync flow tags the stores it creates.
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
-        actions: ["verifiedpermissions:*"],
+        actions: [
+          // Policy stores
+          "verifiedpermissions:CreatePolicyStore",
+          "verifiedpermissions:GetPolicyStore",
+          "verifiedpermissions:UpdatePolicyStore",
+          "verifiedpermissions:DeletePolicyStore",
+          // Schema
+          "verifiedpermissions:GetSchema",
+          "verifiedpermissions:PutSchema",
+          // Policies
+          "verifiedpermissions:CreatePolicy",
+          "verifiedpermissions:GetPolicy",
+          "verifiedpermissions:UpdatePolicy",
+          "verifiedpermissions:DeletePolicy",
+          // Policy templates
+          "verifiedpermissions:CreatePolicyTemplate",
+          "verifiedpermissions:UpdatePolicyTemplate",
+          "verifiedpermissions:DeletePolicyTemplate",
+          // Authorization checks
+          "verifiedpermissions:IsAuthorized",
+          "verifiedpermissions:IsAuthorizedWithToken",
+        ],
         resources: ["*"],
       }),
     );
@@ -144,10 +175,60 @@ export class DashboardStack extends cdk.Stack {
       }),
     );
 
-    // Grant Bedrock AgentCore access
+    // Grant Bedrock AgentCore access.
+    //
+    // Enumerated to the specific operations the dashboard's API routes invoke
+    // (see packages/api/routes/*) instead of the wildcard "bedrock-agentcore:*",
+    // which granted admin-equivalent control over every gateway, target, policy
+    // engine, registry, and runtime in the account.
+    //
+    // Resources remain "*" because AgentCore has uneven resource-level IAM
+    // support and several of these are List/Create operations that cannot be
+    // scoped to a specific ARN. Tighten to ARNs derived from props as AgentCore
+    // adds resource-level support.
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
-        actions: ["bedrock-agentcore:*"],
+        actions: [
+          // Gateways
+          "bedrock-agentcore:ListGateways",
+          "bedrock-agentcore:GetGateway",
+          "bedrock-agentcore:UpdateGateway",
+          // Gateway targets
+          "bedrock-agentcore:CreateGatewayTarget",
+          "bedrock-agentcore:UpdateGatewayTarget",
+          "bedrock-agentcore:GetGatewayTarget",
+          "bedrock-agentcore:ListGatewayTargets",
+          // Policy engines
+          "bedrock-agentcore:CreatePolicyEngine",
+          "bedrock-agentcore:GetPolicyEngine",
+          "bedrock-agentcore:UpdatePolicyEngine",
+          "bedrock-agentcore:DeletePolicyEngine",
+          "bedrock-agentcore:ListPolicyEngines",
+          // Policies
+          "bedrock-agentcore:CreatePolicy",
+          "bedrock-agentcore:GetPolicy",
+          "bedrock-agentcore:UpdatePolicy",
+          "bedrock-agentcore:DeletePolicy",
+          "bedrock-agentcore:ListPolicies",
+          // Registries
+          "bedrock-agentcore:CreateRegistry",
+          "bedrock-agentcore:UpdateRegistry",
+          "bedrock-agentcore:DeleteRegistry",
+          "bedrock-agentcore:ListRegistries",
+          // Registry records
+          "bedrock-agentcore:CreateRegistryRecord",
+          "bedrock-agentcore:GetRegistryRecord",
+          "bedrock-agentcore:ListRegistryRecords",
+          "bedrock-agentcore:UpdateRegistryRecord",
+          "bedrock-agentcore:DeleteRegistryRecord",
+          "bedrock-agentcore:UpdateRegistryRecordStatus",
+          "bedrock-agentcore:SubmitRegistryRecordForApproval",
+          "bedrock-agentcore:SearchRegistryRecords",
+          // Agent runtimes
+          "bedrock-agentcore:ListAgentRuntimes",
+          "bedrock-agentcore:ListAgentRuntimeEndpoints",
+          "bedrock-agentcore:InvokeAgentRuntime",
+        ],
         resources: ["*"],
       }),
     );

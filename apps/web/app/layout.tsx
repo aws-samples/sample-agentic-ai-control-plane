@@ -12,6 +12,8 @@ import {
 } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
+import { headers } from "next/headers";
+
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const notoSansJP = Noto_Sans_JP({
