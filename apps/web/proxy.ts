@@ -52,10 +52,24 @@ function buildCsp(nonce: string): string {
   ].join("; ");
 }
 
-// Applies the CSP header (and exposes the nonce via x-nonce) to a response.
-function withCsp(response: NextResponse, nonce: string): NextResponse {
+// Applies the CSP plus the standard defensive security headers (see security
+// task BSC — X-Frame-Options / X-Content-Type-Options / HSTS / Cache-Control)
+// and exposes the nonce via x-nonce.
+function withSecurityHeaders(
+  response: NextResponse,
+  nonce: string,
+): NextResponse {
   response.headers.set("Content-Security-Policy", buildCsp(nonce));
   response.headers.set("x-nonce", nonce);
+  // Defense-in-depth headers required for every response.
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=47304000; includeSubDomains",
+  );
+  // Prevent caching of potentially sensitive authenticated responses.
+  response.headers.set("Cache-Control", "no-store, no-cache");
   return response;
 }
 
@@ -72,7 +86,7 @@ export async function proxy(request: NextRequest) {
   // Non-protected paths (sign-in, root, etc.) and public endpoints get the CSP
   // but skip the session check.
   if (isPublicPath(pathname) || !isProtectedPath(pathname)) {
-    return withCsp(NextResponse.next(forward), nonce);
+    return withSecurityHeaders(NextResponse.next(forward), nonce);
   }
 
   const session = await auth.api.getSession({
@@ -83,18 +97,18 @@ export async function proxy(request: NextRequest) {
     // API/RPC callers get a 401 (a browser redirect is not a real block for a
     // programmatic client); page routes get redirected to sign-in.
     if (pathname.startsWith("/rpc") || pathname.startsWith("/api")) {
-      return withCsp(
+      return withSecurityHeaders(
         NextResponse.json({ error: "unauthenticated" }, { status: 401 }),
         nonce,
       );
     }
-    return withCsp(
+    return withSecurityHeaders(
       NextResponse.redirect(new URL("/sign-in", request.url)),
       nonce,
     );
   }
 
-  return withCsp(NextResponse.next(forward), nonce);
+  return withSecurityHeaders(NextResponse.next(forward), nonce);
 }
 
 export const config = {
