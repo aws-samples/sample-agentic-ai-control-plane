@@ -13,7 +13,14 @@ type Registry = {
   description?: string;
   registryId: string;
   registryArn: string;
-  status: "CREATING" | "READY" | "DELETING" | "UPDATING";
+  status:
+    | "CREATING"
+    | "CREATE_FAILED"
+    | "READY"
+    | "UPDATING"
+    | "UPDATE_FAILED"
+    | "DELETING"
+    | "DELETE_FAILED";
   approvalConfiguration?: { autoApproval: boolean };
   createdAt?: string | Date;
   updatedAt: string | Date;
