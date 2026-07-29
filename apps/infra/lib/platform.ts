@@ -50,17 +50,9 @@ export function createPlatformStacks(
     route53domain: cloudfront.distribution.distributionDomainName,
   });
 
-  const agentCoreGateway = new AgentCoreGatewayStack(
-    scope,
-    "AgentCoreGatewayStack",
-    {
-      env,
-      userPool: cognito.userPool,
-      personaUserPoolClient: cognito.personaUserPoolClient,
-    },
-  );
-
   // Example tool Lambdas (calculator, expense tools) the agent can register.
+  // Created before the gateway so its invoke grant can be scoped to exactly
+  // these function ARNs.
   const lambdaTools = new LambdaToolStack(scope, "LambdaToolStack", {
     env,
     vpc: vpc.vpc,
@@ -69,6 +61,18 @@ export function createPlatformStacks(
     dbSchema: DB_SCHEMA,
   });
   lambdaTools.addDependency(database);
+
+  const agentCoreGateway = new AgentCoreGatewayStack(
+    scope,
+    "AgentCoreGatewayStack",
+    {
+      env,
+      userPool: cognito.userPool,
+      personaUserPoolClient: cognito.personaUserPoolClient,
+      toolFunctions: [lambdaTools.calculatorFn, lambdaTools.expenseToolsFn],
+    },
+  );
+  agentCoreGateway.addDependency(lambdaTools);
 
   const agentCoreRuntime = new AgentCoreRuntimeStack(
     scope,
@@ -102,10 +106,13 @@ export function createPlatformStacks(
     databaseSecurityGroup: database.databaseSecurityGroup,
     dbSchema: DB_SCHEMA,
     agentCoreGatewayId: agentCoreGateway.gateway.gatewayId,
+    agentCoreGatewayArn: agentCoreGateway.gateway.gatewayArn,
     agentCoreGatewayServiceRoleArn: agentCoreGateway.gatewayServiceRoleArn,
+    agentCoreRuntimeArn: agentCoreRuntime.runtime.agentRuntimeArn,
     personaMasterPasswordSecret: cognito.personaMasterPasswordSecret,
     personaUserPoolClient: cognito.personaUserPoolClient,
   });
   dashboard.addDependency(agentCoreGateway);
+  dashboard.addDependency(agentCoreRuntime);
   dashboard.addDependency(database);
 }
