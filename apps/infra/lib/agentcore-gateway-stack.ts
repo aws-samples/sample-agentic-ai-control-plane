@@ -10,6 +10,11 @@ import * as path from "path";
 interface AgentCoreGatewayStackProps extends cdk.StackProps {
   userPool: cognito.UserPool;
   personaUserPoolClient: cognito.UserPoolClient;
+  // Tool Lambdas the gateway is allowed to invoke as targets (calculator,
+  // expense tools). Passed in as constructs so their ARNs are resolved
+  // dynamically and the invoke grant can be scoped to exactly these functions
+  // instead of every Lambda in the account.
+  toolFunctions: lambda.IFunction[];
 }
 
 // Provisions the AgentCore MCP Gateway (Cognito persona-client inbound auth) plus its Policy Engine / Lambda-invoke IAM grants and the request interceptor Lambda.
@@ -72,15 +77,22 @@ export class AgentCoreGatewayStack extends cdk.Stack {
       }),
     );
 
-    // Permits the Gateway to invoke any Lambda in this account+region. 
+    // Permit the Gateway to invoke only the tool Lambdas registered as targets.
+    // ARNs are pulled dynamically from the passed-in function constructs
+    // (functionArn) rather than a wildcard, so the gateway cannot invoke
+    // arbitrary Lambdas in the account. Both the bare ARN and the :* version
+    // are granted so invocation of a published version/alias also works.
+    // The request interceptor is not listed here — addInterceptor() below grants
+    // its own scoped lambda:InvokeFunction on the interceptor function.
     this.gateway.role.addToPrincipalPolicy(
       new iam.PolicyStatement({
         sid: "LambdaTargetInvocation",
         effect: iam.Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
-        resources: [
-          `arn:${cdk.Aws.PARTITION}:lambda:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:function:*`,
-        ],
+        resources: props.toolFunctions.flatMap((fn) => [
+          fn.functionArn,
+          `${fn.functionArn}:*`,
+        ]),
       }),
     );
 

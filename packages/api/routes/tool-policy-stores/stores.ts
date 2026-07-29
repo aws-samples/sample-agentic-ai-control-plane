@@ -12,6 +12,7 @@ import { z } from "zod";
 import { authed } from "../../context";
 import {
   avpClient,
+  avpOwnerTags,
   extractAwsError,
   mapAwsError,
   REGION,
@@ -161,6 +162,9 @@ export const createToolPolicyStore = authed
         new CreatePolicyStoreCommand({
           description: input.description || undefined,
           validationSettings: { mode: input.validationMode },
+          // Stamp the ownership tag so the task role's tag-scoped IAM policy
+          // permits this create and every later operation on the store.
+          tags: avpOwnerTags(),
         }),
       );
 

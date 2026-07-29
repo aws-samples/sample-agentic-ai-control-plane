@@ -23,6 +23,20 @@ type PrismaTx = Parameters<Parameters<typeof prisma.$transaction>[0]>[0];
 const REGION = process.env.AGENTCORE_REGION || "us-east-1";
 const awsClient = new BedrockAgentCoreControlClient({ region: REGION });
 
+// Ownership tag stamped on every policy engine this service creates. The task
+// role's IAM policy (apps/infra/lib/dashboard-stack.ts) only permits acting on
+// AgentCore resources carrying this tag, so CreatePolicyEngine MUST send it or
+// the create — and every later operation on the engine — is denied. Key/value
+// are injected by the infra stack; fallbacks keep local dev working.
+const AGENTCORE_OWNER_TAG_KEY =
+  process.env.AGENTCORE_OWNER_TAG_KEY || "agentic-ai-platform:managed-by";
+const AGENTCORE_OWNER_TAG_VALUE =
+  process.env.AGENTCORE_OWNER_TAG_VALUE || "dashboard-agentcore-sync";
+
+const agentCoreOwnerTags = (): Record<string, string> => ({
+  [AGENTCORE_OWNER_TAG_KEY]: AGENTCORE_OWNER_TAG_VALUE,
+});
+
 // ── Zod schemas ──────────────────────────────────────────────────────────────
 
 const EngineStatusSchema = z.enum([
@@ -386,6 +400,9 @@ export const createPolicyEngine = authed
         new CreatePolicyEngineCommand({
           name: input.name,
           description: input.description || undefined,
+          // Stamp the ownership tag so the task role's tag-scoped IAM policy
+          // permits this create and every later operation on the engine.
+          tags: agentCoreOwnerTags(),
         }),
       );
 

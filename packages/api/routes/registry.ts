@@ -16,6 +16,7 @@ import {
   ListRegistriesCommand,
   ListRegistryRecordsCommand,
   SubmitRegistryRecordForApprovalCommand,
+  TagResourceCommand,
   UpdateRegistryCommand,
   UpdateRegistryRecordCommand,
   UpdateRegistryRecordStatusCommand,
@@ -26,6 +27,19 @@ import { z } from "zod";
 const REGION = process.env.AGENTCORE_REGISTRY_REGION || "us-east-1";
 const cpClient = new BedrockAgentCoreControlClient({ region: REGION });
 const dpClient = new BedrockAgentCoreClient({ region: REGION });
+
+// Ownership tag stamped on every registry this service creates. CreateRegistry
+// has no tags-on-create field, so the registry is tagged with a follow-up
+// TagResource call; the task role's IAM only permits acting on registries
+// carrying this tag. Key/value injected by the infra stack; dev fallbacks.
+const AGENTCORE_OWNER_TAG_KEY =
+  process.env.AGENTCORE_OWNER_TAG_KEY || "agentic-ai-platform:managed-by";
+const AGENTCORE_OWNER_TAG_VALUE =
+  process.env.AGENTCORE_OWNER_TAG_VALUE || "dashboard-agentcore-sync";
+
+const agentCoreOwnerTags = (): Record<string, string> => ({
+  [AGENTCORE_OWNER_TAG_KEY]: AGENTCORE_OWNER_TAG_VALUE,
+});
 
 // ── Shared Schemas ──────────────────────────────────────────────────────────
 
@@ -202,7 +216,38 @@ export const createRegistry = os
         },
       }),
     );
-    return { registryArn: response.registryArn! };
+
+    // CreateRegistry can't tag on create, so claim ownership with a follow-up
+    // TagResource. If tagging fails the registry would be an orphan the task
+    // role can no longer manage (every other registry op is tag-scoped), so
+    // roll it back by deleting it and surfacing the error.
+    const registryArn = response.registryArn!;
+    try {
+      await cpClient.send(
+        new TagResourceCommand({
+          resourceArn: registryArn,
+          tags: agentCoreOwnerTags(),
+        }),
+      );
+    } catch (err) {
+      // CreateRegistry returns only the ARN; DeleteRegistry takes the id, which
+      // is the last segment of the ARN (arn:...:registry/<registryId>).
+      const registryId = registryArn.split("/").pop();
+      try {
+        if (registryId) {
+          await cpClient.send(new DeleteRegistryCommand({ registryId }));
+        }
+      } catch {
+        // Best-effort rollback; surface the original tagging failure below.
+      }
+      throw new ORPCError("INTERNAL_SERVER_ERROR", {
+        message:
+          "Registry created but ownership tagging failed; rolled back. Please retry.",
+        cause: err,
+      });
+    }
+
+    return { registryArn };
   });
 
 // ── Update Registry ─────────────────────────────────────────────────────────

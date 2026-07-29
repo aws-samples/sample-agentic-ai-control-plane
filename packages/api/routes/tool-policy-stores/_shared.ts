@@ -9,6 +9,22 @@ const REGION =
   "us-east-1";
 const avpClient = new VerifiedPermissionsClient({ region: REGION });
 
+// Ownership tag stamped on every policy store this service creates. The task
+// role's IAM policy (see apps/infra/lib/dashboard-stack.ts) only permits acting
+// on stores carrying this tag, so CreatePolicyStore MUST send it or the create
+// (and every later operation on the store) is denied. Key/value are injected by
+// the infra stack; the fallbacks keep local dev working against a store the
+// developer's own credentials can already reach.
+const AVP_OWNER_TAG_KEY =
+  process.env.AVP_OWNER_TAG_KEY || "agentic-ai-platform:managed-by";
+const AVP_OWNER_TAG_VALUE =
+  process.env.AVP_OWNER_TAG_VALUE || "dashboard-avp-sync";
+
+// Tags to attach when creating a policy store.
+const avpOwnerTags = (): Record<string, string> => ({
+  [AVP_OWNER_TAG_KEY]: AVP_OWNER_TAG_VALUE,
+});
+
 // ── Zod schemas ──────────────────────────────────────────────────────────────
 
 const StoreStatusSchema = z.enum([
@@ -326,6 +342,7 @@ export {
   ToolSyncEventSchema,
   REGION,
   avpClient,
+  avpOwnerTags,
   sha256,
   mapAwsError,
   extractAwsError,
