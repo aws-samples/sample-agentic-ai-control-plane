@@ -45,12 +45,26 @@ const agentCoreOwnerTags = (): Record<string, string> => ({
 
 const ApprovalConfigurationSchema = z.object({ autoApproval: z.boolean() });
 
+// Mirrors the AWS RegistryStatus enum in full — it includes the *_FAILED
+// states, which a create-then-tag rollback (see createRegistry) can produce.
+// Omitting them made ListRegistries fail output validation (500) whenever a
+// registry was in a failed state.
+const RegistryStatusSchema = z.enum([
+  "CREATING",
+  "CREATE_FAILED",
+  "READY",
+  "UPDATING",
+  "UPDATE_FAILED",
+  "DELETING",
+  "DELETE_FAILED",
+]);
+
 const RegistrySchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   registryId: z.string(),
   registryArn: z.string(),
-  status: z.enum(["CREATING", "READY", "DELETING", "UPDATING"]),
+  status: RegistryStatusSchema,
   approvalConfiguration: ApprovalConfigurationSchema.optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date(),
@@ -157,9 +171,7 @@ export const listRegistries = os
   .input(
     z
       .object({
-        status: z
-          .enum(["CREATING", "READY", "DELETING", "UPDATING"])
-          .optional(),
+        status: RegistryStatusSchema.optional(),
       })
       .optional(),
   )
