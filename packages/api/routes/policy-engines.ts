@@ -999,23 +999,48 @@ async function pushPolicyToAws(
       awsStatus = response.status as string | undefined;
       awsRequestId = response.$metadata?.requestId;
     } else {
-      const response = await awsClient.send(
-        new UpdatePolicyCommand({
-          policyEngineId: ep.engine.awsPolicyEngineId,
-          policyId: awsPolicyId,
-          definition: { cedar: { statement: ep.cedarCode } },
-          // AWS enforces 1–4096 chars when the field is present. The DB
-          // column defaults to "" which would fail validation — only send
-          // the description wrapper when we actually have text to pass.
-          description: ep.description
-            ? { optionalValue: ep.description }
-            : undefined,
-          validationMode: "IGNORE_ALL_FINDINGS",
-        }),
-      );
-      awsPolicyArn = response.policyArn ?? awsPolicyArn;
-      awsStatus = response.status as string | undefined;
-      awsRequestId = response.$metadata?.requestId;
+      try {
+        const response = await awsClient.send(
+          new UpdatePolicyCommand({
+            policyEngineId: ep.engine.awsPolicyEngineId,
+            policyId: awsPolicyId,
+            definition: { cedar: { statement: ep.cedarCode } },
+            // AWS enforces 1–4096 chars when the field is present. The DB
+            // column defaults to "" which would fail validation — only send
+            // the description wrapper when we actually have text to pass.
+            description: ep.description
+              ? { optionalValue: ep.description }
+              : undefined,
+            validationMode: "IGNORE_ALL_FINDINGS",
+          }),
+        );
+        awsPolicyArn = response.policyArn ?? awsPolicyArn;
+        awsStatus = response.status as string | undefined;
+        awsRequestId = response.$metadata?.requestId;
+      } catch (err) {
+        // Self-heal DB/AWS drift: the row has a stored awsPolicyId, but the
+        // policy no longer exists in AWS (e.g. the engine was recreated, or the
+        // policy was deleted out-of-band, or the DB was seeded from another
+        // account). UpdatePolicy then fails with ResourceNotFoundException
+        // ("Policy with ID … not found"). Recover by recreating the policy
+        // instead of leaving the row permanently unsyncable.
+        if ((err as { name?: string }).name !== "ResourceNotFoundException") {
+          throw err;
+        }
+        const response = await awsClient.send(
+          new CreatePolicyCommand({
+            policyEngineId: ep.engine.awsPolicyEngineId,
+            name: ep.name,
+            description: ep.description || undefined,
+            definition: { cedar: { statement: ep.cedarCode } },
+            validationMode: "IGNORE_ALL_FINDINGS",
+          }),
+        );
+        awsPolicyId = response.policyId ?? null;
+        awsPolicyArn = response.policyArn ?? null;
+        awsStatus = response.status as string | undefined;
+        awsRequestId = response.$metadata?.requestId;
+      }
     }
 
     await prisma.enginePolicy.update({
