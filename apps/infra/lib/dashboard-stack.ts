@@ -282,28 +282,53 @@ export class DashboardStack extends cdk.Stack {
 
     // Gateway + target actions that support resource-level permissions, scoped
     // to this platform's gateway and its targets.
+    //
+    // Full gateway + gateway-target + gateway-rule API surface (per the
+    // AgentCore Service Authorization Reference / SDK command set), minus
+    // CreateGateway/DeleteGateway — the gateway itself is provisioned by
+    // AgentCoreGatewayStack at deploy time, not by the dashboard, so the task
+    // role must not be able to create or destroy gateways. Everything else
+    // (target CRUD + sync, gateway rules) operates on this platform's gateway.
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
         sid: "AgentCoreOwnedGateway",
         actions: [
-          // Gateways
+          // Gateway (no Create/Delete — deploy-time managed)
           "bedrock-agentcore:GetGateway",
           "bedrock-agentcore:UpdateGateway",
           // Gateway targets
           "bedrock-agentcore:CreateGatewayTarget",
-          "bedrock-agentcore:UpdateGatewayTarget",
           "bedrock-agentcore:GetGatewayTarget",
+          "bedrock-agentcore:UpdateGatewayTarget",
+          "bedrock-agentcore:DeleteGatewayTarget",
           "bedrock-agentcore:ListGatewayTargets",
+          "bedrock-agentcore:SynchronizeGatewayTargets",
+          // Gateway rules
+          "bedrock-agentcore:CreateGatewayRule",
+          "bedrock-agentcore:GetGatewayRule",
+          "bedrock-agentcore:UpdateGatewayRule",
+          "bedrock-agentcore:DeleteGatewayRule",
+          "bedrock-agentcore:ListGatewayRules",
         ],
         resources: [props.agentCoreGatewayArn, gatewayTargetArnPattern],
       }),
     );
 
-    // Invoke only this platform's agent runtime (and its endpoint sub-resource).
+    // Agent runtime actions scoped to this platform's runtime (and its endpoint
+    // sub-resources via arn/*). Invoke plus the read/describe surface the
+    // dashboard uses. No Create/Update/Delete — the runtime is provisioned by
+    // AgentCoreRuntimeStack at deploy time, so the task role must not manage
+    // runtimes. (List* across runtimes has no resource-level support and lives
+    // in the unscoped statement below.)
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
         sid: "AgentCoreOwnedRuntime",
-        actions: ["bedrock-agentcore:InvokeAgentRuntime"],
+        actions: [
+          "bedrock-agentcore:InvokeAgentRuntime",
+          "bedrock-agentcore:GetAgentRuntime",
+          "bedrock-agentcore:GetAgentRuntimeEndpoint",
+          "bedrock-agentcore:ListAgentRuntimeVersions",
+        ],
         resources: [
           props.agentCoreRuntimeArn,
           `${props.agentCoreRuntimeArn}/*`,
@@ -331,21 +356,26 @@ export class DashboardStack extends cdk.Stack {
       }),
     );
 
-    // Ops on an existing policy engine (and the policies that hang off it),
-    // gated on the engine's ownership tag. CreatePolicy/GetPolicy/etc. act
-    // against the parent engine ARN, so they match on the engine's tag — same
-    // shape as the AVP owned-stores statement.
+    // Ops on an existing policy ENGINE, gated on the engine's ownership tag.
+    // These act on the engine resource itself, which the app tags at create
+    // time (CreatePolicyEngine supports tags-on-create), so aws:ResourceTag
+    // matches.
+    //
+    // NOTE: policy and policy-generation actions are intentionally NOT here.
+    // A policy has its own distinct policyArn (a sub-resource of the engine) and
+    // is never tagged — CreatePolicy has no tags field, and IAM has no tag
+    // inheritance from the engine. So an aws:ResourceTag condition on a policy
+    // action can never match and Get/Update/Delete/CreatePolicy and the
+    // policy-generation calls would be silently denied. They live in the
+    // unscoped statement below instead. (Same class of bug as registry records.)
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
         sid: "AgentCoreOwnedPolicyEngines",
         actions: [
           "bedrock-agentcore:GetPolicyEngine",
+          "bedrock-agentcore:GetPolicyEngineSummary",
           "bedrock-agentcore:UpdatePolicyEngine",
           "bedrock-agentcore:DeletePolicyEngine",
-          "bedrock-agentcore:CreatePolicy",
-          "bedrock-agentcore:GetPolicy",
-          "bedrock-agentcore:UpdatePolicy",
-          "bedrock-agentcore:DeletePolicy",
         ],
         resources: ["*"],
         conditions: {
@@ -378,20 +408,24 @@ export class DashboardStack extends cdk.Stack {
       }),
     );
 
-    // Ops on an existing registry and its records, gated on the registry's
-    // ownership tag. Registry records act against the parent registry ARN.
+    // Ops on an existing REGISTRY, gated on the registry's ownership tag. These
+    // act on the registry resource itself, which the app tags at create time
+    // (see registry.ts create-then-tag), so aws:ResourceTag matches.
+    //
+    // NOTE: registry *record* actions are intentionally NOT here. A record is a
+    // distinct sub-resource with its own ARN, and IAM has no tag inheritance —
+    // records are never tagged (CreateRegistryRecord has no tags field and the
+    // app only tags the parent registry), so an aws:ResourceTag condition on a
+    // record action can never match and every record call (Submit-for-approval,
+    // Get/Update/Delete record, UpdateStatus) is silently denied. Record actions
+    // live in the unscoped statement below instead.
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
         sid: "AgentCoreOwnedRegistries",
         actions: [
+          "bedrock-agentcore:GetRegistry",
           "bedrock-agentcore:UpdateRegistry",
           "bedrock-agentcore:DeleteRegistry",
-          "bedrock-agentcore:CreateRegistryRecord",
-          "bedrock-agentcore:GetRegistryRecord",
-          "bedrock-agentcore:UpdateRegistryRecord",
-          "bedrock-agentcore:DeleteRegistryRecord",
-          "bedrock-agentcore:UpdateRegistryRecordStatus",
-          "bedrock-agentcore:SubmitRegistryRecordForApproval",
         ],
         resources: ["*"],
         conditions: {
@@ -403,27 +437,58 @@ export class DashboardStack extends cdk.Stack {
       }),
     );
 
-    // List/Search operations have no resource-level support, and CreateRegistry
-    // cannot tag-on-create so it cannot be tag-gated. These remain "*".
-    // CreateRegistry is a residual gap: the role can create registries, but the
-    // app immediately tags them and every subsequent op is tag-scoped above.
-    //
-    // CreateRegistry (and CreateGateway) implicitly provision a backing workload
-    // identity via a forward-access call using this role, so the workload-
-    // identity lifecycle actions are required or CreateRegistry fails with
-    // "Unable to create workload identity because access was denied." AgentCore
-    // names the workload identity itself (unpredictable), so these stay "*".
+    // Actions that cannot be tag- or ARN-scoped, kept on "*":
+    //  - List/Search: no resource-level support.
+    //  - CreateRegistry: no tags-on-create (residual gap — app tags immediately
+    //    after and every later registry op is tag-scoped).
+    //  - Policy and registry-RECORD sub-resource actions: these act on
+    //    sub-resources (policyArn / recordArn) that are never tagged, and IAM
+    //    has no tag inheritance from the parent engine/registry, so an
+    //    aws:ResourceTag condition on them can never match. They must stay "*"
+    //    (or be scoped some other way) or they're silently denied — this is what
+    //    broke SubmitRegistryRecordForApproval.
+    //  - Workload identity: created implicitly by CreateRegistry/CreateGateway
+    //    via a forward-access call using this role, so the lifecycle actions are
+    //    required or CreateRegistry fails "Unable to create workload identity
+    //    because access was denied." AgentCore names it (unpredictable), so "*".
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
         sid: "AgentCoreUnscopedActions",
         actions: [
+          // Gateway list
           "bedrock-agentcore:ListGateways",
+          // Policy engine list + summaries
           "bedrock-agentcore:ListPolicyEngines",
+          "bedrock-agentcore:ListPolicyEngineSummaries",
+          // Policies (sub-resource of the engine, untagged — see note above)
+          "bedrock-agentcore:CreatePolicy",
+          "bedrock-agentcore:GetPolicy",
+          "bedrock-agentcore:GetPolicySummary",
+          "bedrock-agentcore:UpdatePolicy",
+          "bedrock-agentcore:DeletePolicy",
           "bedrock-agentcore:ListPolicies",
+          "bedrock-agentcore:ListPolicySummaries",
+          // Cedar policy generation (operates against the engine + policies)
+          "bedrock-agentcore:StartPolicyGeneration",
+          "bedrock-agentcore:GetPolicyGeneration",
+          "bedrock-agentcore:GetPolicyGenerationSummary",
+          "bedrock-agentcore:ListPolicyGenerations",
+          "bedrock-agentcore:ListPolicyGenerationSummaries",
+          "bedrock-agentcore:ListPolicyGenerationAssets",
+          // Registry create/list/search
           "bedrock-agentcore:CreateRegistry",
           "bedrock-agentcore:ListRegistries",
           "bedrock-agentcore:ListRegistryRecords",
           "bedrock-agentcore:SearchRegistryRecords",
+          // Registry records (sub-resource of the registry, untagged — see note)
+          "bedrock-agentcore:CreateRegistryRecord",
+          "bedrock-agentcore:GetRegistryRecord",
+          "bedrock-agentcore:UpdateRegistryRecord",
+          "bedrock-agentcore:DeleteRegistryRecord",
+          "bedrock-agentcore:UpdateRegistryRecordStatus",
+          "bedrock-agentcore:SubmitRegistryRecordForApproval",
+          // Agent runtime list (ListAgentRuntimeVersions targets a specific
+          // runtime ARN, so it lives in the scoped runtime statement above)
           "bedrock-agentcore:ListAgentRuntimes",
           "bedrock-agentcore:ListAgentRuntimeEndpoints",
           // Backing workload identity created implicitly by CreateRegistry /
