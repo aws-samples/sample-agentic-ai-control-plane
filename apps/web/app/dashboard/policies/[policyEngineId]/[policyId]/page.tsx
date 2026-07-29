@@ -42,6 +42,8 @@ import {
   Trash2,
 } from "lucide-react";
 import MonacoEditor from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import {
   registerCedarLanguage,
   CEDAR_LANGUAGE_ID,

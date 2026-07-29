@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import MonacoEditor from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import { Check, Copy, Loader2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {

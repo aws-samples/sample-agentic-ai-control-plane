@@ -33,6 +33,8 @@ import {
 } from "@/components/ui/table";
 import { ExternalLink, Loader2, Plus } from "lucide-react";
 import MonacoEditor from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import {
   registerCedarLanguage,
   CEDAR_LANGUAGE_ID,

@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { RotateCcw, GitCompareArrows } from "lucide-react";
 import MonacoEditor, { DiffEditor } from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import { Loader2 } from "lucide-react";
 import {
   registerCedarLanguage,

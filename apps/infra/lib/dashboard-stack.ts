@@ -309,6 +309,12 @@ export class DashboardStack extends cdk.Stack {
           "bedrock-agentcore:UpdateGatewayRule",
           "bedrock-agentcore:DeleteGatewayRule",
           "bedrock-agentcore:ListGatewayRules",
+          // Attaching/detaching a policy engine to the gateway (attachGateway →
+          // UpdateGateway with policyEngineConfiguration) requires managing the
+          // gateway's resource-scoped policy. This is an IAM-authorization-only
+          // action (no matching SDK/API command), so it does not appear in the
+          // SDK command set — it only surfaces as an AccessDenied at attach time.
+          "bedrock-agentcore:ManageResourceScopedPolicy",
         ],
         resources: [props.agentCoreGatewayArn, gatewayTargetArnPattern],
       }),

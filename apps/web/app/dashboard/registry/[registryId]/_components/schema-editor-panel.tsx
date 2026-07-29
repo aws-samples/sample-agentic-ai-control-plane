@@ -2,6 +2,8 @@
 
 import { useMemo } from "react";
 import MonacoEditor from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { Braces, Loader2 } from "lucide-react";
