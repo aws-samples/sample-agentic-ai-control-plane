@@ -39,6 +39,8 @@ import {
   XCircle,
 } from "lucide-react";
 import MonacoEditor, { type OnMount } from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import type { editor as monacoEditor } from "monaco-editor";
 import { MentionKit } from "@/components/editor/plugins/mention-kit";
 import {

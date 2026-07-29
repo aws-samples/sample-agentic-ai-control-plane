@@ -8,6 +8,8 @@ import type { Value } from "platejs";
 import { KEYS } from "platejs";
 import { Plate, usePlateEditor } from "platejs/react";
 import MonacoEditor, { type OnMount } from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import type { editor as monacoEditor } from "monaco-editor";
 import {
   AlertDialog,

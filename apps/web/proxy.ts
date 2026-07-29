@@ -44,6 +44,10 @@ function buildCsp(nonce: string): string {
     `img-src 'self' data: https://api.dicebear.com`,
     `font-src 'self'`,
     `connect-src 'self'`,
+    // The Cedar code editor (self-hosted Monaco — see lib/monaco-setup.ts) spawns
+    // a same-origin web worker; some bundler outputs load it via a blob: URL.
+    // Scoped to 'self'/blob: — far tighter than allowing a third-party CDN.
+    `worker-src 'self' blob:`,
     `object-src 'none'`,
     `base-uri 'none'`,
     `frame-ancestors 'none'`,

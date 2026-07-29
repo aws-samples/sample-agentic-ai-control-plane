@@ -26,6 +26,8 @@ import { Check, ChevronRight, Copy } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import MonacoEditor from "@monaco-editor/react";
+// Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
+import "@/lib/monaco-setup";
 import type { ToolPolicy, ToolPolicyStore } from "../../../_components/constants";
 
 interface SdkUsageProps {
