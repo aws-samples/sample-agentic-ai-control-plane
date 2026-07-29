@@ -34,17 +34,30 @@ type Registry = {
   description?: string;
   registryId: string;
   registryArn: string;
-  status: "CREATING" | "READY" | "DELETING" | "UPDATING";
+  status:
+    | "CREATING"
+    | "CREATE_FAILED"
+    | "READY"
+    | "UPDATING"
+    | "UPDATE_FAILED"
+    | "DELETING"
+    | "DELETE_FAILED";
   approvalConfiguration?: { autoApproval: boolean };
   createdAt?: string | Date;
   updatedAt: string | Date;
 };
+
+const FAILED_STATUS_CLASSNAME =
+  "text-red-600 border-red-200 bg-red-50 dark:text-red-400 dark:border-red-800 dark:bg-red-950/30";
 
 const STATUS_CONFIG: Record<Registry["status"], { className: string }> = {
   READY: { className: "text-emerald-600 border-emerald-200 bg-emerald-50 dark:text-emerald-400 dark:border-emerald-800 dark:bg-emerald-950/30" },
   CREATING: { className: "text-blue-600 border-blue-200 bg-blue-50 dark:text-blue-400 dark:border-blue-800 dark:bg-blue-950/30" },
   UPDATING: { className: "text-amber-600 border-amber-200 bg-amber-50 dark:text-amber-400 dark:border-amber-800 dark:bg-amber-950/30" },
   DELETING: { className: "text-red-600 border-red-200 bg-red-50 dark:text-red-400 dark:border-red-800 dark:bg-red-950/30" },
+  CREATE_FAILED: { className: FAILED_STATUS_CLASSNAME },
+  UPDATE_FAILED: { className: FAILED_STATUS_CLASSNAME },
+  DELETE_FAILED: { className: FAILED_STATUS_CLASSNAME },
 };
 
 interface RegistryListProps {
