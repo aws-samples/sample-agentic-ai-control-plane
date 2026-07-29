@@ -407,6 +407,12 @@ export class DashboardStack extends cdk.Stack {
     // cannot tag-on-create so it cannot be tag-gated. These remain "*".
     // CreateRegistry is a residual gap: the role can create registries, but the
     // app immediately tags them and every subsequent op is tag-scoped above.
+    //
+    // CreateRegistry (and CreateGateway) implicitly provision a backing workload
+    // identity via a forward-access call using this role, so the workload-
+    // identity lifecycle actions are required or CreateRegistry fails with
+    // "Unable to create workload identity because access was denied." AgentCore
+    // names the workload identity itself (unpredictable), so these stay "*".
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
         sid: "AgentCoreUnscopedActions",
@@ -420,6 +426,12 @@ export class DashboardStack extends cdk.Stack {
           "bedrock-agentcore:SearchRegistryRecords",
           "bedrock-agentcore:ListAgentRuntimes",
           "bedrock-agentcore:ListAgentRuntimeEndpoints",
+          // Backing workload identity created implicitly by CreateRegistry /
+          // CreateGateway.
+          "bedrock-agentcore:CreateWorkloadIdentity",
+          "bedrock-agentcore:GetWorkloadIdentity",
+          "bedrock-agentcore:UpdateWorkloadIdentity",
+          "bedrock-agentcore:DeleteWorkloadIdentity",
         ],
         resources: ["*"],
       }),
