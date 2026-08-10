@@ -71,6 +71,7 @@ model User {
   policies             Policy[]
   policyVersions       PolicyVersion[]
   policyActivityEvents PolicyActivityEvent[]
+  registryActivityEvents RegistryActivityEvent[]
   policyEngines        PolicyEngine[]        @relation("PolicyEngineAuthor")
   enginePolicies       EnginePolicy[]        @relation("EnginePolicyAuthor")
   syncBatches          SyncBatch[]           @relation("SyncBatchTriggeredBy")
@@ -208,6 +209,26 @@ model PolicyActivityEvent {
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@index([policyId, createdAt])
+}
+
+// Local audit trail for AgentCore Agent Registry activity. Registry records live
+// in AWS (agent-registry namespace), which exposes no per-user audit read, so
+// events are recorded here as a side-effect of each mutating API call and keyed
+// by AWS identifiers (registryId + optional recordId) rather than a local FK.
+// Never synced to AWS. See docs/registry-activity-tracing.md.
+model RegistryActivityEvent {
+  id          String   @id @default(cuid())
+  registryId  String   @map("registry_id")
+  recordId    String?  @map("record_id")
+  type        String
+  description String
+  actorId     String?  @map("actor_id")
+  actor       User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([registryId, recordId, createdAt])
+  @@map("registry_activity_event")
 }
 
 model LinkedPolicy {
