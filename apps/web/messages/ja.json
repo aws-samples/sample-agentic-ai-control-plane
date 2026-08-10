@@ -180,7 +180,9 @@
     },
     "tabs": {
       "allRecords": "全レコード",
-      "search": "検索"
+      "search": "検索",
+      "records": "レコード",
+      "activity": "アクティビティ ({count})"
     },
     "search": {
       "enterQuery": "検索クエリを入力してください",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +41,7 @@ import {
   X,
   Eye,
   Plus,
+  Loader2,
 } from "lucide-react";
 import { $orpc } from "@/lib/api";
 import { toast } from "sonner";
@@ -101,13 +102,100 @@ export function RecordsList({ records, registryId, isLoading, onRefresh }: Recor
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  // recordIds returned by the AWS semantic search (SearchDiscoverableRegistryRecords),
+  // in relevance order. Only covers APPROVED ("discoverable") records, so we merge
+  // these with a client-side substring pass over all statuses below. null = no
+  // active/successful semantic result yet.
+  const [semanticIds, setSemanticIds] = useState<string[] | null>(null);
+  const [isSemanticSearching, setIsSemanticSearching] = useState(false);
 
-  const filteredRecords = records.filter((record) => {
-    if (statusFilter !== "all" && record.status !== statusFilter) return false;
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return record.name.toLowerCase().includes(q) || record.displayName?.toLowerCase().includes(q) || record.description?.toLowerCase().includes(q) || record.recordType?.toLowerCase().includes(q);
-  });
+  // The registry's ARN — needed by the semantic API. All records in a registry
+  // share the same registryArn, so derive it from the first record.
+  const registryArn = records[0]?.registryArn;
+
+  // Debounced semantic search: fire ~400ms after the user stops typing. Empty
+  // query resets to the plain (substring-only) view with no network call.
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (!q || !registryArn) {
+      setSemanticIds(null);
+      setIsSemanticSearching(false);
+      return;
+    }
+    let cancelled = false;
+    setIsSemanticSearching(true);
+    const timer = setTimeout(async () => {
+      try {
+        const res = await $orpc.searchRegistryRecords({
+          registryIds: [registryArn],
+          searchQuery: q,
+          maxResults: 20,
+        });
+        if (cancelled) return;
+        setSemanticIds(
+          (res.registryRecords ?? [])
+            .map((r) => r.recordId)
+            .filter((id): id is string => Boolean(id)),
+        );
+      } catch {
+        // Semantic search failed (e.g. no approved records / transient AWS
+        // error) — fall back to substring-only by clearing semantic results.
+        if (!cancelled) setSemanticIds(null);
+      } finally {
+        if (!cancelled) setIsSemanticSearching(false);
+      }
+    }, 400);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [searchQuery, registryArn]);
+
+  // Hybrid result set. With no query: all records (status filter only). With a
+  // query: semantic hits first (relevance order, APPROVED only), then any other
+  // records matching a plain substring search — so Draft/Pending records the
+  // semantic API can't see are never lost. Status filter applies throughout.
+  const filteredRecords = useMemo(() => {
+    const byStatus = (record: RegistryRecord) =>
+      statusFilter === "all" || record.status === statusFilter;
+
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return records.filter(byStatus);
+
+    const matchesSubstring = (record: RegistryRecord) =>
+      record.name.toLowerCase().includes(q) ||
+      record.displayName?.toLowerCase().includes(q) ||
+      record.description?.toLowerCase().includes(q) ||
+      record.recordType?.toLowerCase().includes(q);
+
+    const recordById = new Map(
+      records.filter((r) => r.recordId).map((r) => [r.recordId as string, r]),
+    );
+
+    const ordered: RegistryRecord[] = [];
+    const seen = new Set<string>();
+
+    // 1. Semantic hits, in relevance order.
+    for (const id of semanticIds ?? []) {
+      const record = recordById.get(id);
+      if (record && byStatus(record) && !seen.has(id)) {
+        ordered.push(record);
+        seen.add(id);
+      }
+    }
+
+    // 2. Substring matches across all statuses not already surfaced.
+    for (const record of records) {
+      const key = record.recordId ?? record.name;
+      if (seen.has(key)) continue;
+      if (byStatus(record) && matchesSubstring(record)) {
+        ordered.push(record);
+        seen.add(key);
+      }
+    }
+
+    return ordered;
+  }, [records, searchQuery, semanticIds, statusFilter]);
 
   const metrics = {
     total: records.length,
@@ -213,7 +301,10 @@ export function RecordsList({ records, registryId, isLoading, onRefresh }: Recor
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
-            <Input placeholder={t("searchPlaceholder")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-7" />
+            <Input placeholder={t("searchPlaceholder")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-7 pr-7" />
+            {isSemanticSearching && (
+              <Loader2 className="absolute right-2 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground animate-spin" />
+            )}
           </div>
           {searchQuery && (<Button size="sm" variant="ghost" onClick={() => setSearchQuery("")} className="text-muted-foreground"><X className="size-3.5" /></Button>)}
           <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val as string)}>
