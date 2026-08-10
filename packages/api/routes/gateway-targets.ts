@@ -1,8 +1,11 @@
 import { createHash } from "node:crypto";
 import {
+  AgentRegistryControlClient,
+  GetRegistryRecordCommand,
+} from "@aws-sdk/client-agent-registry-control";
+import {
   BedrockAgentCoreControlClient,
   CreateGatewayTargetCommand,
-  GetRegistryRecordCommand,
   ListGatewayTargetsCommand,
   UpdateGatewayTargetCommand,
 } from "@aws-sdk/client-bedrock-agentcore-control";
@@ -15,7 +18,9 @@ import {
 } from "./registry-helpers";
 
 const REGISTRY_REGION = process.env.AGENTCORE_REGISTRY_REGION || "us-west-2";
-const registryClient = new BedrockAgentCoreControlClient({ region: REGISTRY_REGION });
+// Registry reads use the GA agent-registry namespace; gateway ops below stay on
+// bedrock-agentcore (only Registry changed namespace at GA).
+const registryClient = new AgentRegistryControlClient({ region: REGISTRY_REGION });
 
 export type MaterializeInput = {
   registryRecordId: string;

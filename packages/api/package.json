@@ -24,6 +24,8 @@
     "@ai-sdk/amazon-bedrock": "^4.0.129",
     "@ai-sdk/mcp": "^1.0.58",
     "@aws-crypto/sha256-js": "^5.2.0",
+    "@aws-sdk/client-agent-registry": "^3.1105.0",
+    "@aws-sdk/client-agent-registry-control": "^3.1105.0",
     "@aws-sdk/client-bedrock-agent-runtime": "^3.1079.0",
     "@aws-sdk/client-bedrock-agentcore": "^3.1079.0",
     "@aws-sdk/client-bedrock-agentcore-control": "^3.1079.0",

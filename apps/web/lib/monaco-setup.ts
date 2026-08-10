@@ -11,17 +11,38 @@
 // assets are served same-origin. The only CSP addition needed is
 // `worker-src 'self' blob:` for the editor web worker.
 import { loader } from "@monaco-editor/react";
-import * as monaco from "monaco-editor";
+// Type-only import — erased at compile time, so it never runs on the server.
+// The monaco RUNTIME touches `window`/`self` at module-eval, so it must NOT be
+// imported at the top level: this file is imported by a "use client" component
+// that Next.js still evaluates on the server for SSR, which threw
+// "window is not defined" at the monaco import. The runtime is loaded lazily
+// inside the browser-only guard below instead.
+import type * as MonacoNs from "monaco-editor";
 
-// Configure the editor's web worker to load from a same-origin URL (bundled by
-// the app) rather than the CDN. Cedar is a Monarch-only language with no
-// language service, so only the base editor worker is required. The `new URL(…,
-// import.meta.url)` form makes the bundler emit the worker as a same-origin
-// asset under /_next, satisfying `worker-src 'self'`.
+// Configure the editor's web workers to load from same-origin URLs (bundled by
+// the app) rather than the CDN. The `new URL(…, import.meta.url)` form makes the
+// bundler emit each worker as a same-origin asset under /_next, satisfying
+// `worker-src 'self'`.
+//
+// Monaco requests a worker per language `label`. Cedar is a Monarch-only language
+// (base editor worker suffices), but the registry schema editors use `json`
+// (see schema-editor-panel.tsx), which needs the JSON language worker for
+// validation, folding, colors, and document symbols. Returning the base worker
+// for JSON is what caused "Missing requestHandler or method: doValidation /
+// getFoldingRanges / findDocumentColors / findDocumentSymbols".
 if (typeof window !== "undefined") {
-  (self as unknown as { MonacoEnvironment?: monaco.Environment }).MonacoEnvironment =
+  (self as unknown as { MonacoEnvironment?: MonacoNs.Environment }).MonacoEnvironment =
     {
-      getWorker() {
+      getWorker(_workerId: string, label: string) {
+        if (label === "json") {
+          return new Worker(
+            new URL(
+              "monaco-editor/esm/vs/language/json/json.worker.js",
+              import.meta.url,
+            ),
+            { type: "module" },
+          );
+        }
         return new Worker(
           new URL(
             "monaco-editor/esm/vs/editor/editor.worker.js",
@@ -32,6 +53,9 @@ if (typeof window !== "undefined") {
       },
     };
 
-  // Bundle Monaco from the local package instead of fetching it from the CDN.
-  loader.config({ monaco });
+  // Bundle Monaco from the local package (loaded lazily, browser-only) instead of
+  // fetching it from the CDN.
+  void import("monaco-editor").then((monaco) => {
+    loader.config({ monaco });
+  });
 }

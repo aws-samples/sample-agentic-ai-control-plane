@@ -1289,18 +1289,22 @@ function extractRegistryId(arn: string): string {
 }
 
 function extractEndpointFromRecord(record: Record<string, unknown>): string | null {
+  const descriptors = record.descriptors as Record<string, any> | undefined;
+  // GA recordType (MCP | AGENT); records may still carry legacy protocol.
+  const recordType =
+    (record.recordType as string) || (record.protocol as string) || "";
+  // URL-sync source lives on the primary descriptor and is the endpoint.
+  const sourceUrl =
+    descriptors?.mcpServer?.source?.fromUrl?.url ??
+    descriptors?.a2aAgentCard?.source?.fromUrl?.url;
+  if (typeof sourceUrl === "string" && sourceUrl) return sourceUrl;
   try {
-    const descriptors = record.descriptors as Record<string, unknown> | undefined;
-    if ((record.protocol as string) === "MCP") {
-      const mcp = descriptors?.mcp as Record<string, unknown> | undefined;
-      const serverSchema = mcp?.serverSchema as Record<string, unknown> | undefined;
-      const content = JSON.parse((serverSchema?.inlineContent as string) || "{}");
+    if (recordType === "MCP") {
+      const content = JSON.parse((descriptors?.mcpServer?.data as string) || "{}");
       return content.remotes?.[0]?.url || null;
     }
-    if ((record.protocol as string) === "A2A") {
-      const a2a = descriptors?.a2a as Record<string, unknown> | undefined;
-      const agentCard = a2a?.agentCard as Record<string, unknown> | undefined;
-      const content = JSON.parse((agentCard?.inlineContent as string) || "{}");
+    if (recordType === "AGENT" || recordType === "A2A") {
+      const content = JSON.parse((descriptors?.a2aAgentCard?.data as string) || "{}");
       return content.url || null;
     }
   } catch {}

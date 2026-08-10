@@ -42,7 +42,11 @@ type Registry = {
     | "UPDATE_FAILED"
     | "DELETING"
     | "DELETE_FAILED";
-  approvalConfiguration?: { autoApproval: boolean };
+  approvalConfiguration?: { autoApprovalRules?: string[] };
+  discoveryConfiguration?: {
+    authorizerType?: "AWS_IAM" | "CUSTOM_JWT";
+  };
+  statusReason?: string;
   createdAt?: string | Date;
   updatedAt: string | Date;
 };
@@ -232,7 +236,7 @@ export function RegistryList({ registries, isLoading, onRefresh }: RegistryListP
                       <Badge variant="outline" className={statusCfg.className}>
                         {registry.status}
                       </Badge>
-                      {registry.approvalConfiguration?.autoApproval && (
+                      {registry.approvalConfiguration?.autoApprovalRules?.includes("APPROVE_ALL") && (
                         <Badge variant="outline" className="text-[10px]">Auto-approve</Badge>
                       )}
                     </div>

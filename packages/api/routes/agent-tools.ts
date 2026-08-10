@@ -1,7 +1,7 @@
 import {
-  BedrockAgentCoreControlClient,
+  AgentRegistryControlClient,
   GetRegistryRecordCommand,
-} from "@aws-sdk/client-bedrock-agentcore-control";
+} from "@aws-sdk/client-agent-registry-control";
 import { ORPCError, os } from "@orpc/server";
 import { prisma } from "@package/database";
 import { z } from "zod";
@@ -12,7 +12,9 @@ import {
 } from "./registry-helpers";
 
 const REGISTRY_REGION = process.env.AGENTCORE_REGISTRY_REGION || "us-west-2";
-const registryClient = new BedrockAgentCoreControlClient({ region: REGISTRY_REGION });
+// Registry reads use the GA agent-registry namespace (records now carry
+// recordType + flat descriptors, consumed by resolveTargetSpec).
+const registryClient = new AgentRegistryControlClient({ region: REGISTRY_REGION });
 
 const AgentToolSchema = z.object({
   id: z.string(),

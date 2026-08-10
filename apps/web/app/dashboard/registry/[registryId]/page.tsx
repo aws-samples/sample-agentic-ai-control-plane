@@ -14,8 +14,9 @@ type RegistryRecord = {
   recordId?: string;
   recordArn?: string;
   name: string;
+  displayName?: string;
   recordVersion?: string;
-  descriptorType?: string;
+  recordType?: string;
   status: "DRAFT" | "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | "DEPRECATED" | "CREATING" | "UPDATING" | "CREATE_FAILED" | "UPDATE_FAILED";
   description?: string;
   createdAt?: string | Date;

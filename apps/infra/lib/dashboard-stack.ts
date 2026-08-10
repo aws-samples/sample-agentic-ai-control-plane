@@ -393,14 +393,58 @@ export class DashboardStack extends cdk.Stack {
       }),
     );
 
-    // Tagging a resource is how the app "claims" a freshly-created registry
-    // (CreateRegistry can't tag on create). Gated on aws:RequestTag so the task
-    // may only ever add the ownership tag — it can't attach arbitrary tags, and
-    // it can't tag a resource with anything other than the owner tag.
+    // NOTE (GA migration, 2026-08): the dashboard's registry code now targets the
+    // `agent-registry` namespace exclusively (see registry.ts and the
+    // AgentRegistry* statements below), so the old `bedrock-agentcore` registry
+    // grants — a claim-by-tag `TagResource` and an `AgentCoreOwnedRegistries`
+    // Get/Update/Delete statement — have been removed. Registry-record and
+    // create/list/search actions were likewise dropped from
+    // AgentCoreUnscopedActions below. Workload-identity actions are retained there
+    // because they stay under bedrock-agentcore even for agent-registry URL-sync.
+    // See docs/agentcore-registry-ga-migration.md.
+
+    // ── AWS Agent Registry GA namespace (agent-registry:*) ──────────────────
+    //
+    // Every registry IAM action (including account-level ones like
+    // ListRegistries) authorizes under the `agent-registry:` prefix, and registry
+    // resources use `arn:aws:agent-registry:...` ARNs. This is the sole registry
+    // grant set — the old bedrock-agentcore registry grants were removed once the
+    // dashboard code migrated to the agent-registry SDK clients (Phase 1/2).
+    //
+    // NOTE: workload identity is intentionally NOT here — it stays under
+    // bedrock-agentcore (see the unscoped statement below) even for agent-registry
+    // URL-sync records, which the AWS migration guide calls out explicitly.
+    const agentRegistryArnPattern = `arn:aws:agent-registry:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:*`;
+
+    // Ops on an existing REGISTRY, gated on the registry's ownership tag (same
+    // ABAC pattern as AgentCoreOwnedRegistries above).
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
-        sid: "AgentCoreClaimByTag",
-        actions: ["bedrock-agentcore:TagResource"],
+        sid: "AgentRegistryOwnedRegistries",
+        actions: [
+          "agent-registry:GetRegistry",
+          "agent-registry:UpdateRegistry",
+          "agent-registry:DeleteRegistry",
+        ],
+        resources: ["*"],
+        conditions: {
+          StringEquals: {
+            [`aws:ResourceTag/${AGENTCORE_OWNER_TAG_KEY}`]:
+              AGENTCORE_OWNER_TAG_VALUE,
+          },
+        },
+      }),
+    );
+
+    // Claim-by-tag for the agent-registry namespace. CreateRegistry in the new
+    // namespace DOES support tags-on-create, so once registry.ts adopts that the
+    // create-then-tag dance (and this TagResource grant) can be dropped. Kept for
+    // parity during migration; gated on aws:RequestTag so only the owner tag can
+    // ever be attached.
+    ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
+      new iam.PolicyStatement({
+        sid: "AgentRegistryClaimByTag",
+        actions: ["agent-registry:TagResource"],
         resources: ["*"],
         conditions: {
           StringEquals: {
@@ -414,32 +458,35 @@ export class DashboardStack extends cdk.Stack {
       }),
     );
 
-    // Ops on an existing REGISTRY, gated on the registry's ownership tag. These
-    // act on the registry resource itself, which the app tags at create time
-    // (see registry.ts create-then-tag), so aws:ResourceTag matches.
-    //
-    // NOTE: registry *record* actions are intentionally NOT here. A record is a
-    // distinct sub-resource with its own ARN, and IAM has no tag inheritance —
-    // records are never tagged (CreateRegistryRecord has no tags field and the
-    // app only tags the parent registry), so an aws:ResourceTag condition on a
-    // record action can never match and every record call (Submit-for-approval,
-    // Get/Update/Delete record, UpdateStatus) is silently denied. Record actions
-    // live in the unscoped statement below instead.
+    // Registry actions that cannot be tag- or ARN-scoped, on the agent-registry
+    // resource ARN pattern (create/list/search + record sub-resource CRUD).
+    // Mirrors the registry slice of AgentCoreUnscopedActions below. Note the
+    // renamed/added data-plane discovery actions:
+    //   SearchRegistryRecords            -> SearchDiscoverableRegistryRecords
+    //   (new) ListDiscoverableRegistryRecords, GetDiscoverableRegistryRecord
+    // BatchGetDiscoverableRegistryRecord has no own action; it authorizes via
+    // GetDiscoverableRegistryRecord.
     ecsFargateTaskDefinitionDash.taskRole.addToPrincipalPolicy(
       new iam.PolicyStatement({
-        sid: "AgentCoreOwnedRegistries",
+        sid: "AgentRegistryUnscopedActions",
         actions: [
-          "bedrock-agentcore:GetRegistry",
-          "bedrock-agentcore:UpdateRegistry",
-          "bedrock-agentcore:DeleteRegistry",
+          "agent-registry:CreateRegistry",
+          "agent-registry:ListRegistries",
+          "agent-registry:ListRegistryRecords",
+          // Registry records (sub-resource of the registry, untagged — same
+          // untagged-sub-resource caveat as bedrock-agentcore records)
+          "agent-registry:CreateRegistryRecord",
+          "agent-registry:GetRegistryRecord",
+          "agent-registry:UpdateRegistryRecord",
+          "agent-registry:DeleteRegistryRecord",
+          "agent-registry:UpdateRegistryRecordStatus",
+          "agent-registry:SubmitRegistryRecordForApproval",
+          // Data-plane discovery (renamed + new in the GA namespace)
+          "agent-registry:SearchDiscoverableRegistryRecords",
+          "agent-registry:ListDiscoverableRegistryRecords",
+          "agent-registry:GetDiscoverableRegistryRecord",
         ],
-        resources: ["*"],
-        conditions: {
-          StringEquals: {
-            [`aws:ResourceTag/${AGENTCORE_OWNER_TAG_KEY}`]:
-              AGENTCORE_OWNER_TAG_VALUE,
-          },
-        },
+        resources: [agentRegistryArnPattern],
       }),
     );
 
@@ -481,18 +528,9 @@ export class DashboardStack extends cdk.Stack {
           "bedrock-agentcore:ListPolicyGenerations",
           "bedrock-agentcore:ListPolicyGenerationSummaries",
           "bedrock-agentcore:ListPolicyGenerationAssets",
-          // Registry create/list/search
-          "bedrock-agentcore:CreateRegistry",
-          "bedrock-agentcore:ListRegistries",
-          "bedrock-agentcore:ListRegistryRecords",
-          "bedrock-agentcore:SearchRegistryRecords",
-          // Registry records (sub-resource of the registry, untagged — see note)
-          "bedrock-agentcore:CreateRegistryRecord",
-          "bedrock-agentcore:GetRegistryRecord",
-          "bedrock-agentcore:UpdateRegistryRecord",
-          "bedrock-agentcore:DeleteRegistryRecord",
-          "bedrock-agentcore:UpdateRegistryRecordStatus",
-          "bedrock-agentcore:SubmitRegistryRecordForApproval",
+          // NOTE: registry create/list/search + record CRUD actions were removed
+          // here at the GA migration — they now live under agent-registry:* (see
+          // the AgentRegistry* statements above). Workload identity below stays.
           // Agent runtime list (ListAgentRuntimeVersions targets a specific
           // runtime ARN, so it lives in the scoped runtime statement above)
           "bedrock-agentcore:ListAgentRuntimes",

@@ -1,6 +1,7 @@
 import {
   AdminInitiateAuthCommand,
   CognitoIdentityProviderClient,
+  UserNotFoundException,
 } from "@aws-sdk/client-cognito-identity-provider";
 import {
   SecretsManagerClient,
@@ -67,17 +68,33 @@ export async function mintPersonaTokenHandler(input: MintPersonaTokenInput) {
   }
 
   const password = await getMasterPassword();
-  const response = await cognito.send(
-    new AdminInitiateAuthCommand({
-      UserPoolId: userPoolId,
-      ClientId: personaClientId,
-      AuthFlow: "ADMIN_USER_PASSWORD_AUTH",
-      AuthParameters: {
-        USERNAME: persona.externalId,
-        PASSWORD: password,
-      },
-    }),
-  );
+  let response;
+  try {
+    response = await cognito.send(
+      new AdminInitiateAuthCommand({
+        UserPoolId: userPoolId,
+        ClientId: personaClientId,
+        AuthFlow: "ADMIN_USER_PASSWORD_AUTH",
+        AuthParameters: {
+          USERNAME: persona.externalId,
+          PASSWORD: password,
+        },
+      }),
+    );
+  } catch (err) {
+    // Orphaned persona: the DB row exists but its backing Cognito user was
+    // never created (or was deleted out from under us). Surface an actionable
+    // message instead of a raw UserNotFoundException 500, since the fix is to
+    // recreate the persona so the app reprovisions the Cognito user.
+    if (err instanceof UserNotFoundException) {
+      throw new Error(
+        `Persona "${persona.name}" (${persona.id}) has no backing Cognito user ` +
+          `for username ${persona.externalId}. The persona is out of sync with ` +
+          `the user pool — delete and recreate it to reprovision the Cognito user.`,
+      );
+    }
+    throw err;
+  }
 
   // Return the access token. AgentCore Runtime's Cognito authorizer accepts
   // access tokens (token_use=access) but rejects ID tokens with 401. Profile

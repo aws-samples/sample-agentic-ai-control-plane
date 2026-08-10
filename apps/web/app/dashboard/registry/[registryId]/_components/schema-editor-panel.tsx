@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 // Self-host Monaco under the app CSP (no CDN) — see lib/monaco-setup.ts
 import "@/lib/monaco-setup";
@@ -78,11 +78,25 @@ export function SchemaEditorPanel({
   const monacoTheme = resolvedTheme === "dark" ? "vs-dark" : "vs";
 
   const official = OFFICIAL_SCHEMAS[schemaKey];
-  const versionOptions = versions && versions.length > 0 ? versions : [official.version];
+  // Versions to expose: an explicit override (rare), else all vendored versions
+  // for this schema, newest first.
+  const versionOptions =
+    versions && versions.length > 0
+      ? versions
+      : official.versions.map((v) => v.version);
+
+  const [selectedVersion, setSelectedVersion] = useState(
+    official.defaultVersion,
+  );
+
+  const selectedSchema = useMemo(() => {
+    const match = official.versions.find((v) => v.version === selectedVersion);
+    return (match ?? official.versions[0])?.schema;
+  }, [official.versions, selectedVersion]);
 
   const officialJson = useMemo(
-    () => JSON.stringify(official.schema, null, 2),
-    [official.schema],
+    () => JSON.stringify(selectedSchema, null, 2),
+    [selectedSchema],
   );
 
   const prettify = () => {
@@ -173,7 +187,11 @@ export function SchemaEditorPanel({
               <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
                 {t("officialSchema")}
               </span>
-              <Select value={official.version} disabled>
+              <Select
+                value={selectedVersion}
+                onValueChange={(v) => v && setSelectedVersion(v)}
+                disabled={versionOptions.length <= 1}
+              >
                 <SelectTrigger className="h-6 text-[11px] w-[130px]">
                   <SelectValue />
                 </SelectTrigger>

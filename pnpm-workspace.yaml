@@ -22,6 +22,9 @@ overrides:
   "nanoid@3": "^3.3.8"
   "@excalidraw/excalidraw": "^0.18.1"
   "@excalidraw/mermaid-to-excalidraw": "^1.1.3"
+  # The GA agent-registry clients (@aws-sdk 3.1105.0) pull @smithy/types 4.16.1,
+  # while the pinned 3.1079.0 AWS clients pull 4.15.1. 
+  "@smithy/types": "^4.16.1"
 
 # Supply-chain hardening (pnpm >= 10.x). See https://pnpm.io/settings
 # Wait 7 days before installing newly published versions (limits exposure to
@@ -36,6 +39,9 @@ minimumReleaseAgeExclude:
   # CDK CLI must match aws-cdk-lib's cloud-assembly schema (needs >=2.1129.0);
   # the required version is newer than the 7-day window. Dev tooling, pinned exact.
   - "aws-cdk"
+  # AWS Agent Registry GA packages (published 2026-08-06). Required for the
+  # bedrock-agentcore -> agent-registry namespace migration 
+  - "@aws-sdk/*"
 # Block transitive dependencies resolved from non-registry (exotic) sources.
 blockExoticSubdeps: true
 # Prevent updates from downgrading security-relevant settings.

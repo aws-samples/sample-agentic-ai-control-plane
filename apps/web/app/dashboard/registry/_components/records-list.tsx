@@ -65,17 +65,20 @@ const STATUS_STYLE: Record<RecordStatus, string> = {
   UPDATE_FAILED: "text-red-600 border-red-200 bg-red-50 dark:text-red-400 dark:border-red-800 dark:bg-red-950/30",
 };
 
+// Keyed by GA recordType (AGENT|MCP|SKILL|CUSTOM).
 const PROTOCOL_STYLE: Record<string, string> = {
   MCP: "text-blue-600 border-blue-200 bg-blue-50 dark:text-blue-400 dark:border-blue-800 dark:bg-blue-950/30",
-  A2A: "text-purple-600 border-purple-200 bg-purple-50 dark:text-purple-400 dark:border-purple-800 dark:bg-purple-950/30",
+  AGENT: "text-purple-600 border-purple-200 bg-purple-50 dark:text-purple-400 dark:border-purple-800 dark:bg-purple-950/30",
+  SKILL: "text-teal-600 border-teal-200 bg-teal-50 dark:text-teal-400 dark:border-teal-800 dark:bg-teal-950/30",
 };
 
 type RegistryRecord = {
   registryArn: string;
   recordId?: string;
   name: string;
+  displayName?: string;
   recordVersion?: string;
-  descriptorType?: string;
+  recordType?: string;
   status: RecordStatus;
   description?: string;
   createdAt?: string | Date;
@@ -103,7 +106,7 @@ export function RecordsList({ records, registryId, isLoading, onRefresh }: Recor
     if (statusFilter !== "all" && record.status !== statusFilter) return false;
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
-    return record.name.toLowerCase().includes(q) || record.description?.toLowerCase().includes(q) || record.descriptorType?.toLowerCase().includes(q);
+    return record.name.toLowerCase().includes(q) || record.displayName?.toLowerCase().includes(q) || record.description?.toLowerCase().includes(q) || record.recordType?.toLowerCase().includes(q);
   });
 
   const metrics = {
@@ -249,8 +252,8 @@ export function RecordsList({ records, registryId, isLoading, onRefresh }: Recor
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="text-sm font-medium text-foreground truncate">{record.name}</h3>
-                          {record.descriptorType && (<Badge variant="outline" className={PROTOCOL_STYLE[record.descriptorType] || ""}>{record.descriptorType}</Badge>)}
+                          <h3 className="text-sm font-medium text-foreground truncate">{record.displayName || record.name}</h3>
+                          {record.recordType && (<Badge variant="outline" className={PROTOCOL_STYLE[record.recordType] || ""}>{record.recordType}</Badge>)}
                         </div>
                         {record.recordVersion && (<p className="text-[11px] text-muted-foreground mt-0.5">v{record.recordVersion}</p>)}
                       </div>

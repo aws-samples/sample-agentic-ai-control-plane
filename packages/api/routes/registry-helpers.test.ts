@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { resolveTargetSpec, UnsupportedDescriptorError } from "./registry-helpers";
 
 describe("resolveTargetSpec — MCP", () => {
-  it("returns mcpServer spec from synchronizationConfiguration.fromUrl.url", () => {
+  it("returns mcpServer spec from descriptors.mcpServer.source.fromUrl.url", () => {
     const spec = resolveTargetSpec({
-      descriptorType: "MCP",
-      synchronizationConfiguration: {
-        fromUrl: { url: "https://mcp.example.com/mcp" },
+      recordType: "MCP",
+      descriptors: {
+        mcpServer: { source: { fromUrl: { url: "https://mcp.example.com/mcp" } } },
       },
     });
     expect(spec).toEqual({
@@ -15,14 +15,12 @@ describe("resolveTargetSpec — MCP", () => {
     });
   });
 
-  it("falls back to descriptors.mcp.server.inlineContent.url", () => {
+  it("falls back to descriptors.mcpServer.data.url", () => {
     const spec = resolveTargetSpec({
-      descriptorType: "MCP",
+      recordType: "MCP",
       descriptors: {
-        mcp: {
-          server: {
-            inlineContent: JSON.stringify({ url: "https://other.example.com/mcp" }),
-          },
+        mcpServer: {
+          data: JSON.stringify({ url: "https://other.example.com/mcp" }),
         },
       },
     });
@@ -35,15 +33,15 @@ describe("resolveTargetSpec — MCP", () => {
   it("throws when MCP record has no resolvable URL", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "MCP",
-        descriptors: { mcp: { server: { inlineContent: "{}" } } },
+        recordType: "MCP",
+        descriptors: { mcpServer: { data: "{}" } },
       }),
     ).toThrow(UnsupportedDescriptorError);
   });
 });
 
 describe("resolveTargetSpec — CUSTOM", () => {
-  const validInline = JSON.stringify({
+  const validData = JSON.stringify({
     lambdaArn: "arn:aws:lambda:us-east-1:000000000000:function:Calc",
     toolSchema: [
       {
@@ -54,10 +52,10 @@ describe("resolveTargetSpec — CUSTOM", () => {
     ],
   });
 
-  it("returns lambda spec when CUSTOM inlineContent has lambdaArn + toolSchema", () => {
+  it("returns lambda spec when CUSTOM data has lambdaArn + toolSchema", () => {
     const spec = resolveTargetSpec({
-      descriptorType: "CUSTOM",
-      descriptors: { custom: { inlineContent: validInline } },
+      recordType: "CUSTOM",
+      descriptors: { custom: { data: validData } },
     });
     expect(spec).toEqual({
       kind: "lambda",
@@ -72,11 +70,11 @@ describe("resolveTargetSpec — CUSTOM", () => {
     });
   });
 
-  it("throws when inlineContent is not valid JSON", () => {
+  it("throws when data is not valid JSON", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "CUSTOM",
-        descriptors: { custom: { inlineContent: "<not json>" } },
+        recordType: "CUSTOM",
+        descriptors: { custom: { data: "<not json>" } },
       }),
     ).toThrow(UnsupportedDescriptorError);
   });
@@ -84,9 +82,9 @@ describe("resolveTargetSpec — CUSTOM", () => {
   it("throws when lambdaArn is missing", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "CUSTOM",
+        recordType: "CUSTOM",
         descriptors: {
-          custom: { inlineContent: JSON.stringify({ toolSchema: [] }) },
+          custom: { data: JSON.stringify({ toolSchema: [] }) },
         },
       }),
     ).toThrow(UnsupportedDescriptorError);
@@ -95,11 +93,9 @@ describe("resolveTargetSpec — CUSTOM", () => {
   it("throws when toolSchema is missing", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "CUSTOM",
+        recordType: "CUSTOM",
         descriptors: {
-          custom: {
-            inlineContent: JSON.stringify({ lambdaArn: "arn:aws:lambda:..." }),
-          },
+          custom: { data: JSON.stringify({ lambdaArn: "arn:aws:lambda:..." }) },
         },
       }),
     ).toThrow(UnsupportedDescriptorError);
@@ -108,10 +104,10 @@ describe("resolveTargetSpec — CUSTOM", () => {
   it("throws when toolSchema is not an array", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "CUSTOM",
+        recordType: "CUSTOM",
         descriptors: {
           custom: {
-            inlineContent: JSON.stringify({
+            data: JSON.stringify({
               lambdaArn: "arn:aws:lambda:...",
               toolSchema: { name: "x" },
             }),
@@ -124,10 +120,10 @@ describe("resolveTargetSpec — CUSTOM", () => {
   it("throws when toolSchema is empty", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "CUSTOM",
+        recordType: "CUSTOM",
         descriptors: {
           custom: {
-            inlineContent: JSON.stringify({
+            data: JSON.stringify({
               lambdaArn: "arn:aws:lambda:...",
               toolSchema: [],
             }),
@@ -140,10 +136,10 @@ describe("resolveTargetSpec — CUSTOM", () => {
   it("throws when a tool entry is missing required fields", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "CUSTOM",
+        recordType: "CUSTOM",
         descriptors: {
           custom: {
-            inlineContent: JSON.stringify({
+            data: JSON.stringify({
               lambdaArn: "arn:aws:lambda:...",
               toolSchema: [{ name: "x" }],
             }),
@@ -155,27 +151,27 @@ describe("resolveTargetSpec — CUSTOM", () => {
 });
 
 describe("resolveTargetSpec — unsupported types", () => {
-  it("throws on A2A", () => {
+  it("throws on AGENT", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "A2A",
-        descriptors: { a2a: { agentCard: { inlineContent: "{}" } } },
+        recordType: "AGENT",
+        descriptors: { a2aAgentCard: { data: "{}" } } as never,
       }),
     ).toThrow(UnsupportedDescriptorError);
   });
 
-  it("throws on AGENT_SKILLS", () => {
+  it("throws on SKILL", () => {
     expect(() =>
       resolveTargetSpec({
-        descriptorType: "AGENT_SKILLS",
-        descriptors: { agentSkills: { skillMd: { inlineContent: "" } } },
+        recordType: "SKILL",
+        descriptors: { agentSkillsDefinition: { data: "" } } as never,
       }),
     ).toThrow(UnsupportedDescriptorError);
   });
 
-  it("throws on undefined descriptorType", () => {
+  it("throws on undefined recordType", () => {
     expect(() =>
-      resolveTargetSpec({ descriptorType: undefined, descriptors: {} }),
+      resolveTargetSpec({ recordType: undefined, descriptors: {} }),
     ).toThrow(UnsupportedDescriptorError);
   });
 });

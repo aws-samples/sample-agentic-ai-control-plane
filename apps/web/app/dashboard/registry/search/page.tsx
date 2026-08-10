@@ -13,6 +13,13 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { $orpc } from "@/lib/api";
 import { AlertCircle, ExternalLink, Loader2, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -41,8 +48,9 @@ type SearchResult = {
   recordId?: string;
   recordArn?: string;
   name: string;
+  displayName?: string;
   recordVersion?: string;
-  descriptorType?: string;
+  recordType?: string;
   status?: string;
   description?: string;
   createdAt?: string | Date;
@@ -56,6 +64,7 @@ export default function SearchPage() {
     new Set(),
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [recordTypeFilter, setRecordTypeFilter] = useState<string>("all");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoadingRegistries, setIsLoadingRegistries] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
@@ -111,30 +120,51 @@ export default function SearchPage() {
     }
   };
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      toast.error("Please enter a search query");
-      return;
-    }
+  const recordTypeFilters = () =>
+    recordTypeFilter !== "all"
+      ? [{ name: "recordType" as const, values: [recordTypeFilter] }]
+      : undefined;
 
+  const handleSearch = async () => {
     if (selectedRegistries.size === 0) {
       toast.error("Please select at least one registry");
       return;
     }
 
+    // With no query, browse each selected registry's approved records
+    // (ListDiscoverable); with a query, run keyword Search. Both honor the
+    // recordType filter.
+    const query = searchQuery.trim();
     setIsSearching(true);
     setError(null);
     setHasSearched(true);
     const startTime = Date.now();
+    const filters = recordTypeFilters();
 
     try {
-      const response = await $orpc.searchRegistryRecords({
-        registryIds: Array.from(selectedRegistries),
-        searchQuery: searchQuery.trim(),
-        maxResults: 20,
-      });
-
-      setResults(response.registryRecords || []);
+      if (query) {
+        const response = await $orpc.searchRegistryRecords({
+          registryIds: Array.from(selectedRegistries),
+          searchQuery: query,
+          maxResults: 20,
+          filters,
+        });
+        setResults(response.registryRecords || []);
+      } else {
+        // Browse: list approved records from each selected registry (first page).
+        const pages = await Promise.all(
+          Array.from(selectedRegistries).map((arn) =>
+            $orpc
+              .listDiscoverableRegistryRecords({
+                registryId: arn,
+                maxResults: 100,
+                filters,
+              })
+              .then((r) => r.registryRecords || []),
+          ),
+        );
+        setResults(pages.flat());
+      }
       setSearchTime((Date.now() - startTime) / 1000);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Search failed");
@@ -159,7 +189,8 @@ export default function SearchPage() {
   const getProtocolBadge = (protocol: string) => {
     const colors: Record<string, string> = {
       MCP: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-      A2A: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+      AGENT: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+      SKILL: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300",
       CUSTOM: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
     };
 
@@ -274,7 +305,7 @@ export default function SearchPage() {
           <div className="flex gap-2">
             <div className="flex-1">
               <Input
-                placeholder="e.g., process payment, send email, analyze data..."
+                placeholder="Search by capability, or leave empty to browse all…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyPress}
@@ -282,13 +313,25 @@ export default function SearchPage() {
                 className="text-base"
               />
             </div>
+            <Select
+              value={recordTypeFilter}
+              onValueChange={(v) => setRecordTypeFilter(v ?? "all")}
+              disabled={isSearching || selectedRegistries.size === 0}
+            >
+              <SelectTrigger className="w-[150px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All types</SelectItem>
+                <SelectItem value="MCP">MCP</SelectItem>
+                <SelectItem value="AGENT">Agent</SelectItem>
+                <SelectItem value="SKILL">Skill</SelectItem>
+                <SelectItem value="CUSTOM">Custom</SelectItem>
+              </SelectContent>
+            </Select>
             <Button
               onClick={handleSearch}
-              disabled={
-                isSearching ||
-                !searchQuery.trim() ||
-                selectedRegistries.size === 0
-              }
+              disabled={isSearching || selectedRegistries.size === 0}
               className="min-w-[100px]"
             >
               {isSearching ? (
@@ -299,7 +342,7 @@ export default function SearchPage() {
               ) : (
                 <>
                   <Search className="mr-2 h-4 w-4" />
-                  Search
+                  {searchQuery.trim() ? "Search" : "Browse"}
                 </>
               )}
             </Button>
@@ -358,9 +401,9 @@ export default function SearchPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="font-semibold text-lg">
-                            {result.name}
+                            {result.displayName || result.name}
                           </h3>
-                          {getProtocolBadge(result.descriptorType || "")}
+                          {getProtocolBadge(result.recordType || "")}
                           {getStatusBadge(result.status ?? "")}
                         </div>
                         {result.description && (
