@@ -51,3 +51,6 @@ ASH
 apps/a2a-agent
 # Playwright MCP scratch output
 .playwright-mcp/
+
+# Local design/notes docs — not published
+docs/

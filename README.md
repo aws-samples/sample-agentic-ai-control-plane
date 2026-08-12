@@ -410,8 +410,10 @@ session token is temporary, so re-run this whenever the error reappears.
 
 ### Environment variables
 
-See `apps/web/.env.example` and `apps/agent/.env.example` for the full list. The
-key ones come from the CDK stack outputs after deploy:
+Before running `pnpm dev`, you must configure the local env files
+(`apps/web/.env.local` and `apps/agent/.env`) with values from your deployed
+backend. See `apps/web/.env.example` and `apps/agent/.env.example` for the full
+list. The key ones come from the CDK stack outputs after deploy:
 
 | Variable | Source |
 |---|---|
