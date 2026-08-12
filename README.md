@@ -410,8 +410,10 @@ session token is temporary, so re-run this whenever the error reappears.
 
 ### Environment variables
 
-See `apps/web/.env.example` and `apps/agent/.env.example` for the full list. The
-key ones come from the CDK stack outputs after deploy:
+Before running `pnpm dev`, you must configure the local env files
+(`apps/web/.env.local` and `apps/agent/.env`) with values from your deployed
+backend. See `apps/web/.env.example` and `apps/agent/.env.example` for the full
+list. The key ones come from the CDK stack outputs after deploy:
 
 | Variable | Source |
 |---|---|
@@ -419,6 +421,15 @@ key ones come from the CDK stack outputs after deploy:
 | `AGENTCORE_GATEWAY_ID`, `AGENTCORE_GATEWAY_MCP_URL` | AgentCoreGatewayStack outputs |
 | `PERSONA_USER_POOL_CLIENT_ID`, `PERSONA_MASTER_PASSWORD_SECRET_ARN` | CognitoStack outputs |
 | `DATABASE_URL`, `DB_SCHEMA` | Local Postgres (docker compose) |
+
+> **All values must come from the same deployment.** Local dev has no backend of
+> its own — every value above must belong to the *one* deployed environment
+> (account **and** region) you're pointing at. Mixing values from different
+> deployments — e.g. a Cognito pool from one region with a runtime deployed in
+> another — leaves the pieces unable to trust each other, and calls fail with
+> auth errors (`401 Unauthorized`, token/user-not-found) even though each value
+> is individually valid. If you deploy to more than one region, keep the whole
+> env file on one of them.
 
 ## Tear down / clean up
 
