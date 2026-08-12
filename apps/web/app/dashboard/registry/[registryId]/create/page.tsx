@@ -23,11 +23,20 @@ import {
   AGENT_SKILLS_DEFINITION_PLACEHOLDER,
 } from "../_components/constants";
 
+// UI protocol choices. Mapped to the GA `recordType` enum on submit:
+//   MCP -> MCP, A2A -> AGENT, AGENT_SKILLS -> SKILL, CUSTOM -> CUSTOM.
 type Protocol = "MCP" | "A2A" | "AGENT_SKILLS" | "CUSTOM";
 type SyncMode = "URL" | "MANUAL";
 type CredentialType = "IAM" | "OAUTH" | "NONE";
 
 const MANUAL_ONLY_PROTOCOLS: Protocol[] = ["CUSTOM", "AGENT_SKILLS"];
+
+const PROTOCOL_TO_RECORD_TYPE: Record<Protocol, "MCP" | "AGENT" | "SKILL" | "CUSTOM"> = {
+  MCP: "MCP",
+  A2A: "AGENT",
+  AGENT_SKILLS: "SKILL",
+  CUSTOM: "CUSTOM",
+};
 
 interface RadioCardProps {
   value: string;
@@ -141,7 +150,12 @@ export default function CreateRegistryRecordPage() {
           "url_record"
         : name.trim();
 
+    const recordType = PROTOCOL_TO_RECORD_TYPE[protocol];
+
     if (syncMode === "URL") {
+      // GA: URL sync is expressed as a per-descriptor `source.fromUrl` on the
+      // primary descriptor (mcpServer for MCP, a2aAgentCard for AGENT). There is
+      // no separate synchronizationType field.
       const credConfigs =
         credType === "OAUTH" && credArn.trim()
           ? [
@@ -176,41 +190,48 @@ export default function CreateRegistryRecordPage() {
               ]
             : undefined;
 
+      const source = {
+        fromUrl: {
+          url: syncUrl.trim(),
+          ...(credConfigs && { credentialProviderConfigurations: credConfigs }),
+        },
+      };
+      const descriptors =
+        protocol === "A2A"
+          ? { a2aAgentCard: { source } }
+          : { mcpServer: { source } };
+
       return {
         registryId,
         name: recordName,
-        protocol,
+        recordType,
         description: description.trim() || undefined,
         recordVersion: "1.0",
-        synchronizationType: "URL" as const,
-        synchronizationConfiguration: {
-          fromUrl: {
-            url: syncUrl.trim(),
-            ...(credConfigs && { credentialProviderConfigurations: credConfigs }),
-          },
-        },
+        descriptors,
       };
     }
 
-    let descriptors: Record<string, unknown> | undefined;
+    let descriptors: Record<string, unknown> = {};
     if (protocol === "MCP") {
       descriptors = {
-        mcp: {
-          server: { inlineContent: serverSchema.trim() },
+        mcpServer: {
+          data: serverSchema.trim(),
           ...(addToolDefinition && toolSchema.trim() && {
-            tools: { inlineContent: toolSchema.trim() },
+            additionalData: { tools: { data: toolSchema.trim() } },
           }),
         },
       };
     } else if (protocol === "A2A") {
-      descriptors = { a2a: { agentCard: { inlineContent: agentCard.trim() } } };
+      descriptors = { a2aAgentCard: { data: agentCard.trim() } };
     } else if (protocol === "CUSTOM") {
-      descriptors = { custom: { inlineContent: customSchema.trim() } };
+      descriptors = { custom: { data: customSchema.trim() } };
     } else if (protocol === "AGENT_SKILLS") {
       descriptors = {
-        agentSkills: {
-          ...(includeSkillDoc && { skillMd: { inlineContent: skillMd.trim() } }),
-          ...(includeSkillDef && { skillDefinition: { inlineContent: skillDefinition.trim() } }),
+        agentSkillsDefinition: {
+          ...(includeSkillDef && { data: skillDefinition.trim() }),
+          ...(includeSkillDoc && {
+            additionalData: { skillMd: { data: skillMd.trim() } },
+          }),
         },
       };
     }
@@ -218,10 +239,9 @@ export default function CreateRegistryRecordPage() {
     return {
       registryId,
       name: recordName,
-      protocol,
+      recordType,
       description: description.trim() || undefined,
       recordVersion: "1.0",
-      synchronizationType: "MANUAL" as const,
       descriptors,
     };
   };

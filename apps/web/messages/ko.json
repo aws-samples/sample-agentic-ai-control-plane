@@ -180,7 +180,9 @@
     },
     "tabs": {
       "allRecords": "전체 레코드",
-      "search": "검색"
+      "search": "검색",
+      "records": "레코드",
+      "activity": "활동 ({count})"
     },
     "search": {
       "enterQuery": "검색어를 입력하세요",

@@ -32,11 +32,18 @@ function buildCsp(nonce: string): string {
   // there — so allow it only outside production.
   const devEval =
     process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : "";
+  // The Cedar policy checker (@cedar-policy/cedar-wasm) compiles WebAssembly in
+  // the browser. Under CSP, WASM compilation is blocked unless script-src grants
+  // 'wasm-unsafe-eval'. This is NARROWER than 'unsafe-eval' — it permits only
+  // WebAssembly.compile/instantiate, not JS eval() — so it enables the checker
+  // without weakening XSS protection. Without it, the checker shows
+  // "Checker unavailable" in production.
   return [
     `default-src 'self'`,
     // 'strict-dynamic' + nonce is the Next.js-recommended pattern for allowing
-    // framework scripts without 'unsafe-inline'.
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${devEval}`,
+    // framework scripts without 'unsafe-inline'. 'wasm-unsafe-eval' enables the
+    // Cedar WASM checker (see above).
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'wasm-unsafe-eval'${devEval}`,
     // 'unsafe-inline' is permitted by the control for style-src ONLY; Next.js
     // and Tailwind emit inline styles.
     `style-src 'self' 'unsafe-inline'`,

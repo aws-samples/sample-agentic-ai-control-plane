@@ -12,6 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SchemaEditorPanel } from "../../_components/schema-editor-panel";
 import { TestMcpToolSheet } from "../../_components/test-mcp-tool-sheet";
 import {
+  ActivityLog,
+  type RegistryActivityEvent,
+} from "../../../_components/activity-log";
+import {
   SKILL_MD_EXAMPLE,
   MCP_SERVER_PLACEHOLDER,
   MCP_TOOL_PLACEHOLDER,
@@ -77,34 +81,74 @@ function prettifyNestedJSON(obj: any): any {
   return obj;
 }
 
+// UI protocol values. The GA API uses `recordType` (AGENT|MCP|SKILL|CUSTOM);
+// this page keeps the legacy protocol vocabulary internally and maps at the
+// boundary (see recordTypeToProtocol / getRecordProtocol).
 type Protocol = "MCP" | "A2A" | "CUSTOM" | "AGENT_SKILLS";
 
-function getDescriptorContent(record: any, descriptorType: string) {
-  if (descriptorType === "MCP") {
+const recordTypeToProtocol = (recordType?: string): Protocol => {
+  switch (recordType) {
+    case "AGENT":
+      return "A2A";
+    case "SKILL":
+      return "AGENT_SKILLS";
+    case "CUSTOM":
+      return "CUSTOM";
+    default:
+      return "MCP";
+  }
+};
+
+const protocolToRecordType = (
+  protocol: Protocol,
+): "MCP" | "AGENT" | "SKILL" | "CUSTOM" => {
+  switch (protocol) {
+    case "A2A":
+      return "AGENT";
+    case "AGENT_SKILLS":
+      return "SKILL";
+    case "CUSTOM":
+      return "CUSTOM";
+    default:
+      return "MCP";
+  }
+};
+
+// Reads the protocol for a record from its GA recordType.
+const getRecordProtocol = (record: any): Protocol =>
+  recordTypeToProtocol(record?.recordType);
+
+// GA flat descriptors: `data` (was inlineContent), `dataSchemaVersion` (was
+// schemaVersion/protocolVersion), and per-descriptor `source` for URL sync.
+function getDescriptorContent(record: any, protocol: Protocol) {
+  if (protocol === "MCP") {
     return {
-      serverSchema: record.descriptors?.mcp?.server?.inlineContent || "",
+      serverSchema: record.descriptors?.mcpServer?.data || "",
       serverSchemaVersion:
-        record.descriptors?.mcp?.server?.schemaVersion || "2025-12-11",
-      toolSchema: record.descriptors?.mcp?.tools?.inlineContent || "",
+        record.descriptors?.mcpServer?.dataSchemaVersion || "2025-12-11",
+      toolSchema: record.descriptors?.mcpServer?.additionalData?.tools?.data || "",
       toolSchemaVersion:
-        record.descriptors?.mcp?.tools?.schemaVersion || "2025-11-25",
+        record.descriptors?.mcpServer?.additionalData?.tools?.dataSchemaVersion ||
+        "2025-11-25",
     };
   }
-  if (descriptorType === "AGENT_SKILLS") {
+  if (protocol === "AGENT_SKILLS") {
     return {
-      skillMd: record.descriptors?.agentSkills?.skillMd?.inlineContent || "",
-      skillDefinition: record.descriptors?.agentSkills?.skillDefinition?.inlineContent || "",
+      skillMd:
+        record.descriptors?.agentSkillsDefinition?.additionalData?.skillMd?.data ||
+        "",
+      skillDefinition: record.descriptors?.agentSkillsDefinition?.data || "",
     };
   }
-  if (descriptorType === "CUSTOM") {
+  if (protocol === "CUSTOM") {
     return {
-      customSchema: record.descriptors?.custom?.inlineContent || "",
+      customSchema: record.descriptors?.custom?.data || "",
     };
   }
   return {
-    agentCard: record.descriptors?.a2a?.agentCard?.inlineContent || "",
+    agentCard: record.descriptors?.a2aAgentCard?.data || "",
     agentCardVersion:
-      record.descriptors?.a2a?.agentCard?.schemaVersion || "0.3.0",
+      record.descriptors?.a2aAgentCard?.dataSchemaVersion || "0.3.0",
   };
 }
 
@@ -127,9 +171,20 @@ export default function RecordDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Details | Activity tab + the record-scoped activity timeline.
+  const [activeTab, setActiveTab] = useState<"details" | "activity">("details");
+  const [activityEvents, setActivityEvents] = useState<RegistryActivityEvent[]>(
+    [],
+  );
+
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isStatusChanging, setIsStatusChanging] = useState(false);
+  // Pending status transition awaiting an optional reason in the confirm dialog.
+  const [pendingStatus, setPendingStatus] = useState<
+    "APPROVED" | "REJECTED" | "DEPRECATED" | null
+  >(null);
+  const [statusReasonInput, setStatusReasonInput] = useState("");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -158,30 +213,44 @@ export default function RecordDetailPage() {
     }
   }, [registryId, recordId, t]);
 
+  const fetchActivity = useCallback(async () => {
+    try {
+      const res = await $orpc.listRegistryActivity({ registryId, recordId });
+      setActivityEvents(res.events as RegistryActivityEvent[]);
+    } catch {
+      // Activity is a secondary panel — don't surface a blocking error if it
+      // fails to load; the primary record view stays usable.
+    }
+  }, [registryId, recordId]);
+
   useEffect(() => {
-    if (registryId && recordId) fetchRecordDetail();
-  }, [fetchRecordDetail, registryId, recordId]);
+    if (registryId && recordId) {
+      fetchRecordDetail();
+      fetchActivity();
+    }
+  }, [fetchRecordDetail, fetchActivity, registryId, recordId]);
 
   const enterEditMode = useCallback(() => {
     if (!record) return;
+    const protocol = getRecordProtocol(record);
     setEditName(record.name || "");
     setEditDescription(record.description || "");
-    setEditProtocol(record.descriptorType as Protocol);
+    setEditProtocol(protocol);
     setEditVersion(record.recordVersion || "");
 
-    const desc = getDescriptorContent(record, record.descriptorType);
-    if (record.descriptorType === "MCP") {
+    const desc = getDescriptorContent(record, protocol);
+    if (protocol === "MCP") {
       const mcp = desc as {
         serverSchema: string;
         toolSchema: string;
       };
       setEditServerSchema(prettifyJsonString(mcp.serverSchema));
       setEditToolSchema(prettifyJsonString(mcp.toolSchema));
-    } else if (record.descriptorType === "AGENT_SKILLS") {
+    } else if (protocol === "AGENT_SKILLS") {
       const skills = desc as { skillMd: string; skillDefinition: string };
       setEditSkillMd(skills.skillMd);
       setEditSkillDefinition(prettifyJsonString(skills.skillDefinition));
-    } else if (record.descriptorType === "CUSTOM") {
+    } else if (protocol === "CUSTOM") {
       const custom = desc as { customSchema: string };
       setEditCustomSchema(prettifyJsonString(custom.customSchema));
     } else {
@@ -202,6 +271,7 @@ export default function RecordDetailPage() {
     setError(null);
 
     try {
+      const currentProtocol = getRecordProtocol(record);
       let descriptors: any;
       if (editProtocol === "MCP") {
         if (editServerSchema.trim()) {
@@ -210,21 +280,21 @@ export default function RecordDetailPage() {
         if (editToolSchema.trim()) {
           JSON.parse(editToolSchema);
         }
-        const desc = getDescriptorContent(record, record.descriptorType);
+        const desc = getDescriptorContent(record, currentProtocol);
         const mcp = desc as {
           serverSchemaVersion: string;
           toolSchemaVersion: string;
         };
         descriptors = {
-          mcp: {
-            server: {
-              schemaVersion: mcp.serverSchemaVersion,
-              inlineContent: editServerSchema.trim(),
-            },
+          mcpServer: {
+            data: editServerSchema.trim(),
+            dataSchemaVersion: mcp.serverSchemaVersion,
             ...(editToolSchema.trim() && {
-              tools: {
-                schemaVersion: mcp.toolSchemaVersion,
-                inlineContent: editToolSchema.trim(),
+              additionalData: {
+                tools: {
+                  data: editToolSchema.trim(),
+                  dataSchemaVersion: mcp.toolSchemaVersion,
+                },
               },
             }),
           },
@@ -234,9 +304,9 @@ export default function RecordDetailPage() {
           JSON.parse(editSkillDefinition);
         }
         descriptors = {
-          agentSkills: {
-            skillMd: { inlineContent: editSkillMd.trim() },
-            skillDefinition: { inlineContent: editSkillDefinition.trim() },
+          agentSkillsDefinition: {
+            data: editSkillDefinition.trim(),
+            additionalData: { skillMd: { data: editSkillMd.trim() } },
           },
         };
       } else if (editProtocol === "CUSTOM") {
@@ -244,20 +314,18 @@ export default function RecordDetailPage() {
           JSON.parse(editCustomSchema);
         }
         descriptors = {
-          custom: { inlineContent: editCustomSchema.trim() },
+          custom: { data: editCustomSchema.trim() },
         };
       } else {
         if (editAgentCard.trim()) {
           JSON.parse(editAgentCard);
         }
-        const desc = getDescriptorContent(record, record.descriptorType);
+        const desc = getDescriptorContent(record, currentProtocol);
         const a2a = desc as { agentCardVersion: string };
         descriptors = {
-          a2a: {
-            agentCard: {
-              schemaVersion: a2a.agentCardVersion,
-              inlineContent: editAgentCard.trim(),
-            },
+          a2aAgentCard: {
+            data: editAgentCard.trim(),
+            dataSchemaVersion: a2a.agentCardVersion,
           },
         };
       }
@@ -283,6 +351,7 @@ export default function RecordDetailPage() {
       toast.success(t("toast.updateSuccess"));
       setIsEditing(false);
       await fetchRecordDetail();
+      await fetchActivity();
     } catch (err: any) {
       const msg = err.message || t("toast.updateError");
       setError(msg);
@@ -314,6 +383,7 @@ export default function RecordDetailPage() {
       await $orpc.submitRegistryRecord({ registryId, recordId });
       toast.success(t("toast.submitSuccess"));
       await fetchRecordDetail();
+      await fetchActivity();
     } catch (err: any) {
       toast.error(err.message || t("toast.statusError"));
     } finally {
@@ -322,12 +392,21 @@ export default function RecordDetailPage() {
   }, [registryId, recordId, fetchRecordDetail, t]);
 
   const handleStatusChange = useCallback(
-    async (status: "APPROVED" | "REJECTED" | "DEPRECATED") => {
+    async (
+      status: "APPROVED" | "REJECTED" | "DEPRECATED",
+      statusReason?: string,
+    ) => {
       setIsStatusChanging(true);
       try {
-        await $orpc.updateRegistryRecordStatus({ registryId, recordId, status });
+        await $orpc.updateRegistryRecordStatus({
+          registryId,
+          recordId,
+          status,
+          ...(statusReason?.trim() ? { statusReason: statusReason.trim() } : {}),
+        });
         toast.success(t("toast.statusSuccess"));
         await fetchRecordDetail();
+      await fetchActivity();
       } catch (err: any) {
         toast.error(err.message || t("toast.statusError"));
       } finally {
@@ -423,13 +502,13 @@ export default function RecordDetailPage() {
                     <Pencil />
                     {t("edit")}
                   </Button>
-                  {(record.descriptorType === "MCP" || record.descriptorType === "A2A") &&
-                    record.synchronizationType === "URL" && (
-                      <Button variant="outline" size="sm" onClick={handleSync} disabled={isSyncing}>
-                        {isSyncing ? <Loader2 className="animate-spin" /> : <RefreshCw />}
-                        {t("readView.sections.syncButton")}
-                      </Button>
-                    )}
+                  {(record.descriptors?.mcpServer?.source?.fromUrl?.url ||
+                    record.descriptors?.a2aAgentCard?.source?.fromUrl?.url) && (
+                    <Button variant="outline" size="sm" onClick={handleSync} disabled={isSyncing}>
+                      {isSyncing ? <Loader2 className="animate-spin" /> : <RefreshCw />}
+                      {t("readView.sections.syncButton")}
+                    </Button>
+                  )}
                   {(record.status === "DRAFT" ||
                     record.status === "PENDING_APPROVAL" ||
                     record.status === "APPROVED") && (
@@ -457,13 +536,19 @@ export default function RecordDetailPage() {
                         {record.status === "PENDING_APPROVAL" && (
                           <>
                             <DropdownMenuItem
-                              onClick={() => handleStatusChange("APPROVED")}
+                              onClick={() => {
+                                setStatusReasonInput("");
+                                setPendingStatus("APPROVED");
+                              }}
                             >
                               <CheckCircle2 className="mr-2 size-4 text-green-600" />
                               {t("actions.approve")}
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => handleStatusChange("REJECTED")}
+                              onClick={() => {
+                                setStatusReasonInput("");
+                                setPendingStatus("REJECTED");
+                              }}
                             >
                               <XCircle className="mr-2 size-4 text-orange-600" />
                               {t("actions.reject")}
@@ -472,7 +557,10 @@ export default function RecordDetailPage() {
                         )}
                         {record.status === "APPROVED" && (
                           <DropdownMenuItem
-                            onClick={() => handleStatusChange("DEPRECATED")}
+                            onClick={() => {
+                              setStatusReasonInput("");
+                              setPendingStatus("DEPRECATED");
+                            }}
                           >
                             <Archive className="mr-2 size-4" />
                             {t("actions.deprecate")}
@@ -547,12 +635,104 @@ export default function RecordDetailPage() {
                   isSaving={isSaving}
                 />
               ) : (
-                <ReadView t={t} record={record} />
+                <>
+                  <div className="flex items-center gap-1 border-b">
+                    {(["details", "activity"] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        type="button"
+                        onClick={() => setActiveTab(tab)}
+                        className={`px-3 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                          activeTab === tab
+                            ? "border-primary text-foreground"
+                            : "border-transparent text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {tab === "details" ? "Details" : `Activity (${activityEvents.length})`}
+                      </button>
+                    ))}
+                  </div>
+                  {activeTab === "details" ? (
+                    <ReadView t={t} record={record} />
+                  ) : (
+                    <ActivityLog events={activityEvents} />
+                  )}
+                </>
               )}
             </div>
           ) : null}
         </div>
       </div>
+
+      {/* Status-change confirm dialog with an optional reason. The reason is
+          recorded on the activity timeline (see updateRegistryRecordStatus). */}
+      <AlertDialog
+        open={pendingStatus !== null}
+        onOpenChange={(open) => {
+          if (!open && !isStatusChanging) setPendingStatus(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {pendingStatus === "APPROVED"
+                ? t("actions.approve")
+                : pendingStatus === "REJECTED"
+                  ? t("actions.reject")
+                  : t("actions.deprecate")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {`Optionally record why this record is being ${
+                pendingStatus === "APPROVED"
+                  ? "approved"
+                  : pendingStatus === "REJECTED"
+                    ? "rejected"
+                    : "deprecated"
+              }. The reason is saved to the activity log.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="grid gap-1.5 py-1">
+            <Label htmlFor="status-reason" className="text-xs font-medium">
+              Reason <span className="text-muted-foreground">(optional)</span>
+            </Label>
+            <Textarea
+              id="status-reason"
+              value={statusReasonInput}
+              onChange={(e) => setStatusReasonInput(e.target.value)}
+              disabled={isStatusChanging}
+              rows={3}
+              placeholder={
+                pendingStatus === "APPROVED"
+                  ? "e.g. schema validated, endpoint reachable"
+                  : pendingStatus === "REJECTED"
+                    ? "e.g. schema is missing a required field"
+                    : "e.g. superseded by a newer version"
+              }
+            />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isStatusChanging}>
+              {t("cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant={pendingStatus === "REJECTED" ? "destructive" : "default"}
+              disabled={isStatusChanging}
+              onClick={async () => {
+                if (!pendingStatus) return;
+                const status = pendingStatus;
+                const reason = statusReasonInput;
+                setPendingStatus(null);
+                await handleStatusChange(status, reason);
+              }}
+            >
+              {isStatusChanging && (
+                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+              )}
+              {t("actions.updateStatus")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
@@ -592,9 +772,13 @@ function ReadView({ t, record }: { t: any; record: any }) {
     inputSchema?: any;
   } | null>(null);
 
-  const creds =
-    record.synchronizationConfiguration?.fromUrl
-      ?.credentialProviderConfigurations?.[0];
+  const protocol = getRecordProtocol(record);
+
+  // URL-sync source now lives on the primary descriptor.
+  const sourceFromUrl =
+    record.descriptors?.mcpServer?.source?.fromUrl ??
+    record.descriptors?.a2aAgentCard?.source?.fromUrl;
+  const creds = sourceFromUrl?.credentialProviderConfigurations?.[0];
   const defaultAuth: { type: "none" | "sigv4" | "jwt"; bearerToken?: string } =
     creds?.credentialProviderType === "IAM"
       ? { type: "sigv4" }
@@ -602,29 +786,29 @@ function ReadView({ t, record }: { t: any; record: any }) {
         ? { type: "jwt", bearerToken: "" }
         : { type: "none" };
 
-  // Parse descriptors
+  // Parse descriptors (GA: descriptors.mcpServer.data, .a2aAgentCard.data, ...)
   let serverInfo: any = null;
   let tools: Array<{ name: string; description: string; inputSchema?: any }> = [];
   let a2aCard: any = null;
-  let endpoint: string | null = null;
+  let endpoint: string | null = sourceFromUrl?.url || null;
 
-  if (record.descriptorType === "MCP" && record.descriptors?.mcp) {
+  if (protocol === "MCP" && record.descriptors?.mcpServer) {
     try {
-      const raw = record.descriptors.mcp.server?.inlineContent;
+      const raw = record.descriptors.mcpServer.data;
       serverInfo = typeof raw === "string" ? JSON.parse(raw) : raw;
-      endpoint = serverInfo?.remotes?.[0]?.url || null;
+      endpoint = endpoint || serverInfo?.remotes?.[0]?.url || null;
     } catch {}
     try {
-      const raw = record.descriptors.mcp.tools?.inlineContent;
+      const raw = record.descriptors.mcpServer.additionalData?.tools?.data;
       const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
       tools = parsed?.tools || [];
     } catch {}
   }
-  if (record.descriptorType === "A2A" && record.descriptors?.a2a) {
+  if (protocol === "A2A" && record.descriptors?.a2aAgentCard) {
     try {
-      const raw = record.descriptors.a2a.agentCard?.inlineContent;
+      const raw = record.descriptors.a2aAgentCard.data;
       a2aCard = typeof raw === "string" ? JSON.parse(raw) : raw;
-      endpoint = a2aCard?.url || null;
+      endpoint = endpoint || a2aCard?.url || null;
     } catch {}
   }
 
@@ -690,9 +874,7 @@ function ReadView({ t, record }: { t: any; record: any }) {
   const statusLabel = tStatus(record.status);
   const statusTone = STATUS_TONE[record.status] ?? "text-foreground";
   const statusDot = STATUS_DOT[record.status] ?? "bg-muted-foreground/50";
-  const typeLabel = record.descriptorType
-    ? (TYPE_LABEL[record.descriptorType] ?? record.descriptorType)
-    : "—";
+  const typeLabel = TYPE_LABEL[protocol] ?? protocol;
 
   return (
     <>
@@ -774,7 +956,7 @@ function ReadView({ t, record }: { t: any; record: any }) {
         <div className="rounded-lg border bg-card p-4">
           <div className="flex items-center gap-2 mb-2">
             <Link className="size-4 text-muted-foreground" />
-            <span className="text-sm font-medium">{record.descriptorType === "A2A" ? t("readView.sections.agentEndpoint") : t("readView.sections.mcpEndpoint")}</span>
+            <span className="text-sm font-medium">{protocol === "A2A" ? t("readView.sections.agentEndpoint") : t("readView.sections.mcpEndpoint")}</span>
           </div>
           <div className="rounded-md bg-muted px-4 py-2.5">
             <code className="text-sm font-mono break-all">{endpoint}</code>
@@ -783,7 +965,7 @@ function ReadView({ t, record }: { t: any; record: any }) {
       )}
 
       {/* MCP: Server + Tools */}
-      {record.descriptorType === "MCP" && (
+      {protocol === "MCP" && (
         <div className="space-y-6">
           {/* Server info card */}
           {serverInfo && (
@@ -898,7 +1080,7 @@ function ReadView({ t, record }: { t: any; record: any }) {
       )}
 
       {/* A2A: Agent capabilities */}
-      {record.descriptorType === "A2A" && a2aCard && (
+      {protocol === "A2A" && a2aCard && (
         <div className="space-y-6">
           {/* Agent info */}
           <div className="rounded-lg border bg-card p-4 space-y-3">
@@ -979,9 +1161,9 @@ function ReadView({ t, record }: { t: any; record: any }) {
       )}
 
       {/* AGENT_SKILLS: Skill MD + Skill Definition */}
-      {record.descriptorType === "AGENT_SKILLS" && (() => {
-        const skillMdRaw = record.descriptors?.agentSkills?.skillMd?.inlineContent || "";
-        const skillDefRaw = record.descriptors?.agentSkills?.skillDefinition?.inlineContent || "";
+      {protocol === "AGENT_SKILLS" && (() => {
+        const skillMdRaw = record.descriptors?.agentSkillsDefinition?.additionalData?.skillMd?.data || "";
+        const skillDefRaw = record.descriptors?.agentSkillsDefinition?.data || "";
         let skillDef: any = null;
         try { skillDef = typeof skillDefRaw === "string" ? JSON.parse(skillDefRaw) : skillDefRaw; } catch {}
         return (
@@ -1040,8 +1222,8 @@ function ReadView({ t, record }: { t: any; record: any }) {
       })()}
 
       {/* CUSTOM: Raw descriptor */}
-      {record.descriptorType === "CUSTOM" && (() => {
-        const customRaw = record.descriptors?.custom?.inlineContent || "";
+      {protocol === "CUSTOM" && (() => {
+        const customRaw = record.descriptors?.custom?.data || "";
         let customParsed: any = null;
         try { customParsed = typeof customRaw === "string" ? JSON.parse(customRaw) : customRaw; } catch {}
         return (

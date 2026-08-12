@@ -39,11 +39,12 @@ type RegistryRecord = {
   [key: string]: any;
 };
 
+// Keyed by GA recordType (AGENT|MCP|SKILL|CUSTOM).
 const PROTOCOL_BADGE_CLASSES: Record<string, string> = {
   MCP: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-  A2A: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+  AGENT: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
   CUSTOM: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
-  AGENT_SKILLS: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+  SKILL: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
 };
 
 function isSupportedDescriptor(descriptorType: string | undefined): boolean {
@@ -123,7 +124,7 @@ export function RegistryToolPicker({
             .then((res) => (res.registryRecords || []).map((rec: any) => ({
               ...rec,
               recordId: rec.recordId || rec.registryRecordId || "",
-              descriptorType: rec.descriptorType || rec.protocol || "",
+              descriptorType: rec.recordType || rec.descriptorType || rec.protocol || "",
             }) as RegistryRecord)),
         ),
       );
@@ -176,7 +177,7 @@ export function RegistryToolPicker({
             const record = {
               ...rec,
               recordId: rec.recordId || rec.registryRecordId || "",
-              descriptorType: rec.descriptorType || rec.protocol || "",
+              descriptorType: rec.recordType || rec.descriptorType || rec.protocol || "",
             } as RegistryRecord;
             deduped.set(record.recordId, record);
           }

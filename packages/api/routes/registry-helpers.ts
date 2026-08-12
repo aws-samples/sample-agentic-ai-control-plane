@@ -15,27 +15,29 @@ export type TargetSpec =
   | { kind: "mcpServer"; endpoint: string }
   | { kind: "lambda"; lambdaArn: string; toolSchema: ToolDefinition[] };
 
+// GA flat-keyed descriptors. `data` replaces the old `inlineContent`; URL sync
+// moves into a per-descriptor `source.fromUrl` (mcpServer / a2aAgentCard only).
 type Descriptors = {
-  mcp?: { server?: { inlineContent?: string } };
-  custom?: { inlineContent?: string };
+  mcpServer?: {
+    data?: string;
+    source?: { fromUrl?: { url?: string } };
+  };
+  custom?: { data?: string };
   [key: string]: unknown;
 };
 
-type SyncConfiguration = { fromUrl?: { url?: string } } | undefined;
-
 type RegistryRecordLike = {
-  descriptorType?: string;
+  recordType?: string;
   descriptors?: Descriptors;
-  synchronizationConfiguration?: SyncConfiguration;
 };
 
-// Resolves an MCP record to its server endpoint from sync config or inline content.
+// Resolves an MCP record to its server endpoint from sync source or inline data.
 function resolveMcp(record: RegistryRecordLike): TargetSpec {
-  const syncUrl = record.synchronizationConfiguration?.fromUrl?.url;
+  const syncUrl = record.descriptors?.mcpServer?.source?.fromUrl?.url;
   if (typeof syncUrl === "string" && syncUrl.length > 0) {
     return { kind: "mcpServer", endpoint: syncUrl };
   }
-  const inline = record.descriptors?.mcp?.server?.inlineContent;
+  const inline = record.descriptors?.mcpServer?.data;
   if (inline) {
     try {
       const parsed = JSON.parse(inline) as unknown;
@@ -50,16 +52,16 @@ function resolveMcp(record: RegistryRecordLike): TargetSpec {
     }
   }
   throw new UnsupportedDescriptorError(
-    "MCP record has no resolvable server URL — set synchronizationConfiguration.fromUrl.url or descriptors.mcp.server.inlineContent={\"url\":\"...\"}",
+    'MCP record has no resolvable server URL — set descriptors.mcpServer.source.fromUrl.url or descriptors.mcpServer.data={"url":"..."}',
   );
 }
 
 // Resolves a CUSTOM record's inline JSON into a validated lambda target spec.
 function resolveCustom(record: RegistryRecordLike): TargetSpec {
-  const inline = record.descriptors?.custom?.inlineContent;
+  const inline = record.descriptors?.custom?.data;
   if (!inline) {
     throw new UnsupportedDescriptorError(
-      "CUSTOM record is missing descriptors.custom.inlineContent",
+      "CUSTOM record is missing descriptors.custom.data",
     );
   }
   let parsed: unknown;
@@ -67,23 +69,23 @@ function resolveCustom(record: RegistryRecordLike): TargetSpec {
     parsed = JSON.parse(inline);
   } catch {
     throw new UnsupportedDescriptorError(
-      "CUSTOM record's inlineContent is not valid JSON",
+      "CUSTOM record's data is not valid JSON",
     );
   }
   if (typeof parsed !== "object" || parsed === null) {
     throw new UnsupportedDescriptorError(
-      "CUSTOM record's inlineContent must be a JSON object",
+      "CUSTOM record's data must be a JSON object",
     );
   }
   const obj = parsed as { lambdaArn?: unknown; toolSchema?: unknown };
   if (typeof obj.lambdaArn !== "string" || obj.lambdaArn.length === 0) {
     throw new UnsupportedDescriptorError(
-      "CUSTOM record's inlineContent must contain a non-empty `lambdaArn` string",
+      "CUSTOM record's data must contain a non-empty `lambdaArn` string",
     );
   }
   if (!Array.isArray(obj.toolSchema)) {
     throw new UnsupportedDescriptorError(
-      "CUSTOM record's inlineContent must contain a `toolSchema` array",
+      "CUSTOM record's data must contain a `toolSchema` array",
     );
   }
   if (obj.toolSchema.length === 0) {
@@ -123,16 +125,16 @@ function resolveCustom(record: RegistryRecordLike): TargetSpec {
   return { kind: "lambda", lambdaArn: obj.lambdaArn, toolSchema: tools };
 }
 
-// Dispatches a registry record to the resolver for its descriptor type.
+// Dispatches a registry record to the resolver for its record type.
 export function resolveTargetSpec(record: RegistryRecordLike): TargetSpec {
-  switch (record.descriptorType) {
+  switch (record.recordType) {
     case "MCP":
       return resolveMcp(record);
     case "CUSTOM":
       return resolveCustom(record);
     default:
       throw new UnsupportedDescriptorError(
-        `Unsupported descriptor type: ${record.descriptorType ?? "none"}`,
+        `Unsupported record type: ${record.recordType ?? "none"}`,
       );
   }
 }

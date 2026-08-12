@@ -48,3 +48,6 @@ security-evidence
 THREAT_MODEL.md
 ASH
 .ash
+apps/a2a-agent
+# Playwright MCP scratch output
+.playwright-mcp/

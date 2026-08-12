@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { $orpc } from "@/lib/api";
 import { RecordsList } from "../_components/records-list";
+import {
+  ActivityLog,
+  type RegistryActivityEvent,
+} from "../_components/activity-log";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -14,8 +18,9 @@ type RegistryRecord = {
   recordId?: string;
   recordArn?: string;
   name: string;
+  displayName?: string;
   recordVersion?: string;
-  descriptorType?: string;
+  recordType?: string;
   status: "DRAFT" | "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | "DEPRECATED" | "CREATING" | "UPDATING" | "CREATE_FAILED" | "UPDATE_FAILED";
   description?: string;
   createdAt?: string | Date;
@@ -32,6 +37,21 @@ export default function RegistryDetailPage() {
   const [registryName, setRegistryName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"records" | "activity">("records");
+  const [activityEvents, setActivityEvents] = useState<RegistryActivityEvent[]>([]);
+
+  // Registry-scoped activity: omit recordId so the endpoint returns registry-level
+  // events (registry_created/updated) plus every record's events for this registry.
+  const fetchActivity = useCallback(async () => {
+    if (!registryId) return;
+    try {
+      const res = await $orpc.listRegistryActivity({ registryId });
+      setActivityEvents(res.events as RegistryActivityEvent[]);
+    } catch {
+      // Activity is a secondary panel — don't surface a blocking error if it
+      // fails to load; the records view stays usable.
+    }
+  }, [registryId]);
 
   const fetchRecords = useCallback(async (options?: { showToast?: boolean }) => {
     if (!registryId) {
@@ -64,11 +84,13 @@ export default function RegistryDetailPage() {
 
   useEffect(() => {
     fetchRecords();
-  }, [fetchRecords]);
+    fetchActivity();
+  }, [fetchRecords, fetchActivity]);
 
   const handleRefresh = useCallback(() => {
     fetchRecords({ showToast: true });
-  }, [fetchRecords]);
+    fetchActivity();
+  }, [fetchRecords, fetchActivity]);
 
   const handleBackNavigation = useCallback(() => {
     router.push("/dashboard/registry");
@@ -118,12 +140,36 @@ export default function RegistryDetailPage() {
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : (
-            <RecordsList
-              records={records}
-              registryId={registryId}
-              isLoading={isLoading}
-              onRefresh={handleRefresh}
-            />
+            <>
+              <div className="mb-4 flex items-center gap-1 border-b">
+                {(["records", "activity"] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-3 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                      activeTab === tab
+                        ? "border-primary text-foreground"
+                        : "border-transparent text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {tab === "records"
+                      ? t("tabs.records")
+                      : t("tabs.activity", { count: activityEvents.length })}
+                  </button>
+                ))}
+              </div>
+              {activeTab === "records" ? (
+                <RecordsList
+                  records={records}
+                  registryId={registryId}
+                  isLoading={isLoading}
+                  onRefresh={handleRefresh}
+                />
+              ) : (
+                <ActivityLog events={activityEvents} showRecordId />
+              )}
+            </>
           )}
         </div>
       </div>

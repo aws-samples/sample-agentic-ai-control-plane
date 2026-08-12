@@ -9,6 +9,7 @@ import { DashboardStack } from "./dashboard-stack";
 import { DatabaseStack } from "./database-stack";
 import { EcsClusterStack } from "./ecs-cluster-stack";
 import { LambdaToolStack } from "./lambda-tool-stack";
+import { RegistryEventsStack } from "./registry-events-stack";
 import { VPCStack } from "./vpc-stack";
 
 const DB_SCHEMA = "agentic_ai_platform";
@@ -115,4 +116,9 @@ export function createPlatformStacks(
   dashboard.addDependency(agentCoreGateway);
   dashboard.addDependency(agentCoreRuntime);
   dashboard.addDependency(database);
+
+  // Captures AWS Agent Registry lifecycle events (aws.agent-registry) into a
+  // CloudWatch Logs audit sink. Independent of the other stacks — the default
+  // EventBridge bus and the registry service already exist at the account level.
+  new RegistryEventsStack(scope, "RegistryEventsStack", { env });
 }

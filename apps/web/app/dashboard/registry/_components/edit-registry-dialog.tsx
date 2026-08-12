@@ -31,10 +31,15 @@ type Registry = {
     | "UPDATE_FAILED"
     | "DELETING"
     | "DELETE_FAILED";
-  approvalConfiguration?: { autoApproval: boolean };
+  approvalConfiguration?: { autoApprovalRules?: string[] };
   createdAt?: string | Date;
   updatedAt: string | Date;
 };
+
+// GA models approval as an enum-rule array; the UI keeps a simple auto-approve
+// toggle. "APPROVE_ALL" present == auto-approve.
+const isAutoApproved = (reg: Registry): boolean =>
+  reg.approvalConfiguration?.autoApprovalRules?.includes("APPROVE_ALL") ?? false;
 
 interface EditRegistryDialogProps {
   registry: Registry;
@@ -51,9 +56,7 @@ export function EditRegistryDialog({
 }: EditRegistryDialogProps) {
   const t = useTranslations("EditRegistryDialog");
   const [description, setDescription] = useState(registry.description ?? "");
-  const [autoApproval, setAutoApproval] = useState(
-    registry.approvalConfiguration?.autoApproval ?? false,
-  );
+  const [autoApproval, setAutoApproval] = useState(isAutoApproved(registry));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,7 +64,7 @@ export function EditRegistryDialog({
   useEffect(() => {
     if (open) {
       setDescription(registry.description ?? "");
-      setAutoApproval(registry.approvalConfiguration?.autoApproval ?? false);
+      setAutoApproval(isAutoApproved(registry));
       setError(null);
     }
   }, [open, registry]);
@@ -75,7 +78,9 @@ export function EditRegistryDialog({
       await $orpc.updateRegistry({
         registryId: registry.registryId,
         description: description.trim() || undefined,
-        approvalConfiguration: { autoApproval },
+        approvalConfiguration: {
+          autoApprovalRules: autoApproval ? ["APPROVE_ALL"] : [],
+        },
       });
 
       toast.success(t("toast.success"));

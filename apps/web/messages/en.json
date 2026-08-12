@@ -180,7 +180,9 @@
     },
     "tabs": {
       "allRecords": "All Records",
-      "search": "Search"
+      "search": "Search",
+      "records": "Records",
+      "activity": "Activity ({count})"
     },
     "search": {
       "enterQuery": "Please enter a search query",

@@ -15,9 +15,9 @@ type RegistryRecord = {
   recordId?: string;
   recordArn?: string;
   name: string;
-  protocol?: string;
+  displayName?: string;
+  recordType?: string;
   recordVersion?: string;
-  descriptorType?: string;
   status?: string;
   description?: string;
   createdAt?: string | Date;
@@ -29,9 +29,11 @@ interface SearchRecordsProps {
   onViewDetails: (recordId: string) => void;
 }
 
+// Keyed by GA recordType (AGENT|MCP|SKILL|CUSTOM).
 const PROTOCOL_COLORS: Record<string, string> = {
   MCP: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-  A2A: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+  AGENT: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+  SKILL: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300",
   CUSTOM: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
 };
 
@@ -207,9 +209,9 @@ function SearchResultCard({ result, onViewDetails, t }: {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="font-semibold text-lg">{result.name}</h3>
-            <Badge variant="outline" className={PROTOCOL_COLORS[result.protocol ?? "CUSTOM"] || PROTOCOL_COLORS.CUSTOM}>
-              {result.protocol}
+            <h3 className="font-semibold text-lg">{result.displayName || result.name}</h3>
+            <Badge variant="outline" className={PROTOCOL_COLORS[result.recordType ?? "CUSTOM"] || PROTOCOL_COLORS.CUSTOM}>
+              {result.recordType}
             </Badge>
             <Badge>{result.status}</Badge>
           </div>
