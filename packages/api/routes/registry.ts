@@ -148,6 +148,20 @@ const DiscoveryConfigurationSchema = z.object({
   authorizerConfiguration: AuthorizerConfigurationSchema.optional(),
 });
 
+// Mirrors the AWS RegistryStatus enum in full — it includes the *_FAILED
+// states, which a create-then-tag rollback (see createRegistry) can produce.
+// Omitting them made ListRegistries fail output validation (500) whenever a
+// registry was in a failed state.
+const RegistryStatusSchema = z.enum([
+  "CREATING",
+  "CREATE_FAILED",
+  "READY",
+  "UPDATING",
+  "UPDATE_FAILED",
+  "DELETING",
+  "DELETE_FAILED",
+]);
+
 const RegistrySchema = z.object({
   name: z.string(),
   description: z.string().optional(),
