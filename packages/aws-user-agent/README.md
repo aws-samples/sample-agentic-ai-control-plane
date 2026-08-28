@@ -10,9 +10,8 @@ Defined once in [`src/user-agent.ts`](./src/user-agent.ts). Deployments set the
 `USER_AGENT_STRING` env var (CDK for the agent/web containers and the tool
 Lambda; Vercel for a2a-agent) from the single constant in
 [`apps/infra/lib/solution.ts`](../../apps/infra/lib/solution.ts). When unset
-(local dev) the code falls back to the same constant. **On each release, bump
-the version in both files, and replace the `SO0000` placeholder with the real
-solution ID once assigned.**
+(local dev) the code falls back to the same constant. The solution ID is
+`SO0364`. **On each release, bump the version in both files.**
 
 ## Two injection mechanisms
 

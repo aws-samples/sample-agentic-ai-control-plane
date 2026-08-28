@@ -5,8 +5,7 @@
 // token is defined once here and reused everywhere so a release only changes
 // this file (and the deployment env var below).
 //
-// TODO(SO-id): replace SO0000 with the solution ID assigned to this platform.
-export const SOLUTION_ID = "SO0000";
+export const SOLUTION_ID = "SO0364";
 
 // Version reported in the token. The deployment sets USER_AGENT_STRING with the
 // real release version; this constant is only the local-dev fallback.
