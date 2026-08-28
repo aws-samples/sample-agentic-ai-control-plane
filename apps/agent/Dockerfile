@@ -6,6 +6,7 @@ RUN npm install -g corepack@latest && corepack enable
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/agent/package.json ./apps/agent/
 COPY packages/database/package.json ./packages/database/
+COPY packages/aws-user-agent/package.json ./packages/aws-user-agent/
 
 RUN pnpm install --frozen-lockfile
 
@@ -17,6 +18,7 @@ RUN npm install -g corepack@latest && corepack enable
 COPY --from=deps /app/ ./
 COPY apps/agent/ ./apps/agent/
 COPY packages/database/ ./packages/database/
+COPY packages/aws-user-agent/ ./packages/aws-user-agent/
 
 RUN pnpm --filter @package/database exec prisma generate
 
