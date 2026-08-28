@@ -1,4 +1,4 @@
-import { solutionUserAgent } from "./user-agent.js";
+import { solutionUserAgent } from "./user-agent";
 
 // The Vercel AI SDK's `@ai-sdk/amazon-bedrock` provider does NOT use
 // `@aws-sdk/client-*` — it signs requests with its own SigV4 implementation and

@@ -4,6 +4,6 @@
 //
 // This module has no exports on purpose. If your linter strips "unused"
 // side-effect imports, call `installSolutionUserAgentHook()` explicitly instead.
-import { installSolutionUserAgentHook } from "./sdk-hook.js";
+import { installSolutionUserAgentHook } from "./sdk-hook";
 
 installSolutionUserAgentHook();

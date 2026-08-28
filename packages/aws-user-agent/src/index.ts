@@ -6,6 +6,6 @@ export {
   SOLUTION_VERSION,
   DEFAULT_SOLUTION_UA,
   solutionUserAgent,
-} from "./user-agent.js";
-export { installSolutionUserAgentHook } from "./sdk-hook.js";
-export { solutionFetch } from "./solution-fetch.js";
+} from "./user-agent";
+export { installSolutionUserAgentHook } from "./sdk-hook";
+export { solutionFetch } from "./solution-fetch";

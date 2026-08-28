@@ -1,6 +1,6 @@
 import { BedrockRuntimeClient } from "@aws-sdk/client-bedrock-runtime";
 
-import { solutionUserAgent } from "./user-agent.js";
+import { solutionUserAgent } from "./user-agent";
 
 // Every generated `@aws-sdk/client-*` class extends one common base class
 // (@smithy/smithy-client's `Client`). Patching `send` on that base class covers

@@ -12,9 +12,9 @@ import {
 } from "@aws-sdk/client-secrets-manager";
 import { describe, expect, it } from "vitest";
 
-import { installSolutionUserAgentHook } from "./sdk-hook.js";
-import { solutionFetch } from "./solution-fetch.js";
-import { solutionUserAgent } from "./user-agent.js";
+import { installSolutionUserAgentHook } from "./sdk-hook";
+import { solutionFetch } from "./solution-fetch";
+import { solutionUserAgent } from "./user-agent";
 
 // Cover both AWS SDK generations present in the monorepo: the pinned 3.1079.x
 // clients (bedrock-runtime/secrets-manager) and the GA 3.1105.x agent-registry
