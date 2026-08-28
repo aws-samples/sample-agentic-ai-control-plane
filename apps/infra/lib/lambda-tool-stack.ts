@@ -6,6 +6,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as nodejs from "aws-cdk-lib/aws-lambda-nodejs";
 import * as rds from "aws-cdk-lib/aws-rds";
 import { Construct } from "constructs";
+import { SOLUTION_USER_AGENT } from "./solution";
 
 interface LambdaToolStackProps extends cdk.StackProps {
   vpc: ec2.IVpc;
@@ -52,6 +53,7 @@ export class LambdaToolStack extends cdk.Stack {
         DB_SECRET_ARN: props.database.secret!.secretArn,
         DB_SCHEMA: props.dbSchema,
         NODE_ENV: "production",
+        USER_AGENT_STRING: SOLUTION_USER_AGENT,
       },
       bundling: {
         format: nodejs.OutputFormat.ESM,

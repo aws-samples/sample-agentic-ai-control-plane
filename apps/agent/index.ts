@@ -2,6 +2,13 @@ import dotenv from "dotenv";
 dotenv.config();
 dotenv.config({ path: ".env.local", override: true });
 
+// Install the AWS Solutions User-Agent hook before Strands (and its bundled
+// AWS SDK) loads, so every AWS call the agent makes — model inference, session
+// storage, and the clients inside bundled tools — carries the solution token.
+// Must run after dotenv so USER_AGENT_STRING is populated. See
+// packages/aws-user-agent.
+import "@package/aws-user-agent/register";
+
 import * as strands from "@strands-agents/sdk";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import express, { type Request, type Response } from "express";

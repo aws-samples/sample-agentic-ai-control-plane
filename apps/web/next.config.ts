@@ -5,7 +5,12 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   output: "standalone",
-  transpilePackages: ["@package/auth", "@packages/api", "@package/database"],
+  transpilePackages: [
+    "@package/aws-user-agent",
+    "@package/auth",
+    "@packages/api",
+    "@package/database",
+  ],
   webpack(config) {
     config.experiments = {
       ...config.experiments,
