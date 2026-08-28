@@ -7,6 +7,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as rds from "aws-cdk-lib/aws-rds";
 import { Construct } from "constructs";
 import * as path from "path";
+import { SOLUTION_USER_AGENT } from "./solution";
 
 interface AgentCoreRuntimeStackProps extends cdk.StackProps {
   userPool: cognito.UserPool;
@@ -65,6 +66,7 @@ export class AgentCoreRuntimeStack extends cdk.Stack {
         NODE_ENV: "production",
         DB_SECRET_ARN: props.database.secret!.secretArn,
         DB_SCHEMA: props.dbSchema,
+        USER_AGENT_STRING: SOLUTION_USER_AGENT,
       },
     });
 

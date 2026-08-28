@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.27.1",
+    "@package/aws-user-agent": "workspace:*",
     "@package/database": "workspace:*",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",

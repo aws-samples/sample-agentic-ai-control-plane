@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ariakit/react": "^0.4.32",
+    "@aws-sdk/client-agent-registry": "^3.1105.0",
     "@aws-sdk/client-bedrock-agentcore": "^3.1079.0",
     "@base-ui/react": "^1.6.0",
     "@cedar-policy/cedar-wasm": "^4.11.2",
@@ -25,6 +26,7 @@
     "@orpc/server": "^1.14.6",
     "@orpc/tanstack-query": "^1.14.6",
     "@orpc/zod": "^1.14.6",
+    "@package/aws-user-agent": "workspace:*",
     "@package/auth": "workspace:*",
     "@package/database": "workspace:*",
     "@package/policy": "workspace:*",

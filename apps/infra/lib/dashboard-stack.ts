@@ -8,6 +8,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as rds from "aws-cdk-lib/aws-rds";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
+import { SOLUTION_USER_AGENT } from "./solution";
 
 interface DashboardStackProps extends cdk.StackProps {
   vpc: ec2.Vpc;
@@ -88,6 +89,7 @@ export class DashboardStack extends cdk.Stack {
       memoryLimitMiB: 1024,
       environment: {
         NODE_ENV: "production",
+        USER_AGENT_STRING: SOLUTION_USER_AGENT,
         NEXT_PUBLIC_URL: publicUrl,
         COGNITO_CLIENT_ID: props.userPoolClient.userPoolClientId,
         COGNITO_CLIENT_SECRET:

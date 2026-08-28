@@ -3,6 +3,7 @@ import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { createMCPClient } from "@ai-sdk/mcp";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { os } from "@orpc/server";
+import { solutionUserAgent } from "@package/aws-user-agent";
 import { HttpRequest } from "@smithy/protocol-http";
 import { SignatureV4 } from "@smithy/signature-v4";
 import { z } from "zod";
@@ -39,6 +40,9 @@ async function sigv4Fetch(url: string, init?: RequestInit): Promise<Response> {
     headers: {
       "Content-Type": "application/json",
       host: parsedUrl.hostname,
+      // AWS Solutions metrics token — this path hand-signs instead of using an
+      // @aws-sdk client, so the SDK base-class hook does not reach it.
+      "user-agent": solutionUserAgent(),
       ...(init?.headers as Record<string, string>),
     },
     body: init?.body as string,

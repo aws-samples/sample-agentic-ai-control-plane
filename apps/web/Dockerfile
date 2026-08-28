@@ -12,6 +12,7 @@ COPY packages/auth/package.json ./packages/auth/
 COPY packages/api/package.json ./packages/api/
 COPY packages/database/package.json ./packages/database/
 COPY packages/policy/package.json ./packages/policy/
+COPY packages/aws-user-agent/package.json ./packages/aws-user-agent/
 
 RUN pnpm install --frozen-lockfile
 
@@ -26,6 +27,7 @@ COPY packages/auth/ ./packages/auth/
 COPY packages/api/ ./packages/api/
 COPY packages/database/ ./packages/database/
 COPY packages/policy/ ./packages/policy/
+COPY packages/aws-user-agent/ ./packages/aws-user-agent/
 
 RUN pnpm --filter @package/database exec prisma generate
 
