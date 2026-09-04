@@ -15,7 +15,9 @@ const CognitoGroupSchema = z.object({
 
 const OutputSchema = z.object({ groups: z.array(CognitoGroupSchema) });
 
-// Lists the Cognito user pool's groups (name + description), up to 60.
+// Lists all of the Cognito user pool's groups (name + description).
+// ListGroups caps at 60 groups per page, so we follow NextToken until the
+// pool is fully drained rather than truncating at the first page.
 export async function listCognitoGroupsHandler(): Promise<
   z.infer<typeof OutputSchema>
 > {
@@ -23,14 +25,27 @@ export async function listCognitoGroupsHandler(): Promise<
   if (!userPoolId) {
     throw new Error("COGNITO_USER_POOL_ID is not configured");
   }
-  // TODO: paginate when pools with >60 groups appear; ListGroups caps at 60/page.
-  const response = await client.send(
-    new ListGroupsCommand({ UserPoolId: userPoolId, Limit: 60 }),
-  );
-  const groups = (response.Groups ?? []).map((g) => ({
-    name: g.GroupName ?? "",
-    description: g.Description ?? null,
-  }));
+
+  const groups: z.infer<typeof CognitoGroupSchema>[] = [];
+  let nextToken: string | undefined;
+
+  do {
+    const response = await client.send(
+      new ListGroupsCommand({
+        UserPoolId: userPoolId,
+        Limit: 60,
+        NextToken: nextToken,
+      }),
+    );
+    for (const g of response.Groups ?? []) {
+      groups.push({
+        name: g.GroupName ?? "",
+        description: g.Description ?? null,
+      });
+    }
+    nextToken = response.NextToken;
+  } while (nextToken);
+
   return { groups };
 }
 
