@@ -8,8 +8,9 @@ import { NextRequest, NextResponse } from "next/server";
 //                    becomes healthy (deploy fails with NotStabilized).
 //   /api/auth/*     — Better Auth's own handler (sign-in, OAuth callback that
 //                    CREATES the session). Gating it breaks the login flow.
+//                    Matched on the path segment so e.g. /api/authz/* is NOT public.
 function isPublicPath(pathname: string): boolean {
-  return pathname === "/api/status" || pathname.startsWith("/api/auth");
+  return pathname === "/api/status" || pathname.startsWith("/api/auth/");
 }
 
 // Paths that require an authenticated session. Everything else (e.g. /sign-in,

@@ -2,7 +2,8 @@ import {
   AgentRegistryControlClient,
   GetRegistryRecordCommand,
 } from "@aws-sdk/client-agent-registry-control";
-import { ORPCError, os } from "@orpc/server";
+import { ORPCError } from "@orpc/server";
+import { authed } from "../context";
 import { prisma } from "@package/database";
 import { z } from "zod";
 import { materializeGatewayTarget } from "./gateway-targets";
@@ -37,7 +38,7 @@ const AddAgentToolTargetSchema = z
 
 // Lists an agent's tools, joining each registry tool to its gateway target's
 // materialization status (CREATING/READY/CREATE_FAILED).
-export const listAgentTools = os
+export const listAgentTools = authed
   .route({
     method: "GET",
     path: "/agent-tools/list",
@@ -96,7 +97,7 @@ export const listAgentTools = os
 
 // Adds a tool to an agent; for registry tools also materializes a gateway
 // target, rolling back the row if required metadata is missing or unsupported.
-export const addAgentTool = os
+export const addAgentTool = authed
   .route({
     method: "POST",
     path: "/agent-tools/add",
@@ -179,7 +180,7 @@ export const addAgentTool = os
   });
 
 // Updates an agent tool's name, metadata, and/or enabled flag.
-export const updateAgentTool = os
+export const updateAgentTool = authed
   .route({
     method: "PATCH",
     path: "/agent-tools/update",
@@ -209,7 +210,7 @@ export const updateAgentTool = os
   });
 
 // Deletes an agent tool row by id.
-export const removeAgentTool = os
+export const removeAgentTool = authed
   .route({
     method: "DELETE",
     path: "/agent-tools/remove",

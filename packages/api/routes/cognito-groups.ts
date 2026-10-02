@@ -2,7 +2,7 @@ import {
   CognitoIdentityProviderClient,
   ListGroupsCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { z } from "zod";
 
 const REGION = process.env.COGNITO_REGION ?? "us-east-1";
@@ -49,7 +49,7 @@ export async function listCognitoGroupsHandler(): Promise<
   return { groups };
 }
 
-export const listCognitoGroups = os
+export const listCognitoGroups = authed
   .route({
     method: "GET",
     path: "/cognito/groups",

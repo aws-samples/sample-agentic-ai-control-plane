@@ -1,4 +1,4 @@
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { z } from "zod";
 
 const MICROSOFT_TENANT_ID = process.env.MICROSOFT_TENANT_ID || "";
@@ -102,7 +102,7 @@ const ListGroupsResponseSchema = z.object({
 
 // Lists Entra ID groups (optionally Teams-only or filtered by search), returning
 // the page plus a skipToken cursor for the next page.
-export const listMicrosoftGroups = os
+export const listMicrosoftGroups = authed
   .route({
     method: "GET",
     path: "/idp/microsoft/groups",
@@ -199,7 +199,7 @@ const SearchUsersResponseSchema = z.object({
 
 // Searches Entra ID users by name/mail/UPN, returning the page plus a skipToken
 // cursor for the next page.
-export const searchMicrosoftUsers = os
+export const searchMicrosoftUsers = authed
   .route({
     method: "GET",
     path: "/idp/microsoft/users",

@@ -10,7 +10,7 @@ import {
   GetMetricDataCommand,
   type MetricDataQuery,
 } from "@aws-sdk/client-cloudwatch";
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { z } from "zod";
 
 const REGION =
@@ -125,7 +125,7 @@ function findSeriesValues(
 
 // Returns aggregate policy-decision counts (approvals, denials, derived total
 // requests) and the count of ACTIVE policies over the requested range.
-export const getDashboardStats = os
+export const getDashboardStats = authed
   .route({
     method: "GET",
     path: "/dashboard/stats",
@@ -199,7 +199,7 @@ export const getDashboardStats = os
 
 // Returns per-day approval/denial/derived-call counts across the range for
 // charting (one point per UTC day, zero-filled).
-export const getDashboardTimeseries = os
+export const getDashboardTimeseries = authed
   .route({
     method: "GET",
     path: "/dashboard/timeseries",
@@ -380,7 +380,7 @@ function buildGatewayQueries(
 
 // Returns aggregate gateway metrics (count, invocations, errors, throttles,
 // average latency) over the requested range.
-export const getGatewayStats = os
+export const getGatewayStats = authed
   .route({
     method: "GET",
     path: "/dashboard/gateway/stats",
@@ -447,7 +447,7 @@ export const getGatewayStats = os
 
 // Returns per-day gateway invocation/error/latency metrics across the range
 // for charting (one point per UTC day, zero-filled).
-export const getGatewayTimeseries = os
+export const getGatewayTimeseries = authed
   .route({
     method: "GET",
     path: "/dashboard/gateway/timeseries",

@@ -6,7 +6,7 @@ import {
   ListAgentRuntimesCommand,
   ListAgentRuntimeEndpointsCommand,
 } from "@aws-sdk/client-bedrock-agentcore-control";
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { z } from "zod";
 
 const REGION = process.env.AGENTCORE_REGION || "us-east-1";
@@ -45,7 +45,7 @@ const GatewaySummarySchema = z.object({
 });
 
 // Lists AgentCore gateways (paginated), deriving each gateway's full ARN.
-export const listGateways = os
+export const listGateways = authed
   .route({
     method: "GET",
     path: "/gateways/list",
@@ -110,7 +110,7 @@ const TargetSummarySchema = z.object({
 });
 
 // Lists a gateway's targets (paginated) from AgentCore.
-export const listGatewayTargets = os
+export const listGatewayTargets = authed
   .route({
     method: "GET",
     path: "/gateways/targets/list",
@@ -158,7 +158,7 @@ const ToolSummarySchema = z.object({
 
 // Returns the tools exposed by a gateway target, reading from either the Lambda
 // inline tool schema or the API Gateway tool overrides.
-export const listGatewayTargetTools = os
+export const listGatewayTargetTools = authed
   .route({
     method: "GET",
     path: "/gateways/targets/tools",
@@ -240,7 +240,7 @@ const AgentRuntimeSummarySchema = z.object({
 });
 
 // Lists AgentCore agent runtimes (paginated).
-export const listAgentRuntimes = os
+export const listAgentRuntimes = authed
   .route({
     method: "GET",
     path: "/agent-runtimes/list",
@@ -305,7 +305,7 @@ const AgentRuntimeEndpointSummarySchema = z.object({
 });
 
 // Lists the endpoints for a given agent runtime (paginated).
-export const listAgentRuntimeEndpoints = os
+export const listAgentRuntimeEndpoints = authed
   .route({
     method: "GET",
     path: "/agent-runtimes/endpoints/list",

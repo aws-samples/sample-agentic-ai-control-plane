@@ -161,7 +161,20 @@ aws cognito-idp admin-create-user --user-pool-id "$POOL" \
 
 aws cognito-idp admin-set-user-password --user-pool-id "$POOL" \
   --username "$EMAIL" --password "$PASSWORD" --permanent
+
+# Optional: let this user create, edit, and delete personas
+aws cognito-idp admin-add-user-to-group --user-pool-id "$POOL" \
+  --username "$EMAIL" --group-name PlatformAdmins
 ```
+
+> **Persona management is admin-only.** A persona decides which group claims its
+> minted token carries, so only members of the **`PlatformAdmins`** Cognito group
+> (`PlatformAdminGroupName` in the CognitoStack outputs) can create, update, or
+> delete personas. Other signed-in users can still use existing personas in the
+> playground. Membership is checked live on every request, so removing a user
+> from the group takes effect immediately. Federated (Entra) users can be added
+> the same way after their first sign-in, using their Cognito username
+> (`EntraID_...`).
 
 Prefer the console? Create the user there instead: **Cognito → User pools →
 `AgenticAiPlatformUserPool...` → Users → Create user**, then set the email and a
@@ -420,6 +433,7 @@ list. The key ones come from the CDK stack outputs after deploy:
 | `COGNITO_USER_POOL_ID`, `COGNITO_DOMAIN`, `COGNITO_CLIENT_SECRET` | CognitoStack outputs |
 | `AGENTCORE_GATEWAY_ID`, `AGENTCORE_GATEWAY_MCP_URL` | AgentCoreGatewayStack outputs |
 | `PERSONA_USER_POOL_CLIENT_ID`, `PERSONA_MASTER_PASSWORD_SECRET_ARN` | CognitoStack outputs |
+| `PLATFORM_ADMIN_GROUP` | CognitoStack `PlatformAdminGroupName` output (`PlatformAdmins`) |
 | `DATABASE_URL`, `DB_SCHEMA` | Local Postgres (docker compose) |
 
 ## Tear down / clean up
@@ -550,6 +564,7 @@ cost):
   ```bash
   for sid in \
     agentic-ai-platform/persona/master-password \
+    agentic-ai-platform/cloudfront/origin-verify \
     agentic-ai-platform/entra/client-secret; do
     aws secretsmanager delete-secret --secret-id "$sid" \
       --force-delete-without-recovery --region "$AWS_REGION" 2>/dev/null || true

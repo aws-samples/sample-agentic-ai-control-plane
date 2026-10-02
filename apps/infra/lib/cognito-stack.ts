@@ -13,6 +13,7 @@ const ENTRA_PLACEHOLDER = "REPLACE_AFTER_DEPLOY";
 const ENTRA_CLIENT_ID_PARAM = "/agentic-ai-platform/entra/client-id";
 const ENTRA_TENANT_ID_PARAM = "/agentic-ai-platform/entra/tenant-id";
 const ENTRA_CLIENT_SECRET_NAME = "agentic-ai-platform/entra/client-secret";
+const PLATFORM_ADMIN_GROUP_NAME = "PlatformAdmins";
 
 interface CognitoStackProps extends cdk.StackProps {
   route53domain: string;
@@ -25,6 +26,7 @@ export class CognitoStack extends cdk.Stack {
   public readonly userPoolClient: cognito.UserPoolClient;
   public readonly personaUserPoolClient: cognito.UserPoolClient;
   public readonly personaMasterPasswordSecret: secretsmanager.Secret;
+  public readonly platformAdminGroup: cognito.UserPoolGroup;
 
   constructor(scope: Construct, id: string, props: CognitoStackProps) {
     super(scope, id, props);
@@ -326,6 +328,22 @@ export class CognitoStack extends cdk.Stack {
       },
     );
     this.personaMasterPasswordSecret = personaMasterPasswordSecret;
+
+    // Dashboard users in this group may create, update, and delete personas
+    // (which choose the group claims a minted persona token carries). The
+    // dashboard checks live membership via AdminListGroupsForUser.
+    const platformAdminGroup = userPool.addGroup("PlatformAdminsGroup", {
+      groupName: PLATFORM_ADMIN_GROUP_NAME,
+      description:
+        "Agentic AI Platform administrators: may create, update, and delete personas",
+    });
+    this.platformAdminGroup = platformAdminGroup;
+
+    new cdk.CfnOutput(this, "PlatformAdminGroupName", {
+      value: platformAdminGroup.groupName,
+      description:
+        "Add dashboard users to this Cognito group to let them manage personas",
+    });
 
     new cdk.CfnOutput(this, "PersonaMasterPasswordSecretArn", {
       value: personaMasterPasswordSecret.secretArn,

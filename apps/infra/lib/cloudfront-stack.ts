@@ -15,6 +15,7 @@ import {
 import { LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { Construct } from "constructs";
+import { ORIGIN_VERIFY_HEADER, ORIGIN_VERIFY_SECRET_NAME } from "./alb-stack";
 
 interface CloudFrontProps extends cdk.StackProps {
   domainName?: string;
@@ -35,8 +36,12 @@ export class CloudFrontStack extends cdk.Stack {
       protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
       httpPort: 80,
       originPath: "/",
+      // The ALB rejects origin requests without this secret header (see
+      // alb-stack.ts), so the ALB can't be used to bypass CloudFront.
       customHeaders: {
-        "X-CloudFront-Origin": "true",
+        [ORIGIN_VERIFY_HEADER]: cdk.SecretValue.secretsManager(
+          ORIGIN_VERIFY_SECRET_NAME,
+        ).unsafeUnwrap(),
       },
       connectionAttempts: 3,
       connectionTimeout: cdk.Duration.seconds(10),

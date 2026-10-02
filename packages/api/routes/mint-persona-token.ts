@@ -7,9 +7,7 @@ import {
   SecretsManagerClient,
   GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
-import { os } from "@orpc/server";
 import { prisma } from "@package/database";
-import { z } from "zod";
 
 const REGION = process.env.COGNITO_REGION ?? "us-east-1";
 
@@ -50,6 +48,8 @@ export interface MintPersonaTokenInput {
 
 // Authenticates the persona's Cognito user via ADMIN_USER_PASSWORD_AUTH and
 // returns its access token plus expiry for calling AgentCore runtimes.
+// Server-side only (see invoke-stream/route.ts): deliberately not exposed as an
+// API route, so the raw persona token never reaches a browser.
 export async function mintPersonaTokenHandler(input: MintPersonaTokenInput) {
   const userPoolId = process.env.COGNITO_USER_POOL_ID ?? "";
   const personaClientId = process.env.PERSONA_USER_POOL_CLIENT_ID ?? "";
@@ -108,20 +108,3 @@ export async function mintPersonaTokenHandler(input: MintPersonaTokenInput) {
 
   return { accessToken, expiresIn };
 }
-
-export const mintPersonaToken = os
-  .route({
-    method: "POST",
-    path: "/personas/mint-token",
-    tags: ["personas"],
-  })
-  .input(z.object({ personaId: z.string().min(1) }))
-  .output(
-    z.object({
-      accessToken: z.string(),
-      expiresIn: z.number(),
-    }),
-  )
-  .handler(async ({ input }) => mintPersonaTokenHandler(input));
-
-export const mintPersonaTokenRouter = { mintPersonaToken };

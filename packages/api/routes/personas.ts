@@ -10,7 +10,7 @@ import {
   SecretsManagerClient,
   GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
-import { os } from "@orpc/server";
+import { adminAuthed, authed } from "../context";
 import { prisma } from "@package/database";
 import { z } from "zod";
 
@@ -346,7 +346,7 @@ export async function deletePersonaHandler(input: DeletePersonaInput) {
 // ─── oRPC routes (thin wrappers) ────────────────────────────────────────────
 
 // Lists personas, optionally filtered by provider, ordered by name.
-export const listPersonas = os
+export const listPersonas = authed
   .route({
     method: "GET",
     path: "/personas/list",
@@ -373,7 +373,7 @@ export const listPersonas = os
   });
 
 // Route wrapper for createPersonaHandler.
-export const createPersona = os
+export const createPersona = adminAuthed
   .route({
     method: "POST",
     path: "/personas/create",
@@ -394,7 +394,7 @@ export const createPersona = os
   .handler(async ({ input }) => createPersonaHandler(input));
 
 // Route wrapper for updatePersonaHandler.
-export const updatePersona = os
+export const updatePersona = adminAuthed
   .route({
     method: "PATCH",
     path: "/personas/update",
@@ -414,7 +414,7 @@ export const updatePersona = os
   .handler(async ({ input }) => updatePersonaHandler(input));
 
 // Route wrapper for deletePersonaHandler.
-export const deletePersona = os
+export const deletePersona = adminAuthed
   .route({
     method: "DELETE",
     path: "/personas/delete",

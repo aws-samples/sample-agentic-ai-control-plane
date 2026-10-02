@@ -3,6 +3,7 @@ import {
   InvokeAgentRuntimeCommand,
 } from "@aws-sdk/client-bedrock-agentcore";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
+import { auth } from "@package/auth/server";
 import prisma from "@package/database/client";
 import { mintPersonaTokenHandler } from "@packages/api/routes/mint-persona-token";
 
@@ -39,6 +40,16 @@ function parseChunk(
 const LOCAL_AGENT_URL = "http://localhost:8080/invocations";
 
 export async function POST(request: Request) {
+  // Defense in depth: proxy.ts already gates /api, but this route mints persona
+  // tokens, so it must not depend on the proxy matcher alone.
+  const session = await auth.api.getSession({ headers: request.headers });
+  if (!session) {
+    return new Response(JSON.stringify({ error: "unauthenticated" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const reqId = Math.random().toString(36).slice(2, 8);
   console.log(`[invoke-stream:${reqId}] received request`);
   const body = await request.json();

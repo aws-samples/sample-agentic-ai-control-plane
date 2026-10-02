@@ -1,7 +1,7 @@
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock";
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 import { generateText } from "ai";
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { z } from "zod";
 
 const REGION =
@@ -251,7 +251,7 @@ function buildMentionContext(mentions: Mention[]): string {
 
 // Generates a Cedar policy from natural language via Bedrock, incorporating any
 // existing policy and mentioned entities, and strips markdown fences from output.
-export const generateCedarPolicy = os
+export const generateCedarPolicy = authed
   .route({ method: "POST", path: "/cedar/generate", tags: ["cedar"] })
   .input(
     z.object({

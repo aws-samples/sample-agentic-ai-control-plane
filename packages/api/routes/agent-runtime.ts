@@ -2,7 +2,7 @@ import {
   BedrockAgentCoreClient,
   InvokeAgentRuntimeCommand,
 } from "@aws-sdk/client-bedrock-agentcore";
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { z } from "zod";
 
 const REGION = process.env.AGENTCORE_REGION || "us-east-1";
@@ -11,7 +11,7 @@ const client = new BedrockAgentCoreClient({ region: REGION });
 
 // Invokes a Bedrock AgentCore runtime with a prompt and returns the parsed
 // response, surfacing failures as { success: false, error } rather than throwing.
-export const invokeAgentRuntime = os
+export const invokeAgentRuntime = authed
   .route({
     method: "POST",
     path: "/agent-runtimes/invoke",

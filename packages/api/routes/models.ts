@@ -1,4 +1,4 @@
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { prisma } from "@package/database";
 import { z } from "zod";
 
@@ -14,7 +14,7 @@ const ModelSchema = z.object({
 });
 
 // Lists all configured models ordered by name.
-export const listModels = os
+export const listModels = authed
   .route({
     method: "GET",
     path: "/models/list",
@@ -30,7 +30,7 @@ export const listModels = os
   });
 
 // Fetches a single model by id.
-export const getModel = os
+export const getModel = authed
   .route({
     method: "GET",
     path: "/models/get",
@@ -51,7 +51,7 @@ export const getModel = os
   });
 
 // Creates a model record.
-export const createModel = os
+export const createModel = authed
   .route({
     method: "POST",
     path: "/models/create",
@@ -76,7 +76,7 @@ export const createModel = os
   });
 
 // Updates a model's editable fields by id.
-export const updateModel = os
+export const updateModel = authed
   .route({
     method: "PATCH",
     path: "/models/update",
@@ -105,7 +105,7 @@ export const updateModel = os
   });
 
 // Deletes a model by id.
-export const deleteModel = os
+export const deleteModel = authed
   .route({
     method: "DELETE",
     path: "/models/delete",

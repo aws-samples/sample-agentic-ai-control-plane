@@ -2,7 +2,7 @@ import { Sha256 } from "@aws-crypto/sha256-js";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { createMCPClient } from "@ai-sdk/mcp";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { solutionUserAgent } from "@package/aws-user-agent";
 import { HttpRequest } from "@smithy/protocol-http";
 import { SignatureV4 } from "@smithy/signature-v4";
@@ -88,7 +88,7 @@ async function createTestClient(
 
 // Connects to an MCP endpoint and lists its tools to verify reachability/auth,
 // returning { success: false, error } instead of throwing on failure.
-export const testMcpEndpoint = os
+export const testMcpEndpoint = authed
   .route({ method: "POST", path: "/mcp/test-endpoint", tags: ["mcp"] })
   .input(
     z.object({
@@ -136,7 +136,7 @@ export const testMcpEndpoint = os
 
 // Invokes a named tool on an MCP endpoint with the given arguments, returning
 // { success: false, error } if the tool is missing or the call throws.
-export const callMcpTool = os
+export const callMcpTool = authed
   .route({ method: "POST", path: "/mcp/call-tool", tags: ["mcp"] })
   .input(
     z.object({

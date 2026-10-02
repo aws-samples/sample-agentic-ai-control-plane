@@ -28,6 +28,7 @@ interface DashboardStackProps extends cdk.StackProps {
   agentCoreRuntimeArn: string;
   personaMasterPasswordSecret: secretsmanager.Secret;
   personaUserPoolClient: cognito.UserPoolClient;
+  platformAdminGroup: cognito.UserPoolGroup;
 }
 
 // Ownership tag stamped on every AVP policy store the dashboard creates. The
@@ -118,6 +119,9 @@ export class DashboardStack extends cdk.Stack {
           props.personaMasterPasswordSecret.secretArn,
         PERSONA_USER_POOL_CLIENT_ID:
           props.personaUserPoolClient.userPoolClientId,
+        // Only members of this Cognito group may create/update/delete personas
+        // (see packages/api/platform-admin.ts).
+        PLATFORM_ADMIN_GROUP: props.platformAdminGroup.groupName,
       },
       secrets: {
         BETTER_AUTH_SECRET: ecs.Secret.fromSecretsManager(betterAuthSecret),
@@ -598,6 +602,7 @@ export class DashboardStack extends cdk.Stack {
           "cognito-idp:AdminUpdateUserAttributes",
           "cognito-idp:AdminInitiateAuth",
           "cognito-idp:AdminAddUserToGroup",
+          "cognito-idp:AdminListGroupsForUser",
         ],
         resources: [props.userPool.userPoolArn],
       }),
