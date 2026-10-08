@@ -1,2 +1,8 @@
 export { router } from "./router";
-export { authed, authMiddleware, base } from "./context";
+export {
+  adminAuthed,
+  adminMiddleware,
+  authed,
+  authMiddleware,
+  base,
+} from "./context";

@@ -9,7 +9,8 @@ import {
   ListGatewayTargetsCommand,
   UpdateGatewayTargetCommand,
 } from "@aws-sdk/client-bedrock-agentcore-control";
-import { ORPCError, os } from "@orpc/server";
+import { ORPCError } from "@orpc/server";
+import { authed } from "../context";
 import { prisma } from "@package/database";
 import { z } from "zod";
 import {
@@ -348,7 +349,7 @@ const GatewayTargetSchema = z.object({
 });
 
 // Returns the gateway target row for a registryRecordId, or null if none exists.
-export const getGatewayTarget = os
+export const getGatewayTarget = authed
   .route({
     method: "GET",
     path: "/gateway-targets/get",
@@ -365,7 +366,7 @@ export const getGatewayTarget = os
 
 // Re-materializes a non-READY gateway target by refetching its spec from the
 // registry; returns the existing row unchanged if already READY.
-export const retryGatewayTarget = os
+export const retryGatewayTarget = authed
   .route({
     method: "POST",
     path: "/gateway-targets/retry",
@@ -411,7 +412,7 @@ export const retryGatewayTarget = os
 // row is marked MISSING but reappears, it's flipped back to READY. We never
 // delete DB rows or recreate AWS targets here — the prototype's gateway is
 // shared, so silent auto-heal is unsafe. Surfacing drift is the goal.
-export const syncGatewayTargets = os
+export const syncGatewayTargets = authed
   .route({
     method: "POST",
     path: "/gateway-targets/sync",

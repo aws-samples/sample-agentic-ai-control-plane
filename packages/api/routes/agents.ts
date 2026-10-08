@@ -1,4 +1,4 @@
-import { os } from "@orpc/server";
+import { authed } from "../context";
 import { prisma } from "@package/database";
 import { nanoid } from "nanoid";
 import { z } from "zod";
@@ -33,7 +33,7 @@ const AgentWithToolsSchema = AgentSchema.extend({
 
 // Lists agents visible to the caller: their own plus public ones (or only
 // public agents when no userId is given).
-export const listAgents = os
+export const listAgents = authed
   .route({
     method: "GET",
     path: "/agents/list",
@@ -69,7 +69,7 @@ export const listAgents = os
   });
 
 // Fetches a single agent by id with its tools and creator email.
-export const getAgent = os
+export const getAgent = authed
   .route({
     method: "GET",
     path: "/agents/get",
@@ -99,7 +99,7 @@ export const getAgent = os
   });
 
 // Creates an agent owned by the given user with a generated nanoid.
-export const createAgent = os
+export const createAgent = authed
   .route({
     method: "POST",
     path: "/agents/create",
@@ -136,7 +136,7 @@ export const createAgent = os
 
 // Updates an agent's editable fields (name, description, prompt, visibility,
 // preferred model).
-export const updateAgent = os
+export const updateAgent = authed
   .route({
     method: "PATCH",
     path: "/agents/update",
@@ -171,7 +171,7 @@ export const updateAgent = os
   });
 
 // Deletes an agent by id.
-export const deleteAgent = os
+export const deleteAgent = authed
   .route({
     method: "DELETE",
     path: "/agents/delete",

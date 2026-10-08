@@ -112,6 +112,7 @@ export function createPlatformStacks(
     agentCoreRuntimeArn: agentCoreRuntime.runtime.agentRuntimeArn,
     personaMasterPasswordSecret: cognito.personaMasterPasswordSecret,
     personaUserPoolClient: cognito.personaUserPoolClient,
+    platformAdminGroup: cognito.platformAdminGroup,
   });
   dashboard.addDependency(agentCoreGateway);
   dashboard.addDependency(agentCoreRuntime);

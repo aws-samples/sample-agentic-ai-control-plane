@@ -416,6 +416,7 @@ function generateEnvFile(cognito: CognitoConfig): boolean {
     `COGNITO_DOMAIN=${cognito.domain}`,
     `COGNITO_REGION=${cognito.region}`,
     `COGNITO_USER_POOL_ID=${cognito.userPoolId}`,
+    `PLATFORM_ADMIN_GROUP=PlatformAdmins`,
     ``,
     `DATABASE_URL=${LOCAL_DATABASE_URL}`,
     ``, // trailing newline

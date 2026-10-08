@@ -9,7 +9,6 @@ import { gatewaysRouter } from "./routes/gateways";
 import { health } from "./routes/health";
 import { idpRouter } from "./routes/idp";
 import { mcpRouter } from "./routes/mcp";
-import { mintPersonaTokenRouter } from "./routes/mint-persona-token";
 import { modelsRouter } from "./routes/models";
 import { personasRouter } from "./routes/personas";
 import { policyEnginesRouter } from "./routes/policy-engines";
@@ -25,7 +24,6 @@ export const router = {
   ...agentRuntimeInvokeRouter,
   ...modelsRouter,
   ...personasRouter,
-  ...mintPersonaTokenRouter,
   ...idpRouter,
   ...mcpRouter,
   ...policyEnginesRouter,
