@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.27.1",
+    "@modelcontextprotocol/sdk": "1.32.0",
     "@package/aws-user-agent": "workspace:*",
     "@package/database": "workspace:*",
     "@prisma/adapter-pg": "^7.8.0",
